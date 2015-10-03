@@ -34,7 +34,7 @@ public class MainActivity extends AppCompatActivity {
         newWorkOrder.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(MainActivity.this, NewWorkOrderActivity.class);
+                Intent intent = new Intent(MainActivity.this, WorkOrderInboxActivity.class);
                 startActivity(intent);
             }
         });
