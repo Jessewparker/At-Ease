@@ -1,9 +1,14 @@
 package com.atease.at_ease;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
+
+import com.parse.Parse;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -11,6 +16,28 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        Parse.enableLocalDatastore(this);
+
+        Parse.initialize(this, "RWYMOqEP4OgQ4oZIqFjyqHGxG7uYzbaPDWuzvZPq", "WJgweZXzSzoCgsdwgv5h5VzHwryAiAV1FvTFrZyF");
+
+        Button signin = (Button) findViewById(R.id.signin);
+        signin.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(MainActivity.this, ParseSIgnIn.class);
+                startActivity(intent);
+            }
+        });
+
+        Button newWorkOrder = (Button) findViewById(R.id.new_work_order);
+        newWorkOrder.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(MainActivity.this, NewWorkOrderActivity.class);
+                startActivity(intent);
+            }
+        });
     }
 
     @Override
