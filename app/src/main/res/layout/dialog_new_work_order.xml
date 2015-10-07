@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <com.rengwuxian.materialedittext.MaterialEditText
+        android:id="@+id/new_work_order_picture_description"
+        android:layout_marginTop="15dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:met_baseColor="@color/primary_text"
+        app:met_primaryColor="@color/primary_dark"
+        app:met_errorColor="@color/accent"
+        app:met_floatingLabel="highlight"
+        app:met_floatingLabelText="Enter a description:"
+        app:met_floatingLabelTextColor = "@color/primary"
+        app:met_maxCharacters="25"
+        android:hint="Enter a description:"/>
+
+</LinearLayout>

@@ -14,9 +14,10 @@
         android:layout_height="wrap_content"
         android:text="SignIn"
         android:id="@+id/signin"
-        android:layout_below="@+id/textView"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="63dp" />
+        android:layout_alignBaseline="@+id/ggm"
+        android:layout_alignBottom="@+id/ggm"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
 
     <Button
         android:layout_width="wrap_content"
@@ -24,7 +25,97 @@
         android:text="New Work-Order"
         android:id="@+id/new_work_order"
         android:layout_below="@+id/signin"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="43dp" />
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Inbox"
+        android:id="@+id/inbox"
+        android:layout_below="@+id/new_work_order"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Manny"
+        android:id="@+id/manny"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Mark"
+        android:id="@+id/mark"
+        android:layout_below="@+id/manny"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="GG Manager"
+        android:id="@+id/ggm"
+        android:layout_below="@+id/mark"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Derek"
+        android:id="@+id/derek"
+        android:layout_below="@+id/ggm"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Syd"
+        android:id="@+id/syd"
+        android:layout_below="@+id/derek"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Jes"
+        android:id="@+id/jes"
+        android:layout_below="@+id/syd"
+        android:layout_alignRight="@+id/syd"
+        android:layout_alignEnd="@+id/syd" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Hannah"
+        android:id="@+id/hannah"
+        android:layout_below="@+id/jes"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Justin"
+        android:id="@+id/justin"
+        android:layout_below="@+id/hannah"
+        android:layout_alignRight="@+id/hannah"
+        android:layout_alignEnd="@+id/hannah" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Tom"
+        android:id="@+id/tom"
+        android:layout_below="@+id/justin"
+        android:layout_alignRight="@+id/justin"
+        android:layout_alignEnd="@+id/justin" />
 
 </RelativeLayout>

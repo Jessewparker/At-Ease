@@ -4,6 +4,11 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recycler"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
     <com.software.shell.fab.ActionButton
         android:id="@+id/action_button"
         android:layout_width="wrap_content"
@@ -12,5 +17,8 @@
         android:layout_alignParentRight="true"
         android:layout_marginRight="@dimen/fab_margin"
         android:layout_marginBottom="@dimen/fab_margin"
+        fab:image="@drawable/fab_plus_icon"
+        fab:button_color="@color/primary"
+        fab:button_colorPressed="@color/secondary"
         />
 </RelativeLayout>
