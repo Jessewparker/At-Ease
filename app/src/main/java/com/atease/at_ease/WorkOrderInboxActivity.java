@@ -15,7 +15,7 @@ public class WorkOrderInboxActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_work_order_inbox);
 
         ActionButton actionButton = (ActionButton) findViewById(R.id.action_button);
         actionButton.setOnClickListener(new View.OnClickListener() {
