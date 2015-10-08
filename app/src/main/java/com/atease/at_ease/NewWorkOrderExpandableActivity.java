@@ -28,24 +28,24 @@ import com.afollestad.materialdialogs.MaterialDialog;
 import com.daimajia.slider.library.SliderLayout;
 import com.daimajia.slider.library.SliderTypes.TextSliderView;
 import com.gc.materialdesign.views.ButtonFlat;
+import com.parse.FindCallback;
 import com.parse.LogInCallback;
 import com.parse.ParseException;
 import com.parse.ParseFile;
 import com.parse.ParseObject;
+import com.parse.ParseQuery;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by Mark on 10/4/2015.
  */
 public class NewWorkOrderExpandableActivity extends Activity {
-    TableLayout image_table=null;
-    LinearLayout layout;
-    int numberOfPictures = 0;
     SliderLayout sliderShow;
 
     ArrayList<String> image_description =new ArrayList<String>();
@@ -63,11 +63,67 @@ public class NewWorkOrderExpandableActivity extends Activity {
         ParseUser currentUser = ParseUser.getCurrentUser();
         if (currentUser != null) {
             // do stuff with the user
-            TextView textViewName = (TextView) findViewById(R.id.new_work_order_tenant_name);
-            TextView textViewNumber = (TextView) findViewById(R.id.new_work_order_tenant_phone);
+            TextView tenantTextViewName = (TextView) findViewById(R.id.new_work_order_tenant_name);
+            TextView tenantTextViewEmail = (TextView) findViewById(R.id.new_work_order_tenant_email);
+            TextView tenantTextViewNumber = (TextView) findViewById(R.id.new_work_order_tenant_phone);
+            TextView tenantTextViewAddress = (TextView) findViewById(R.id.new_work_order_tenant_address);
+            TextView tenantTextViewLocation = (TextView) findViewById(R.id.new_work_order_tenant_location);
 
-            textViewName.setText(currentUser.getUsername());
-            textViewNumber.setText((currentUser.get("phone").toString()));
+            tenantTextViewName.setText(currentUser.getString("firstName") + " " + currentUser.getString("lastName"));
+            tenantTextViewEmail.setText(currentUser.getString("email"));
+            String phoneString = currentUser.getString("phone");
+            tenantTextViewNumber.setText(phoneString.substring(0,3) + "-"
+                    + phoneString.substring(3, 6) + "-"
+                    + phoneString.substring(6, 10));
+            String addressString = currentUser.getString("address") + ", " +
+                    currentUser.getString("city") + ", " +
+                    currentUser.getString("state") + " " +
+                    currentUser.getString("zip");
+            tenantTextViewAddress.setText(addressString);
+            tenantTextViewLocation.setText(currentUser.getString("building") +
+                    " - " + currentUser.getString("room"));
+
+
+
+            Log.d("At-Ease", currentUser.toString());
+            Log.d("At-Ease", currentUser.get("manager").toString());
+            ParseUser manager = null;
+            try {
+                manager = currentUser.getParseUser("manager").fetchIfNeeded();
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+            Log.d("At-Ease", manager.getUsername());
+//            ParseQuery<ParseUser> query = ParseUser.getQuery();
+//            query.whereEqualTo("objectId", currentUser.get("manager"));
+//            query.findInBackground(new FindCallback<ParseUser>() {
+//                public void done(List<ParseUser> objects, ParseException e) {
+//                    if (e == null) {
+//                        ParseUser manager = objects.get(0);
+                        TextView managerTextViewName = (TextView) findViewById(R.id.new_work_order_manager_name);
+                        TextView managerTextViewEmail = (TextView) findViewById(R.id.new_work_order_manager_email);
+                        TextView managerTextViewNumber = (TextView) findViewById(R.id.new_work_order_manager_phone);
+                        TextView managerTextViewAddress = (TextView) findViewById(R.id.new_work_order_manager_address);
+//                        TextView managerTextViewLocation = (TextView) findViewById(R.id.new_work_order_manager_location);
+
+                        managerTextViewName.setText(manager.getString("firstName") + " " + manager.getString("lastName"));
+                        managerTextViewEmail.setText(manager.getString("email"));
+                        String phoneStringM = manager.getString("phone");
+                        managerTextViewNumber.setText(phoneStringM.substring(0, 3) + "-"
+                                + phoneStringM.substring(3, 6) + "-"
+                                + phoneStringM.substring(6, 10));
+                        String addressStringM = manager.getString("address") + ", " +
+                                manager.getString("city") + ", " +
+                                manager.getString("state") + " " +
+                                manager.getString("zip");
+                        managerTextViewAddress.setText(addressStringM);
+//                        managerTextViewLocation.setText(manager.getString("building") +
+//                                " - " + manager.getString("room"));
+//                    } else {
+//                        Log.d("At-Ease", "Manager not found: " + e.getMessage());
+//                    }
+//                }
+//            });
         } else {
             // show the signup or login screen
             Log.d("MYAPPTAG", "No Current User");

@@ -6,12 +6,20 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.Snackbar;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
+import com.mikepenz.materialdrawer.Drawer;
+import com.mikepenz.materialdrawer.DrawerBuilder;
+import com.mikepenz.materialdrawer.model.DividerDrawerItem;
+import com.mikepenz.materialdrawer.model.PrimaryDrawerItem;
+import com.mikepenz.materialdrawer.model.SecondaryDrawerItem;
+import com.mikepenz.materialdrawer.model.interfaces.IDrawerItem;
 import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseObject;
@@ -27,8 +35,8 @@ import co.dift.ui.SwipeToAction;
 /**
  * Created by Mark on 10/3/2015.
  */
-public class WorkOrderInboxActivity extends Activity {
-
+public class WorkOrderInboxActivity extends AppCompatActivity {
+    private Toolbar toolbar;
     RecyclerView recyclerView;
     WorkOrderInboxRecyclerViewAdapter adapter;
     SwipeToAction swipeToAction;
@@ -39,6 +47,12 @@ public class WorkOrderInboxActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_work_order_inbox);
+
+        toolbar = (Toolbar) findViewById(R.id.tool_bar); // Attaching the layout to the toolbar object
+        setSupportActionBar(toolbar);                   // Setting toolbar as the ActionBar with setSupportActionBar() call
+
+        AtEaseApplication application = (AtEaseApplication) getApplicationContext();
+        application.getNewDrawerBuilder().withActivity(this).build();
 
         ActionButton actionButton = (ActionButton) findViewById(R.id.action_button);
         actionButton.setOnClickListener(new View.OnClickListener() {
