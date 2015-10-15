@@ -50,4 +50,6 @@ dependencies {
     compile('com.mikepenz:materialdrawer:4.3.3@aar') {
         transitive = true
     }
+    compile 'com.stripe:stripe-android:+'
+
 }
