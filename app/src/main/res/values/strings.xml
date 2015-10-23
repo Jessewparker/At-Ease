@@ -6,4 +6,6 @@
     <string name="title_activity_payment">PaymentActivity</string>
     <string name="title_activity_manager_payments">ManagerPaymentsActivity</string>
     <string name="title_activity_stripe_connect">StripeConnectActivity</string>
+    <string name="title_activity_stripe_auth">StripeAuthActivity</string>
+    <string name="title_activity_tenant_payments">TenantPaymentsActivity</string>
 </resources>

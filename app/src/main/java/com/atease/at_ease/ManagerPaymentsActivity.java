@@ -1,17 +1,20 @@
 package com.atease.at_ease;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
 
 import com.parse.LogInCallback;
 import com.parse.ParseException;
 import com.parse.ParseUser;
 
 public class ManagerPaymentsActivity extends AppCompatActivity {
-    final String TAG = "ManagerPaymentActivity";
+    final String TAG = "ManagerPaymentsActivity";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -22,6 +25,7 @@ public class ManagerPaymentsActivity extends AppCompatActivity {
         ParseUser currentUser = ParseUser.getCurrentUser();
         if (currentUser != null) {
             currentUser.logOut();
+            Log.d(TAG, "current User has been logged out");
         }
         ParseUser.logInInBackground("jesseManager", "password", new LogInCallback() {
             public void done(ParseUser user, ParseException e) {
@@ -34,9 +38,24 @@ public class ManagerPaymentsActivity extends AppCompatActivity {
             }
         });
         //set the currentUser because it should exist
-        currentUser = ParseUser.getCurrentUser();
+        //currentUser = ParseUser.getCurrentUser();
 
-
+        Button btnAddStripeAccount = (Button) findViewById(R.id.btnAddStripeAccount);
+        btnAddStripeAccount.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(ManagerPaymentsActivity.this, StripeConnectActivity.class);
+                startActivity(intent);
+            }
+        });
+        Button btnPaymentHistory = (Button) findViewById(R.id.btnPaymentHistory);
+        btnPaymentHistory.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(ManagerPaymentsActivity.this, MainActivity.class);
+                startActivity(intent);
+            }
+        });
 
 
 

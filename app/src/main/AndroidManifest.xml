@@ -42,6 +42,14 @@
             android:name=".StripeConnectActivity"
             android:label="@string/title_activity_stripe_connect" >
         </activity>
+        <activity
+            android:name=".StripeAuthActivity"
+            android:label="@string/title_activity_stripe_auth" >
+        </activity>
+        <activity
+            android:name=".TenantPaymentsActivity"
+            android:label="@string/title_activity_tenant_payments" >
+        </activity>
     </application>
 
 </manifest>

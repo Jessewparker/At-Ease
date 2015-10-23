@@ -67,8 +67,17 @@ public class MainActivity extends AppCompatActivity{
             }
         });
 
-        Button payments = (Button) findViewById(R.id.payments);
-        payments.setOnClickListener(new View.OnClickListener() {
+        Button btnManagerPayments = (Button) findViewById(R.id.manager_payments);
+        btnManagerPayments.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(MainActivity.this, ManagerPaymentsActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        Button btnTenantPayments = (Button) findViewById(R.id.tenant_payments);
+        btnTenantPayments.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(MainActivity.this, StripeConnectActivity.class);
