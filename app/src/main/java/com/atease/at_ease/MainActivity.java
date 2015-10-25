@@ -10,6 +10,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 
+import com.mikepenz.materialdrawer.AccountHeader;
+import com.mikepenz.materialdrawer.AccountHeaderBuilder;
 import com.mikepenz.materialdrawer.Drawer;
 import com.mikepenz.materialdrawer.DrawerBuilder;
 import com.mikepenz.materialdrawer.model.DividerDrawerItem;
@@ -38,7 +40,13 @@ public class MainActivity extends AppCompatActivity{
             currentUser.logOut();
         }
 
-        ((AtEaseApplication) getApplicationContext()).getNewDrawerBuilder().withActivity(this).build();
+        AccountHeader header = new AccountHeaderBuilder()
+                .withActivity(this)
+                .build();
+
+        ((AtEaseApplication) getApplicationContext()).getNewDrawerBuilder()
+                .withAccountHeader(header)
+                .withActivity(this).build();
 
         Button signin = (Button) findViewById(R.id.signin);
         signin.setOnClickListener(new View.OnClickListener() {

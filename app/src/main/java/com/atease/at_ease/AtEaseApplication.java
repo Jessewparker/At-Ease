@@ -5,6 +5,8 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 
+import com.mikepenz.fontawesome_typeface_library.FontAwesome;
+import com.mikepenz.google_material_typeface_library.GoogleMaterial;
 import com.mikepenz.materialdrawer.Drawer;
 import com.mikepenz.materialdrawer.DrawerBuilder;
 import com.mikepenz.materialdrawer.model.DividerDrawerItem;
@@ -12,6 +14,7 @@ import com.mikepenz.materialdrawer.model.PrimaryDrawerItem;
 import com.mikepenz.materialdrawer.model.SecondaryDrawerItem;
 import com.mikepenz.materialdrawer.model.interfaces.IDrawerItem;
 import com.parse.Parse;
+import com.parse.ParseObject;
 
 /**
  * Created by Mark on 10/8/2015.
@@ -23,22 +26,53 @@ public class AtEaseApplication extends Application {
         super.onCreate();
 
         Parse.enableLocalDatastore(this);
-
+        ParseObject.registerSubclass(WorkOrder.class);
         Parse.initialize(this, "RWYMOqEP4OgQ4oZIqFjyqHGxG7uYzbaPDWuzvZPq", "WJgweZXzSzoCgsdwgv5h5VzHwryAiAV1FvTFrZyF");
     }
 
     public DrawerBuilder getNewDrawerBuilder() {
-        PrimaryDrawerItem item1 = new PrimaryDrawerItem().withName("home");
-        SecondaryDrawerItem item2 = new SecondaryDrawerItem().withName("settings");
+        PrimaryDrawerItem home = new PrimaryDrawerItem()
+                .withIcon(GoogleMaterial.Icon.gmd_home)
+                .withName("Home");
+        PrimaryDrawerItem workOrderInbox = new PrimaryDrawerItem()
+                .withIcon(FontAwesome.Icon.faw_wrench)
+                .withName("Work Orders");
+        PrimaryDrawerItem messageInbox = new PrimaryDrawerItem()
+                .withIcon(GoogleMaterial.Icon.gmd_forum)
+                .withName("Messages");
+        PrimaryDrawerItem rentInbox = new PrimaryDrawerItem()
+                .withIcon(GoogleMaterial.Icon.gmd_attach_money)
+                .withName("Rent");
+
+        PrimaryDrawerItem newWorkOrder = new PrimaryDrawerItem()
+                .withIcon(GoogleMaterial.Icon.gmd_add_box)
+                .withName("New Work Order");
+        PrimaryDrawerItem newMessage = new PrimaryDrawerItem()
+                .withIcon(GoogleMaterial.Icon.gmd_add_box)
+                .withName("New Message");
+        PrimaryDrawerItem payRent = new PrimaryDrawerItem()
+                .withIcon(GoogleMaterial.Icon.gmd_add_box)
+                .withName("Pay Rent");
 
         return new DrawerBuilder()
                 .withTranslucentNavigationBar(false)
                 .withActionBarDrawerToggle(false)
                 .addDrawerItems(
-                        item1,
+                        home,
                         new DividerDrawerItem(),
-                        item2,
-                        new SecondaryDrawerItem().withName("secondary2")
+                        new SecondaryDrawerItem()
+                                .withName("Inboxes")
+                                .withSelectable(false),
+                        workOrderInbox,
+                        messageInbox,
+                        rentInbox,
+                        new DividerDrawerItem(),
+                        new SecondaryDrawerItem()
+                                .withName("Actions")
+                                .withSelectable(false),
+                        newWorkOrder,
+                        newMessage,
+                        payRent
                 )
                 .withOnDrawerItemClickListener(new Drawer.OnDrawerItemClickListener() {
                     @Override

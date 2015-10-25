@@ -23,6 +23,7 @@
         <activity android:name=".NewWorkOrderExpandableActivity"
             android:windowSoftInputMode="adjustPan"/>
         <activity android:name=".WorkOrderInboxActivity"/>
+        <activity android:name=".ViewWorkOrderActivity"/>
     </application>
 
     <uses-permission android:name="android.permission.INTERNET" />

@@ -47,9 +47,9 @@ public class WorkOrderInboxRecyclerViewAdapter extends RecyclerView.Adapter<Recy
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         WorkOrder item = workOrders.get(position);
         WorkOrderViewHolder workOrderViewHolder = (WorkOrderViewHolder) holder;
-        workOrderViewHolder.nameView.setText(item.get_name());
-        workOrderViewHolder.dateView.setText(item.get_date());
-        workOrderViewHolder.subjectView.setText(item.get_subject());
+//        workOrderViewHolder.nameView.setText(item.get_name());
+//        workOrderViewHolder.dateView.setText(item.get_date());
+        workOrderViewHolder.subjectView.setText(item.GetSubject());
         workOrderViewHolder.data = item;
     }
 

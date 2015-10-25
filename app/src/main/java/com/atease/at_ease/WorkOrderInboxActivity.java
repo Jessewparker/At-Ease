@@ -75,7 +75,7 @@ public class WorkOrderInboxActivity extends AppCompatActivity {
             @Override
             public boolean swipeLeft(final WorkOrder inWorkOrder) {
                 final int pos = removeWorkOrder(inWorkOrder);
-                displaySnackbar(inWorkOrder.get_name() + " removed", "Undo", new View.OnClickListener() {
+                displaySnackbar(inWorkOrder.GetSubject() + " removed", "Undo", new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         addWorkOrder(pos, inWorkOrder);
@@ -86,18 +86,22 @@ public class WorkOrderInboxActivity extends AppCompatActivity {
 
             @Override
             public boolean swipeRight(WorkOrder inWorkOrder) {
-                displaySnackbar(inWorkOrder.get_name() + " loved", null, null);
+                displaySnackbar(inWorkOrder.GetSubject() + " loved", null, null);
                 return true;
             }
 
             @Override
             public void onClick(WorkOrder inWorkOrder) {
-                displaySnackbar(inWorkOrder.get_name() + " clicked", null, null);
+                displaySnackbar(inWorkOrder.GetSubject() + " clicked", null, null);
+                Intent intent = new Intent(WorkOrderInboxActivity.this, ViewWorkOrderActivity.class);
+                Log.d("At-Ease", ":" + inWorkOrder.getObjectId());
+                intent.putExtra("workOrder", inWorkOrder.getObjectId());
+                startActivity(intent);
             }
 
             @Override
             public void onLongClick(WorkOrder inWorkOrder) {
-                displaySnackbar(inWorkOrder.get_name() + " long-clicked", null, null);
+                displaySnackbar(inWorkOrder.GetSubject() + " long-clicked", null, null);
             }
         });
 
@@ -116,21 +120,16 @@ public class WorkOrderInboxActivity extends AppCompatActivity {
     }
 
     private void populate() {
-        this.workOrderList.add(new WorkOrder("Mark", "1"));
-        this.workOrderList.add(new WorkOrder("Mike", "2"));
-        this.workOrderList.add(new WorkOrder("Mark", "3"));
-        this.workOrderList.add(new WorkOrder("Derek", "4"));
-        this.workOrderList.add(new WorkOrder("Bobby", "5"));
     }
 
     private void populateFromParse(final ParseUser user) {
-        ParseQuery<ParseObject> tenantQuery = ParseQuery.getQuery("WorkOrder");
-        ParseQuery<ParseObject> managerQuery = ParseQuery.getQuery("WorkOrder");
-        ParseQuery<ParseObject> query = ParseQuery.getQuery("WorkOrder");
+        ParseQuery<WorkOrder> tenantQuery = ParseQuery.getQuery("WorkOrder");
+        ParseQuery<WorkOrder> managerQuery = ParseQuery.getQuery("WorkOrder");
+        ParseQuery<WorkOrder> query = ParseQuery.getQuery("WorkOrder");
         if(user.getBoolean("isTenant") && user.getBoolean("isManager")) {
             tenantQuery.whereEqualTo("tenant", user);
             managerQuery.whereEqualTo("manager", user);
-            List<ParseQuery<ParseObject>> queries = new ArrayList<ParseQuery<ParseObject>>();
+            List<ParseQuery<WorkOrder>> queries = new ArrayList<>();
             queries.add(tenantQuery);
             queries.add(managerQuery);
             query = ParseQuery.or(queries);
@@ -142,14 +141,16 @@ public class WorkOrderInboxActivity extends AppCompatActivity {
             query.whereEqualTo("manager", user);
         }
 
-        query.findInBackground(new FindCallback<ParseObject>() {
+        query.findInBackground(new FindCallback<WorkOrder>() {
             @Override
-            public void done(List<ParseObject> list, ParseException e) {
+            public void done(List<WorkOrder> results, ParseException e) {
                 if (e == null) {
-                    Log.d("At-Ease", "Retrieved " + list.size() + " work orders");
-                    for (int i = 0; i < list.size(); i++) {
-                        WorkOrderInboxActivity.this.workOrderList.add(new WorkOrder(list.get(i), user));
+                    Log.d("At-Ease", "Retrieved " + results.size() + " work orders");
+                    int i = 0;
+                    for (WorkOrder workOrder : results) {
+                        WorkOrderInboxActivity.this.workOrderList.add(workOrder);
                         Log.d("At-Ease", "Created work order " + Integer.toString(i));
+                        i++;
                     }
                     adapter.notifyDataSetChanged();
                 } else {

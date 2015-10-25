@@ -69,31 +69,52 @@ public class NewWorkOrderExpandableActivity extends Activity {
             TextView tenantTextViewAddress = (TextView) findViewById(R.id.new_work_order_tenant_address);
             TextView tenantTextViewLocation = (TextView) findViewById(R.id.new_work_order_tenant_location);
 
+            ParseObject lives = null;
+            ParseObject address = null;
+            String addressString = null;
+            try {
+                lives = currentUser.getParseObject("liveAt").fetchIfNeeded();
+                address = lives.getParseObject("address").fetchIfNeeded();
+                addressString = address.getString("street") + ", " +
+                        address.getString("city") + ", " +
+                        address.getString("state") + " " +
+                        address.getString("zipcode");
+
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+
             tenantTextViewName.setText(currentUser.getString("firstName") + " " + currentUser.getString("lastName"));
             tenantTextViewEmail.setText(currentUser.getString("email"));
             String phoneString = currentUser.getString("phone");
             tenantTextViewNumber.setText(phoneString.substring(0,3) + "-"
                     + phoneString.substring(3, 6) + "-"
                     + phoneString.substring(6, 10));
-            String addressString = currentUser.getString("address") + ", " +
-                    currentUser.getString("city") + ", " +
-                    currentUser.getString("state") + " " +
-                    currentUser.getString("zip");
+
             tenantTextViewAddress.setText(addressString);
-            tenantTextViewLocation.setText(currentUser.getString("building") +
-                    " - " + currentUser.getString("room"));
-
-
-
-            Log.d("At-Ease", currentUser.toString());
-            Log.d("At-Ease", currentUser.get("manager").toString());
-            ParseUser manager = null;
+            ParseObject building = null;
+            ParseObject complex = null;
             try {
-                manager = currentUser.getParseUser("manager").fetchIfNeeded();
+                building = lives.getParseObject("building").fetchIfNeeded();
+                complex = building.getParseObject("complex").fetchIfNeeded();
             } catch (ParseException e) {
                 e.printStackTrace();
             }
-            Log.d("At-Ease", manager.getUsername());
+            String locString = complex.getString("name") + " - " +
+                    building.getString("name") + "-" +
+                    lives.getString("name");
+            tenantTextViewLocation.setText(locString);
+
+            Log.d("At-Ease", currentUser.toString());
+//            Log.d("At-Ease", currentUser.get("manager").toString());
+            ParseUser manager = null;
+            try {
+                manager = lives.getParseUser("owner").fetchIfNeeded();
+                Log.d("At-Ease", manager.getUsername());
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+
 //            ParseQuery<ParseUser> query = ParseUser.getQuery();
 //            query.whereEqualTo("objectId", currentUser.get("manager"));
 //            query.findInBackground(new FindCallback<ParseUser>() {
@@ -103,7 +124,6 @@ public class NewWorkOrderExpandableActivity extends Activity {
                         TextView managerTextViewName = (TextView) findViewById(R.id.new_work_order_manager_name);
                         TextView managerTextViewEmail = (TextView) findViewById(R.id.new_work_order_manager_email);
                         TextView managerTextViewNumber = (TextView) findViewById(R.id.new_work_order_manager_phone);
-                        TextView managerTextViewAddress = (TextView) findViewById(R.id.new_work_order_manager_address);
 //                        TextView managerTextViewLocation = (TextView) findViewById(R.id.new_work_order_manager_location);
 
                         managerTextViewName.setText(manager.getString("firstName") + " " + manager.getString("lastName"));
@@ -112,11 +132,11 @@ public class NewWorkOrderExpandableActivity extends Activity {
                         managerTextViewNumber.setText(phoneStringM.substring(0, 3) + "-"
                                 + phoneStringM.substring(3, 6) + "-"
                                 + phoneStringM.substring(6, 10));
-                        String addressStringM = manager.getString("address") + ", " +
-                                manager.getString("city") + ", " +
-                                manager.getString("state") + " " +
-                                manager.getString("zip");
-                        managerTextViewAddress.setText(addressStringM);
+//                        String addressStringM = manager.getString("address") + ", " +
+//                                manager.getString("city") + ", " +
+//                                manager.getString("state") + " " +
+//                                manager.getString("zip");
+//                        managerTextViewAddress.setText(addressStringM);
 //                        managerTextViewLocation.setText(manager.getString("building") +
 //                                " - " + manager.getString("room"));
 //                    } else {
@@ -244,30 +264,37 @@ public class NewWorkOrderExpandableActivity extends Activity {
         return d;
     }
 
-    public void submitWorkOrder(View view)
-    {
+    public void submitWorkOrder(View view) throws ParseException {
         ParseUser currentUser = ParseUser.getCurrentUser();
         if (currentUser != null) {
             // do stuff with the user
-            ParseObject workOrder = new ParseObject("WorkOrder");
-            byte[] data = ((EditText) findViewById(R.id.new_work_order_text)).getText().toString().getBytes();
-            ParseFile textFile = new ParseFile("text.txt", data);
-            workOrder.put("text", textFile);
+            WorkOrder workOrder = new WorkOrder();
 
+            String text = ((EditText) findViewById(R.id.new_work_order_text)).getText().toString();
             String subject = ((EditText) findViewById(R.id.new_work_order_subject)).getText().toString();
-            Log.d("At-Ease", "Subject: " + subject);
-            workOrder.put("subject", subject);
-//            Bitmap bitmap = ((BitmapDrawable) image_drawable.get(0)).getBitmap();
-//            ByteArrayOutputStream stream = new ByteArrayOutputStream();
-//            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream);
-//            byte[] pic1 = stream.toByteArray();
-//            ParseFile pic1File = new ParseFile("pic1.jpg", pic1);
-//            workOrder.put("pic1", pic1File);
-            ParseUser manager = currentUser.getParseUser("manager");
-            if (manager != null) {
-                workOrder.put("manager", manager);
+            workOrder.SetTextFromString(text);
+            workOrder.SetSubject(subject);
+
+            switch (image_drawable.size()) {
+                case 3: workOrder.SetPic3FromDrawable(image_drawable.get(2));
+                    Log.d("At-Ease", "Setting Pic 3");
+                case 2: workOrder.SetPic2FromDrawable(image_drawable.get(1));
+                    Log.d("At-Ease", "Setting Pic 2");
+                case 1: workOrder.SetPic1FromDrawable(image_drawable.get(0));
+                    Log.d("At-Ease", "Setting Pic 1");
+                    break;
+                default: break;
             }
-            workOrder.put("tenant", currentUser);
+
+            ParseObject liveAt = currentUser.getParseObject("liveAt").fetchIfNeeded();
+            ParseUser manager = liveAt.getParseUser("owner").fetchIfNeeded();
+
+            if (manager != null) {
+                workOrder.SetManager(manager);
+            }
+
+            workOrder.SetTenant(currentUser);
+
             Log.d("MYAPPTAG", "Saving Parse Object from NewWorkOrderActivity");
             workOrder.saveInBackground(new SaveCallback() {
                 @Override
