@@ -50,6 +50,14 @@
             android:name=".TenantPaymentsActivity"
             android:label="@string/title_activity_tenant_payments" >
         </activity>
+        <activity
+            android:name=".RentPayActivity"
+            android:label="@string/title_activity_rent_pay" >
+        </activity>
+        <activity
+            android:name=".PaymentHistoryActivity"
+            android:label="@string/title_activity_payment_history" >
+        </activity>
     </application>
 
 </manifest>

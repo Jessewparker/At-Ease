@@ -80,7 +80,7 @@ public class MainActivity extends AppCompatActivity{
         btnTenantPayments.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(MainActivity.this, StripeConnectActivity.class);
+                Intent intent = new Intent(MainActivity.this, TenantPaymentsActivity.class);
                 startActivity(intent);
             }
         });
