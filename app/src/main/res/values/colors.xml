@@ -10,4 +10,6 @@
     <color name="divider">#B6B6B6</color>
     <color name="secondary">#8BC34A</color>
     <color name="item_background">#FFF</color>
+    <color name="error">#ff090a</color>
+    <color name="my_yellow">#ffe61f</color>
 </resources>
