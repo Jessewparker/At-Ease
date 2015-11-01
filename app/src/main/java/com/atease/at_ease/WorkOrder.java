@@ -68,7 +68,7 @@ public class WorkOrder extends ParseObject implements Parcelable{
     }
 
     public void SetPic1(ParseFile inPic1) {
-        put("Pic1", inPic1);
+        put("pic1", inPic1);
     }
 
     public void SetPic1FromDrawable(Drawable inPic1) {
@@ -85,14 +85,20 @@ public class WorkOrder extends ParseObject implements Parcelable{
     }
 
     public Drawable GetPic2AsDrawable() throws ParseException {
-        byte[] b = GetPic2().getData();
-        ByteArrayInputStream is = new ByteArrayInputStream(b);
-        Drawable pic2 = Drawable.createFromStream(is, "pic2.jpg");
-        return pic2;
+        ParseFile pic2File = GetPic2();
+        if (pic2File != null) {
+            byte[] b = pic2File.getData();
+            ByteArrayInputStream is = new ByteArrayInputStream(b);
+            Drawable pic2 = Drawable.createFromStream(is, "pic2.jpg");
+            return pic2;
+        }
+        else {
+            return null;
+        }
     }
 
     public void SetPic2(ParseFile inPic2) {
-        put("Pic2", inPic2);
+        put("pic2", inPic2);
     }
 
     public void SetPic2FromDrawable(Drawable inPic2) {
@@ -109,14 +115,20 @@ public class WorkOrder extends ParseObject implements Parcelable{
     }
 
     public Drawable GetPic3AsDrawable() throws ParseException {
-        byte[] b = GetPic3().getData();
-        ByteArrayInputStream is = new ByteArrayInputStream(b);
-        Drawable pic3 = Drawable.createFromStream(is, "pic3.jpg");
-        return pic3;
+        ParseFile pic3File = GetPic3();
+        if (pic3File != null) {
+            byte[] b = pic3File.getData();
+            ByteArrayInputStream is = new ByteArrayInputStream(b);
+            Drawable pic3 = Drawable.createFromStream(is, "pic3.jpg");
+            return pic3;
+        }
+        else {
+            return null;
+        }
     }
 
     public void SetPic3(ParseFile inPic3) {
-        put("Pic3", inPic3);
+        put("pic3", inPic3);
     }
 
     public void SetPic3FromDrawable(Drawable inPic3) {

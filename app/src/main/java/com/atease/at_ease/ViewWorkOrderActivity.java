@@ -2,6 +2,8 @@ package com.atease.at_ease;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.Context;
+import android.content.ContextWrapper;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
@@ -30,6 +32,8 @@ import com.parse.ParseUser;
 import com.parse.SaveCallback;
 
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 
 /**
@@ -140,12 +144,53 @@ public class ViewWorkOrderActivity extends Activity {
         TextView subject = (TextView) findViewById(R.id.view_work_order_subject);
         subject.setText(workOrder.GetSubject());
         Log.d("At-Ease", workOrder.GetSubject());
-//        TextView text = (TextView) findViewById(R.id.view_work_order_text);
-//        try {
-//            text.setText(workOrder.GetTextAsString());
-//        } catch (ParseException e) {
-//            e.printStackTrace();
-//        }
+        TextView text = (TextView) findViewById(R.id.view_work_order_text);
+        try {
+            text.setText(workOrder.GetTextAsString());
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        try {
+            ContextWrapper cw = new ContextWrapper(getApplicationContext());
+            // path to /data/data/yourapp/app_data/imageDir
+            File directory = cw.getDir("imageDir", Context.MODE_PRIVATE);
+            // Create imageDir
+            Drawable pic1 = workOrder.GetPic1AsDrawable();
+            Drawable pic2 = workOrder.GetPic2AsDrawable();
+            Drawable pic3 = workOrder.GetPic3AsDrawable();
+            File mypath1 =new File(directory,"pic1.png");
+            File mypath2 =new File(directory,"pic2.png");
+            File mypath3 =new File(directory,"pic3.png");
+            if (pic1 != null)
+            {
+                FileOutputStream out = null;
+                try {
+                    out = new FileOutputStream(mypath1);
+                    ((BitmapDrawable) pic1).getBitmap().compress(Bitmap.CompressFormat.PNG, 100, out); // bmp is your Bitmap instance
+                    // PNG is a lossless format, the compression factor (100) is ignored
+                } catch (Exception e) {
+                    e.printStackTrace();
+                } finally {
+                    try {
+                        if (out != null) {
+                            out.close();
+                        }
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+                TextSliderView textSliderView = new TextSliderView(this);
+                textSliderView
+                        .description("Picture 1")
+                        .image(mypath1);
+
+                sliderShow.addSlider(textSliderView);
+            }
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+
     }
 
     @Override
