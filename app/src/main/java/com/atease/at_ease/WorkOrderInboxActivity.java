@@ -1,10 +1,9 @@
 package com.atease.at_ease;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.os.Handler;
+import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -14,15 +13,11 @@ import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
-import com.mikepenz.materialdrawer.Drawer;
-import com.mikepenz.materialdrawer.DrawerBuilder;
-import com.mikepenz.materialdrawer.model.DividerDrawerItem;
-import com.mikepenz.materialdrawer.model.PrimaryDrawerItem;
-import com.mikepenz.materialdrawer.model.SecondaryDrawerItem;
-import com.mikepenz.materialdrawer.model.interfaces.IDrawerItem;
+import com.afollestad.materialdialogs.DialogAction;
+import com.afollestad.materialdialogs.MaterialDialog;
+import com.parse.DeleteCallback;
 import com.parse.FindCallback;
 import com.parse.ParseException;
-import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
 import com.software.shell.fab.ActionButton;
@@ -75,24 +70,61 @@ public class WorkOrderInboxActivity extends AppCompatActivity {
             @Override
             public boolean swipeLeft(final WorkOrder inWorkOrder) {
                 final int pos = removeWorkOrder(inWorkOrder);
-                displaySnackbar(inWorkOrder.GetSubject() + " removed", "Undo", new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        addWorkOrder(pos, inWorkOrder);
-                    }
-                });
+                new MaterialDialog.Builder(WorkOrderInboxActivity.this)
+                        .title("Confirm Deletion")
+                        .content("Are you sure you want to cancel this Work Order? This action can not be undone!")
+                        .positiveText("Delete")
+                        .negativeText("Cancel")
+                        .onNegative(new MaterialDialog.SingleButtonCallback() {
+                            @Override
+                            public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                                return;
+                            }
+                        })
+                        .onPositive(new MaterialDialog.SingleButtonCallback() {
+                            @Override
+                            public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                                ParseUser currentUser = ParseUser.getCurrentUser();
+                                if(inWorkOrder.getTenant() == currentUser) {
+                                    inWorkOrder.deleteInBackground(new DeleteCallback() {
+                                        public void done(ParseException e) {
+                                            if (e != null) {
+                                                // There was some error.
+                                                Log.d("At-Ease", "Work order deletion not successful: " + e.getMessage());
+                                                displaySnackbar(inWorkOrder.getSubject() + " deletion not successful", null, null);
+                                                return;
+                                            } else {
+                                                Log.i("At-Ease", "Work order deleted");
+                                                displaySnackbar(inWorkOrder.getSubject() + " deleted", null, null);
+                                            }
+                                        }
+                                    });
+                                } else {
+                                    Log.i("At-Ease", "Managers are not allowed to cancel a work order");
+                                    displaySnackbar("Managers are not allowed to cancel a work order", null, null);
+                                }
+
+                            }
+                        })
+                        .show();
+//                displaySnackbar(inWorkOrder.getSubject() + " removed", "Undo", new View.OnClickListener() {
+//                    @Override
+//                    public void onClick(View v) {
+//                        addWorkOrder(pos, inWorkOrder);
+//                    }
+//                });
                 return true;
             }
 
             @Override
             public boolean swipeRight(WorkOrder inWorkOrder) {
-                displaySnackbar(inWorkOrder.GetSubject() + " loved", null, null);
+                displaySnackbar(inWorkOrder.getSubject() + " loved", null, null);
                 return true;
             }
 
             @Override
             public void onClick(WorkOrder inWorkOrder) {
-                displaySnackbar(inWorkOrder.GetSubject() + " clicked", null, null);
+                displaySnackbar(inWorkOrder.getSubject() + " clicked", null, null);
                 Intent intent = new Intent(WorkOrderInboxActivity.this, ViewWorkOrderActivity.class);
                 Log.d("At-Ease", ":" + inWorkOrder.getObjectId());
                 intent.putExtra("workOrder", inWorkOrder.getObjectId());
@@ -101,7 +133,7 @@ public class WorkOrderInboxActivity extends AppCompatActivity {
 
             @Override
             public void onLongClick(WorkOrder inWorkOrder) {
-                displaySnackbar(inWorkOrder.GetSubject() + " long-clicked", null, null);
+                displaySnackbar(inWorkOrder.getSubject() + " long-clicked", null, null);
             }
         });
 

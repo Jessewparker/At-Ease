@@ -1,5 +1,6 @@
 package com.atease.at_ease;
 
+import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,6 +21,8 @@ public class WorkOrderInboxRecyclerViewAdapter extends RecyclerView.Adapter<Recy
         public TextView nameView;
         public TextView dateView;
         public TextView subjectView;
+        public Context context;
+
 
         public WorkOrderViewHolder (View v) {
             super(v);
@@ -27,6 +30,7 @@ public class WorkOrderInboxRecyclerViewAdapter extends RecyclerView.Adapter<Recy
             nameView = (TextView) v.findViewById(R.id.work_order_inbox_name);
             dateView = (TextView) v.findViewById(R.id.work_order_inbox_date);
             subjectView = (TextView) v.findViewById(R.id.work_order_inbox_subject);
+            context = v.getContext();
 
         }
     }
@@ -49,7 +53,10 @@ public class WorkOrderInboxRecyclerViewAdapter extends RecyclerView.Adapter<Recy
         WorkOrderViewHolder workOrderViewHolder = (WorkOrderViewHolder) holder;
 //        workOrderViewHolder.nameView.setText(item.get_name());
 //        workOrderViewHolder.dateView.setText(item.get_date());
-        workOrderViewHolder.subjectView.setText(item.GetSubject());
+        workOrderViewHolder.subjectView.setText(item.getSubject());
+        if (item.isManagerDone()){
+            workOrderViewHolder.nameView.setTextColor(((WorkOrderViewHolder) holder).context.getResources().getColor(R.color.colorAccent));
+        }
         workOrderViewHolder.data = item;
     }
 

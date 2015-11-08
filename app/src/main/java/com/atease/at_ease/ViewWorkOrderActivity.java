@@ -1,35 +1,20 @@
 package com.atease.at_ease;
 
 import android.app.Activity;
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.ContextWrapper;
-import android.content.Intent;
-import android.database.Cursor;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
-import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
-import android.provider.MediaStore;
-import android.support.annotation.NonNull;
 import android.util.Log;
-import android.view.View;
-import android.widget.EditText;
 import android.widget.TextView;
 
-import com.afollestad.materialdialogs.DialogAction;
-import com.afollestad.materialdialogs.MaterialDialog;
 import com.daimajia.slider.library.SliderLayout;
 import com.daimajia.slider.library.SliderTypes.TextSliderView;
-import com.gc.materialdesign.views.ButtonFlat;
 import com.parse.ParseException;
 import com.parse.ParseObject;
-import com.parse.ParseQuery;
 import com.parse.ParseUser;
-import com.parse.SaveCallback;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -71,7 +56,7 @@ public class ViewWorkOrderActivity extends Activity {
         sliderShow.setPresetTransformer(SliderLayout.Transformer.FlipPage);
         sliderShow.stopAutoCycle();
 
-        ParseUser currentUser = workOrder.GetTenant();
+        ParseUser currentUser = workOrder.getTenant();
         if (currentUser != null) {
             // do stuff with the user
             TextView tenantTextViewName = (TextView) findViewById(R.id.new_work_order_tenant_name);
@@ -142,11 +127,11 @@ public class ViewWorkOrderActivity extends Activity {
         }
 
         TextView subject = (TextView) findViewById(R.id.view_work_order_subject);
-        subject.setText(workOrder.GetSubject());
-        Log.d("At-Ease", workOrder.GetSubject());
+        subject.setText(workOrder.getSubject());
+        Log.d("At-Ease", workOrder.getSubject());
         TextView text = (TextView) findViewById(R.id.view_work_order_text);
         try {
-            text.setText(workOrder.GetTextAsString());
+            text.setText(workOrder.getTextAsString());
         } catch (ParseException e) {
             e.printStackTrace();
         }
@@ -155,9 +140,9 @@ public class ViewWorkOrderActivity extends Activity {
             // path to /data/data/yourapp/app_data/imageDir
             File directory = cw.getDir("imageDir", Context.MODE_PRIVATE);
             // Create imageDir
-            Drawable pic1 = workOrder.GetPic1AsDrawable();
-            Drawable pic2 = workOrder.GetPic2AsDrawable();
-            Drawable pic3 = workOrder.GetPic3AsDrawable();
+            Drawable pic1 = workOrder.getPic1AsDrawable();
+            Drawable pic2 = workOrder.getPic2AsDrawable();
+            Drawable pic3 = workOrder.getPic3AsDrawable();
             File mypath1 =new File(directory,"pic1.png");
             File mypath2 =new File(directory,"pic2.png");
             File mypath3 =new File(directory,"pic3.png");

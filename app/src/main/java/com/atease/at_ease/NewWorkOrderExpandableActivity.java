@@ -15,12 +15,7 @@ import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.util.Log;
 import android.view.View;
-import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.TableLayout;
 import android.widget.TextView;
 
 import com.afollestad.materialdialogs.DialogAction;
@@ -28,19 +23,13 @@ import com.afollestad.materialdialogs.MaterialDialog;
 import com.daimajia.slider.library.SliderLayout;
 import com.daimajia.slider.library.SliderTypes.TextSliderView;
 import com.gc.materialdesign.views.ButtonFlat;
-import com.parse.FindCallback;
-import com.parse.LogInCallback;
 import com.parse.ParseException;
-import com.parse.ParseFile;
 import com.parse.ParseObject;
-import com.parse.ParseQuery;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
 
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by Mark on 10/4/2015.
@@ -272,15 +261,15 @@ public class NewWorkOrderExpandableActivity extends Activity {
 
             String text = ((EditText) findViewById(R.id.new_work_order_text)).getText().toString();
             String subject = ((EditText) findViewById(R.id.new_work_order_subject)).getText().toString();
-            workOrder.SetTextFromString(text);
-            workOrder.SetSubject(subject);
+            workOrder.setTextFromString(text);
+            workOrder.setSubject(subject);
 
             switch (image_drawable.size()) {
-                case 3: workOrder.SetPic3FromDrawable(image_drawable.get(2));
+                case 3: workOrder.setPic3FromDrawable(image_drawable.get(2));
                     Log.d("At-Ease", "Setting Pic 3");
-                case 2: workOrder.SetPic2FromDrawable(image_drawable.get(1));
+                case 2: workOrder.setPic2FromDrawable(image_drawable.get(1));
                     Log.d("At-Ease", "Setting Pic 2");
-                case 1: workOrder.SetPic1FromDrawable(image_drawable.get(0));
+                case 1: workOrder.setPic1FromDrawable(image_drawable.get(0));
                     Log.d("At-Ease", "Setting Pic 1");
                     break;
                 default: break;
@@ -290,10 +279,10 @@ public class NewWorkOrderExpandableActivity extends Activity {
             ParseUser manager = liveAt.getParseUser("owner").fetchIfNeeded();
 
             if (manager != null) {
-                workOrder.SetManager(manager);
+                workOrder.setManager(manager);
             }
 
-            workOrder.SetTenant(currentUser);
+            workOrder.setTenant(currentUser);
 
             Log.d("MYAPPTAG", "Saving Parse Object from NewWorkOrderActivity");
             workOrder.saveInBackground(new SaveCallback() {
