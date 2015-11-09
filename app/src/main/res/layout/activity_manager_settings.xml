@@ -1,0 +1,149 @@
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent" android:layout_height="fill_parent">
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    tools:context="com.atease.at_ease.ManagerSettingsActivity"
+    android:id="@+id/relative"
+    android:scrollIndicators="right">
+
+    <LinearLayout
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+
+        android:id="@+id/linearLayout"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="To use stripe payments you must first connect your stripe account"
+            android:id="@+id/tvTitle"
+        />
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Connect Stripe Account"
+            android:id="@+id/btnStripeConnect"
+
+       />
+
+        <Switch
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Stripe Payments"
+            android:id="@+id/swUseStripe"
+            android:checked="false" />
+    </LinearLayout>
+
+    <RelativeLayout
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_below="@+id/linearLayout"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:id="@+id/relativeLayout2"
+        android:layout_alignParentBottom="true">
+
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Here you can edit information about your property"
+            android:id="@+id/tvGeneral"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:textColor="@color/primary"/>
+
+
+
+        <com.rey.material.widget.CheckBox
+            style="@style/Material.Drawable.CheckBox"
+            android:id="@+id/cbOccupied"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/tvGeneral"
+            android:text="Occupied"
+            android:layout_marginTop="30dp"
+            android:textColor="@color/primary"
+            android:textSize="22dp" />
+
+        <com.rengwuxian.materialedittext.MaterialEditText
+            android:id="@+id/etMonthlyRent"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:met_baseColor="@color/primary_text"
+            app:met_primaryColor="@color/primary_dark"
+            app:met_errorColor="@color/error"
+            app:met_floatingLabel="highlight"
+            app:met_floatingLabelText="Monthly Rent Amount"
+            app:met_floatingLabelTextColor = "@color/primary"
+            android:text= "$1250.00"
+            android:hint="Monthly Rent Amount"
+            android:editable="true"
+            android:enabled="true"
+            android:layout_below="@+id/cbOccupied"
+            android:layout_marginTop="30dp" />
+
+        <com.rengwuxian.materialedittext.MaterialEditText
+            android:id="@+id/etProrateDays"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:met_baseColor="@color/primary_text"
+            app:met_primaryColor="@color/primary_dark"
+            app:met_errorColor="@color/error"
+            app:met_floatingLabel="highlight"
+            app:met_floatingLabelText="Number of days to prorate this month"
+            app:met_floatingLabelTextColor = "@color/primary"
+            android:text= "0"
+            android:hint="Number of days to prorate this month"
+            android:editable="true"
+            android:enabled="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_below="@+id/etMonthlyRent" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="Date that the next rent payment is due"
+            android:id="@+id/tvRentDue"
+            android:layout_below="@+id/etProrateDays"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:textColor="@color/primary"/>
+
+        <com.prolificinteractive.materialcalendarview.MaterialCalendarView
+            android:id="@+id/calendarView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            app:mcv_showOtherDates="all"
+            app:mcv_selectionColor="@color/primary"
+            android:layout_below="@+id/tvRentDue"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true" />
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Save Settings"
+            android:id="@+id/btnSave"
+            android:layout_below="@+id/calendarView"
+
+            />
+
+
+    </RelativeLayout>
+
+</RelativeLayout>
+</ScrollView>

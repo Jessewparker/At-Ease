@@ -75,6 +75,24 @@ public class MainActivity extends AppCompatActivity{
             }
         });
 
+        Button btnManagerPayments = (Button) findViewById(R.id.manager_payments);
+        btnManagerPayments.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(MainActivity.this, ManagerPaymentsActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        Button btnTenantPayments = (Button) findViewById(R.id.tenant_payments);
+        btnTenantPayments.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(MainActivity.this, TenantPaymentsActivity.class);
+                startActivity(intent);
+            }
+        });
+
         Button manny = (Button) findViewById(R.id.manny);
         manny.setOnClickListener(new View.OnClickListener() {
             @Override
