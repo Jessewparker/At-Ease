@@ -24,4 +24,14 @@
         android:layout_below="@+id/btnAddStripeAccount"
         android:layout_alignLeft="@+id/btnAddStripeAccount"
         android:layout_alignStart="@+id/btnAddStripeAccount" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Property Settings"
+        android:id="@+id/btnMgrSettings"
+        android:layout_below="@+id/btnPaymentHistory"
+        android:layout_alignLeft="@+id/btnPaymentHistory"
+        android:layout_alignStart="@+id/btnPaymentHistory" />
+
 </RelativeLayout>

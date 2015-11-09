@@ -52,11 +52,17 @@
         </activity>
         <activity
             android:name=".RentPayActivity"
-            android:label="@string/title_activity_rent_pay" >
+            android:label="@string/title_activity_rent_pay"
+            android:windowSoftInputMode="stateHidden">
         </activity>
         <activity
             android:name=".PaymentHistoryActivity"
             android:label="@string/title_activity_payment_history" >
+        </activity>
+        <activity
+            android:name=".ManagerSettingsActivity"
+            android:label="@string/title_activity_manager_settings"
+            android:windowSoftInputMode="stateHidden">
         </activity>
     </application>
 

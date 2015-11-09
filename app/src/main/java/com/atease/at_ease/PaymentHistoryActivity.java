@@ -80,14 +80,13 @@ public class PaymentHistoryActivity extends AppCompatActivity {
         ParseQuery<Payment> managerQuery = ParseQuery.getQuery("Payment");
         tenantQuery.whereEqualTo("tenant",ParseUser.getCurrentUser());
         managerQuery.whereEqualTo("manager", ParseUser.getCurrentUser());
-        //tenantQuery.include("User");
-        //managerQuery.include("User");
         List<ParseQuery<Payment>> queries = new ArrayList<ParseQuery<Payment>>();
         queries.add(tenantQuery);
         queries.add(managerQuery);
 
         ParseQuery<Payment> mainQuery = ParseQuery.or(queries);
         mainQuery.include("User");
+        mainQuery.orderByDescending("createdAt");
 
         mainQuery.findInBackground(new FindCallback<Payment>() {
             @Override

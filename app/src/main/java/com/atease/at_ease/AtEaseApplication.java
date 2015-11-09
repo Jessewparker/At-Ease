@@ -17,6 +17,8 @@ import com.mikepenz.materialdrawer.model.interfaces.IDrawerItem;
 import com.parse.Parse;
 import com.parse.ParseObject;
 
+import net.danlew.android.joda.JodaTimeAndroid;
+
 /**
  * Created by Mark on 10/8/2015.
  */
@@ -31,6 +33,7 @@ public class AtEaseApplication extends Application {
         ParseObject.registerSubclass(ManagerSettings.class);
         ParseObject.registerSubclass(Property.class);
         Parse.initialize(this, "RWYMOqEP4OgQ4oZIqFjyqHGxG7uYzbaPDWuzvZPq", "WJgweZXzSzoCgsdwgv5h5VzHwryAiAV1FvTFrZyF");
+        JodaTimeAndroid.init(this);
     }
 
     public DrawerBuilder getNewDrawerBuilder() {

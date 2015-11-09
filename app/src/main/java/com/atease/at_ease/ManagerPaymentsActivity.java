@@ -52,21 +52,18 @@ public class ManagerPaymentsActivity extends AppCompatActivity {
         btnPaymentHistory.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(ManagerPaymentsActivity.this, MainActivity.class);
+                Intent intent = new Intent(ManagerPaymentsActivity.this, PaymentHistoryActivity.class);
                 startActivity(intent);
             }
         });
-
-
-
-
-
-
-
-
-
-
-
+        Button btnMgrSettings = (Button) findViewById(R.id.btnMgrSettings);
+        btnMgrSettings.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(ManagerPaymentsActivity.this, ManagerSettingsActivity.class);
+                startActivity(intent);
+            }
+        });
 
 
     }

@@ -1,5 +1,6 @@
 package com.atease.at_ease;
 
+import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -13,12 +14,33 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.atease.at_ease.models.ManagerSettings;
+import com.atease.at_ease.models.Payment;
+import com.atease.at_ease.models.Property;
+import com.parse.FindCallback;
+import com.parse.GetCallback;
+import com.parse.Parse;
+import com.parse.ParseException;
+import com.parse.ParseObject;
+import com.parse.ParseQuery;
 import com.parse.ParseUser;
 import com.stripe.android.*;
 import com.stripe.android.model.Card;
 import com.stripe.android.model.Token;
+import com.stripe.android.util.DateUtils;
 import com.stripe.model.Charge;
 //import com.stripe.Stripe;
+
+import net.danlew.android.joda.JodaTimeAndroid;
+
+import org.joda.time.DateTime;
+
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import fr.ganfra.materialspinner.MaterialSpinner;
 
@@ -43,14 +65,39 @@ public class RentPayActivity extends AppCompatActivity {
     ParseUser currentUser;
     Stripe stripe;
 
+    ParseObject property;
+    ParseUser manager;
+    ParseObject stripeAuth;
+    String fixedAmount;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_rent_pay);
 
-
         currentUser = ParseUser.getCurrentUser();
-    // need property and manager -> manager's stripeAuth settings to make the payment.
+        try{
+            currentUser.fetch();
+            property = currentUser.getParseObject("liveAt");
+            property.fetch();
+            manager = property.getParseUser("owner");
+            manager.fetch();
+        }catch(ParseException ex){
+            Log.d(TAG, ex.getMessage());
+        }
+
+        getStripeAuth();
+
+        Date date = property.getDate("nextRentDue");
+        DateTime dzate = new DateTime(date);
+        Log.d(TAG, "day: " + Integer.toString(dzate.getDayOfMonth()));
+        Log.d(TAG, "month: " + Integer.toString(dzate.getMonthOfYear()));
+        Log.d(TAG, "year: " + Integer.toString(dzate.getYear()));
+
+
+
+
         stateSpinner = (MaterialSpinner) findViewById(R.id.spinnerState);
         ArrayAdapter<CharSequence> adapterState = ArrayAdapter.createFromResource(this, R.array.states_array, android.R.layout.simple_spinner_item);
         adapterState.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -83,21 +130,39 @@ public class RentPayActivity extends AppCompatActivity {
         tvError = (TextView) findViewById(R.id.tvError);
         btnConfirm = (Button) findViewById(R.id.btnConfirm);
 
+
+        etCardHolderName.setText("Jesse Parker");
+        etCardHolderAddressOne.setText("718 Vicksburg Drive");
+        etCity.setText("Tuscaloosa");
+        etZipcode.setText("35406");
+        etCardNumber.setText("4242424242424242");
+        etCardCVC.setText("123");
+        etAmount.setText("5000");
+
+        Log.d(TAG, property.getString("nickname"));
+        Log.d(TAG, manager.getEmail());
+        Log.d(TAG, currentUser.getEmail());
+        setRentDuetv();
+
+
         btnConfirm.setOnClickListener(new View.OnClickListener() {
+
+
+
+
             @Override
             public void onClick(View v) {
                 Log.d(TAG, "clicked Confirm button");
 
-               /* Log.d(TAG, "spinner is: " + stateSpinner.getSelectedItem().toString());
+                Log.d(TAG, "spinner is: " + stateSpinner.getSelectedItem().toString());
                 Log.d(TAG, "Card holder is: " + etCardHolderName.getText().toString());
                 Log.d(TAG,"cardholdername is: " + etCardHolderName.getText());
-                Log.d(TAG,"billing address is: " + etCardHolderAddressOne.getText());*/
+                Log.d(TAG,"billing address is: " + etCardHolderAddressOne.getText());
 
                 String error = "Error, Required Fields:\n";
                 error += findErrors();
-                Log.d(TAG,"Errors are : " + error);
-                if (error.equals("Error, Required Fields:\n")){
 
+                if (error.equals("Error, Required Fields:\n")){
                     Card card = makeCard();
                     if (!card.validateCard()){
                         //false card
@@ -108,66 +173,173 @@ public class RentPayActivity extends AppCompatActivity {
                         Log.d(TAG, "Process the payment!");
                         tvError.setVisibility(View.GONE);
                         try{
-                            stripe = new Stripe(StripeUtils.TEST_SECRET_KEY);
+                            Log.d(TAG, " in the try to make stripe");
+                            stripe = new Stripe(StripeUtils.PUBLISHABLE_KEY);
+                            stripe.createToken(
+                                    card,
+                                    new TokenCallback() {
+                                        public void onSuccess(Token token) {
+                                            fixedAmount = fixAmount(etAmount.getText().toString());
+                                            final Map<String, Object> chargeParams = new HashMap<String, Object>();
+                                            chargeParams.put("amount", Integer.parseInt(fixedAmount));
+                                            chargeParams.put("destination",stripeAuth.getString("stripe_user_id"));
+                                            chargeParams.put("currency", "usd");
+                                            chargeParams.put("card", token.getId());
+                                            Log.d(TAG,"inside OnSuccess");
+
+                                            new AsyncTask<Void, Void, Void>() {
+                                                Charge charge;
+                                                @Override
+                                                protected Void doInBackground(Void... params) {
+                                                    try {
+                                                        com.stripe.Stripe.apiKey = StripeUtils.TEST_SECRET_KEY;
+                                                        charge = Charge.create(chargeParams);
+
+                                                    } catch (Exception e) {
+                                                        Toast.makeText(RentPayActivity.this,
+                                                                "Error creating charge :" + e.getLocalizedMessage(),
+                                                                Toast.LENGTH_LONG
+                                                        ).show();
+                                                    }
+                                                    return null;
+                                                }
+
+                                                protected void onPostExecute(Void result) {
+                                                    persistPayment();
+                                                    adjustRent();
+                                                    finish();
+                                                   // Toast.makeText(TenantPaymentsActivity,
+                                                     //       //might want to change this
+                                                      //      "Card Successfully Charged",
+                                                      //      Toast.LENGTH_LONG
+                                                   // ).show();
+                                                }
+                                            }.execute();
+                                        }
+                                        public void onError(Exception error) {
+                                            // Show localized error message
+                                            Toast.makeText(RentPayActivity.this,
+                                                    error.getMessage().toString(),
+                                                    Toast.LENGTH_LONG
+                                            ).show();
+                                        }
+                                    }
+                            );
                         }
-                        catch(Exception ex){
-                            Log.d(TAG,ex.getMessage());
-                            Toast.makeText(getApplicationContext(),
+                        catch(Exception ex) {
+                            Log.d(TAG, ex.getMessage());
+                            Toast.makeText(RentPayActivity.this,
                                     "Problem Authenticating the At-Ease Stripe Account",
                                     Toast.LENGTH_LONG
                             ).show();
+
                         }
-                        /*
-                        Token token;
-                        stripe.createToken(
-                                card,
-                                new TokenCallback() {
-                                    public void onSuccess(Token token) {
-                                        // Send token to your server
-                                        tokeen = token;
-                                    }
-
-                                    public void onError(Exception error) {
-                                        // Show localized error message
-                                        Toast.makeText(getApplicationContext(),
-                                                error.getMessage().toString(),
-                                                Toast.LENGTH_LONG
-                                        ).show();
-                                    }
-                                }
-                        );*/
-                        //process card
-                        Charge charge = new Charge();
-
                     }
                 }
                 else{
                     tvError.setVisibility(View.VISIBLE);
                     tvError.setText(error);
+                    Log.d(TAG, "Errors are : " + error);
                 }
 
             }
         });
 
+
     }
 
-    /**
-     *  etCardHolderName;
-      etCardHolderAddressOne;
-      etCardHolderAddressTwo;
-      etCity;
-      stateSpinner;
-      countrySpinner;
-      etCardNumber;
-      etCardCVC;
-      expMonthSpinner;
-      expYearSpinner;
-      etAmount;
-      tvDueRent;
-       tvError;
-     Button btnConfirm;
+    private void persistPayment(){
+        double amount = Double.parseDouble(fixedAmount);
+        amount /= 100.0;
 
-     */
+        ParseObject payment = ParseObject.create("Payment");
+        payment.put("manager", manager);
+        payment.put("tenant", currentUser);
+        payment.put("property",property);
+        payment.put("amount", amount);
+        payment.saveInBackground();
+
+    }
+
+    private void adjustRent(){
+        int amountPayed = Integer.parseInt(fixedAmount);
+        int amountNeeded = property.getInt("rentAmount");
+        int differ = amountNeeded - amountPayed;
+        if(differ > 0 ){
+            property.put("rentAmount", differ);
+        }
+        else{ //move up one month,
+            int monthly = property.getInt("monthlyRentDue");
+            Date date = property.getDate("nextRentDue");
+            DateTime dt = new DateTime(date);
+            dt = dt.plusMonths(1);
+            amountPayed = differ * -1; // extra that rolled over if any
+            while(amountPayed > monthly){
+                amountPayed -= monthly;
+                dt = dt.plusMonths(1);
+            }
+            differ = monthly - amountPayed;
+            property.put("rentAmount", differ);
+            property.put("nextRentDue", dt.toDate());
+        }
+        property.saveInBackground();
+    }
+
+
+    private String fixAmount(String amount){
+        String ans;
+
+        if(amount.contains(".")){
+            Log.d(TAG,amount);
+            String[] ansSplit = amount.split("[.]");
+            Log.d(TAG,ansSplit[0]);
+            Log.d(TAG,ansSplit[1]);
+            if(ansSplit[1].length() > 2){
+                ansSplit[1] = ansSplit[1].substring(0,2);
+                ans = ansSplit[0] + ansSplit[1];
+            }
+            else if(ansSplit[1].length() == 2){
+                ans = ansSplit[0] + ansSplit[1];
+            }
+            else if(ansSplit[1].length() == 1){
+                ans = ansSplit[0] + ansSplit[1] + "0";
+            }
+            else{
+                ans = ansSplit[0] + "00";
+            }
+        }
+        else{
+            ans = amount += "00";
+        }
+        return ans;
+    }
+
+
+    private void setRentDuetv(){
+        String rentdue = Integer.toString(property.getInt("rentAmount"));
+        rentdue = rentdue.substring(0, rentdue.length() - 2) + "." + rentdue.substring(rentdue.length() - 2, rentdue.length());
+        DateFormat df = new SimpleDateFormat("MMM d, yyyy");
+        String date = df.format(property.getDate("nextRentDue"));
+        rentdue = "$" + rentdue + " due by " + date;
+        tvDueRent.setText(rentdue);
+    }
+
+
+    private void getStripeAuth(){
+        ParseQuery<ParseObject> stripeAuthQuery = ParseQuery.getQuery("StripeAuth");
+        stripeAuthQuery.whereEqualTo("manager", manager);
+
+        stripeAuthQuery.getFirstInBackground(new GetCallback<ParseObject>() {
+            @Override
+            public void done(ParseObject stripeA, ParseException e) {
+                if (e == null) {
+                    stripeAuth = stripeA;
+                } else {
+                    Log.d(TAG, "couldn't get stripeAuth from Parse");
+                }
+            }
+        });
+    }
 
 
     private String findErrors(){
@@ -239,15 +411,11 @@ public class RentPayActivity extends AppCompatActivity {
         card.setAddressLine2(etCardHolderAddressTwo.getText().toString());
         card.setAddressCity(etCity.getText().toString());
         card.setAddressState(stateSpinner.getSelectedItem().toString());
-        card.setAddressZip("52525");
+        card.setAddressZip(etZipcode.getText().toString());
         card.setAddressCountry(countrySpinner.getSelectedItem().toString());
 
 
         return card;
-    }
-
-    private void makeCharge(Card card){
-
     }
 
 

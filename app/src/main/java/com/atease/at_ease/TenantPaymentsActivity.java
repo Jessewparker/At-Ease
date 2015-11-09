@@ -12,27 +12,34 @@ import android.widget.TextView;
 
 import com.parse.LogInCallback;
 import com.parse.ParseException;
+import com.parse.ParseObject;
 import com.parse.ParseUser;
 
-public class TenantPaymentsActivity extends AppCompatActivity {
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 
+public class TenantPaymentsActivity extends AppCompatActivity {
+    TextView tvTitle;
+    TextView tvRent;
+    ParseObject property;
     static final String TAG ="TenantPaymentsActivity";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_tenant_payments);
 
-        TextView tvTitle = (TextView) findViewById(R.id.tvTitle);
+
+        tvTitle = (TextView) findViewById(R.id.tvTitle);
         tvTitle.setText("Rent Due ");
-        TextView tvRent = (TextView) findViewById(R.id.tvRent);
-        tvRent.setText("$590");
+        //TextView tvRent = (TextView) findViewById(R.id.tvRent);
+        //tvRent.setText("$590");
 
         ParseUser currentUser = ParseUser.getCurrentUser();
         if (currentUser != null) {
             currentUser.logOut();
             Log.d(TAG, "current User has been logged out");
         }
-        ParseUser.logInInBackground("jesseTenant", "password", new LogInCallback() {
+       /* ParseUser.logInInBackground("jesseTenant", "password", new LogInCallback() {
             public void done(ParseUser user, ParseException e) {
                 if (user != null) {
                     Log.d(TAG, "Tenant User Login successful");
@@ -40,7 +47,20 @@ public class TenantPaymentsActivity extends AppCompatActivity {
                     Log.d(TAG, "Tenant User Login Failed");
                 }
             }
-        });
+        });*/
+
+
+
+        try{
+            ParseUser.logIn("jesseTenant","password");
+            currentUser = ParseUser.getCurrentUser();
+            currentUser.fetch();
+            property = currentUser.getParseObject("liveAt");
+            property.fetch();
+            setRentDuetv();
+        }catch(ParseException ex){
+            Log.d(TAG,ex.getMessage());
+        }
 
 
         Button btnPayRent = (Button) findViewById(R.id.btnPayRent);
@@ -64,6 +84,14 @@ public class TenantPaymentsActivity extends AppCompatActivity {
 
 
 
+    }
+    private void setRentDuetv(){
+        String rentdue = Integer.toString(property.getInt("rentAmount"));
+        rentdue = rentdue.substring(0, rentdue.length() - 2) + "." + rentdue.substring(rentdue.length() - 2, rentdue.length());
+        DateFormat df = new SimpleDateFormat("MMM d, yyyy");
+        String date = df.format(property.getDate("nextRentDue"));
+        rentdue = "$" + rentdue + " due by " + date;
+        tvTitle.setText(rentdue);
     }
 
     @Override

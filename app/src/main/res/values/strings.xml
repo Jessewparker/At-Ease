@@ -102,4 +102,5 @@
         <item>2029</item>
         <item>2030</item>
     </string-array>
+    <string name="title_activity_manager_settings">ManagerSettingsActivity</string>
 </resources>
