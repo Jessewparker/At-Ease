@@ -34,7 +34,14 @@
         <activity android:name=".NewWorkOrderExpandableActivity"
             android:windowSoftInputMode="adjustPan"/>
         <activity android:name=".WorkOrderInboxActivity"/>
+
         <activity android:name=".ViewWorkOrderActivity"/>
+
+        <activity android:name=".ListUsersActivity"/>
+        <activity android:name=".MessagingActivity"/>
+        <service android:name=".MessageService"></service>
+    </application>
+
 
         <activity android:name=".ParseSIgnIn" />
         <activity
