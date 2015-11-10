@@ -30,17 +30,22 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".ParseSIgnIn"/>
-        <activity android:name=".NewWorkOrderExpandableActivity"
-            android:windowSoftInputMode="adjustPan"/>
-        <activity android:name=".WorkOrderInboxActivity"/>
-        <activity android:name=".ViewWorkOrderActivity"/>
+      
+
+        
+
+        <activity android:name=".ListUsersActivity"/>
+        <activity android:name=".MessagingActivity"/>
+        <service android:name=".MessageService"></service>
+    
+
 
         <activity android:name=".ParseSIgnIn" />
         <activity
             android:name=".NewWorkOrderExpandableActivity"
             android:windowSoftInputMode="adjustPan" />
         <activity android:name=".WorkOrderInboxActivity" />
+        <activity android:name=".ViewWorkOrderActivity"/>
         <activity
             android:name=".ManagerPaymentsActivity"
             android:label="@string/title_activity_manager_payments" >

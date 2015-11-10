@@ -9,6 +9,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
 
 import com.mikepenz.materialdrawer.AccountHeader;
 import com.mikepenz.materialdrawer.AccountHeaderBuilder;
@@ -75,6 +76,7 @@ public class MainActivity extends AppCompatActivity{
             }
         });
 
+
         Button btnManagerPayments = (Button) findViewById(R.id.manager_payments);
         btnManagerPayments.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -93,6 +95,19 @@ public class MainActivity extends AppCompatActivity{
             }
         });
 
+        Button messaging = (Button) findViewById(R.id.messaging);
+        messaging.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(MainActivity.this, ListUsersActivity.class);
+                Intent serviceIntent = new Intent(getApplicationContext(), MessageService.class);
+
+                startService(serviceIntent);
+                startActivity(intent);
+            }
+        });
+
+
         Button manny = (Button) findViewById(R.id.manny);
         manny.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -106,6 +121,7 @@ public class MainActivity extends AppCompatActivity{
                     public void done(ParseUser user, ParseException e) {
                         if (user != null) {
                             // Hooray! The user is logged in.
+                            toastLogin(user.getUsername());
                             Log.i("At-Ease", "User " + user.getUsername() + " Logged in");
                         } else {
                             Log.d("MYAPPTAG", "User Log-in Failed");
@@ -128,6 +144,7 @@ public class MainActivity extends AppCompatActivity{
                     public void done(ParseUser user, ParseException e) {
                         if (user != null) {
                             // Hooray! The user is logged in.
+                            toastLogin(user.getUsername());
                             Log.i("At-Ease", "User " + user.getUsername() + " Logged in");
                         } else {
                             Log.d("MYAPPTAG", "User Log-in Failed");
@@ -150,6 +167,7 @@ public class MainActivity extends AppCompatActivity{
                     public void done(ParseUser user, ParseException e) {
                         if (user != null) {
                             // Hooray! The user is logged in.
+                            toastLogin(user.getUsername());
                             Log.i("At-Ease", "User " + user.getUsername() + " Logged in");
                         } else {
                             Log.d("MYAPPTAG", "User Log-in Failed");
@@ -172,6 +190,7 @@ public class MainActivity extends AppCompatActivity{
                     public void done(ParseUser user, ParseException e) {
                         if (user != null) {
                             // Hooray! The user is logged in.
+                            toastLogin(user.getUsername());
                             Log.i("At-Ease", "User " + user.getUsername() + " Logged in");
                         } else {
                             Log.d("MYAPPTAG", "User Log-in Failed");
@@ -194,6 +213,7 @@ public class MainActivity extends AppCompatActivity{
                     public void done(ParseUser user, ParseException e) {
                         if (user != null) {
                             // Hooray! The user is logged in.
+                            toastLogin(user.getUsername());
                             Log.i("At-Ease", "User " + user.getUsername() + " Logged in");
                         } else {
                             Log.d("MYAPPTAG", "User Log-in Failed");
@@ -216,6 +236,7 @@ public class MainActivity extends AppCompatActivity{
                     public void done(ParseUser user, ParseException e) {
                         if (user != null) {
                             // Hooray! The user is logged in.
+                            toastLogin(user.getUsername());
                             Log.i("At-Ease", "User " + user.getUsername() + " Logged in");
                         } else {
                             Log.d("MYAPPTAG", "User Log-in Failed");
@@ -238,6 +259,7 @@ public class MainActivity extends AppCompatActivity{
                     public void done(ParseUser user, ParseException e) {
                         if (user != null) {
                             // Hooray! The user is logged in.
+                            toastLogin(user.getUsername());
                             Log.i("At-Ease", "User " + user.getUsername() + " Logged in");
                         } else {
                             Log.d("MYAPPTAG", "User Log-in Failed");
@@ -260,6 +282,7 @@ public class MainActivity extends AppCompatActivity{
                     public void done(ParseUser user, ParseException e) {
                         if (user != null) {
                             // Hooray! The user is logged in.
+                            toastLogin(user.getUsername());
                             Log.i("At-Ease", "User " + user.getUsername() + " Logged in");
                         } else {
                             Log.d("MYAPPTAG", "User Log-in Failed");
@@ -282,6 +305,7 @@ public class MainActivity extends AppCompatActivity{
                     public void done(ParseUser user, ParseException e) {
                         if (user != null) {
                             // Hooray! The user is logged in.
+                            toastLogin(user.getUsername());
                             Log.i("At-Ease", "User " + user.getUsername() + " Logged in");
                         } else {
                             Log.d("MYAPPTAG", "User Log-in Failed");
@@ -290,6 +314,29 @@ public class MainActivity extends AppCompatActivity{
                 });
             }
         });
+
+        Button logoutButton = (Button) findViewById(R.id.logoutButton);
+        logoutButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                stopService(new Intent(getApplicationContext(), MessageService.class));
+                String username = ParseUser.getCurrentUser().getUsername();
+                ParseUser.logOut();
+                Toast.makeText(getApplicationContext(),
+                        username + " Logged out",
+                        Toast.LENGTH_LONG).show();
+            }
+        });
+
+
+
+
+    }
+
+    private void toastLogin(String name){
+        Toast.makeText(getApplicationContext(),
+                name + " Logged in",
+                Toast.LENGTH_LONG).show();
     }
 
     @Override
