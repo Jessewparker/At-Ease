@@ -76,8 +76,8 @@
             android:text="GG Manager"
             android:id="@+id/ggm"
             android:layout_below="@+id/mark"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentEnd="true" />
+            android:layout_alignRight="@+id/derek"
+            android:layout_alignEnd="@+id/derek" />
 
         <Button
             android:layout_width="wrap_content"
@@ -132,6 +132,26 @@
             android:layout_below="@+id/justin"
             android:layout_alignRight="@+id/justin"
             android:layout_alignEnd="@+id/justin" />
+
+        <Button
+            style="?android:attr/buttonStyleSmall"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="LOGIN"
+            android:id="@+id/login"
+            android:layout_above="@+id/hannah"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true" />
+
+        <Button
+            style="?android:attr/buttonStyleSmall"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="LOGOUT"
+            android:id="@+id/logout"
+            android:layout_below="@+id/login"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true" />
 
     </RelativeLayout>
 

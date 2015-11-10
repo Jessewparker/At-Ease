@@ -23,6 +23,7 @@ import com.parse.ParseUser;
 
 public class MainActivity extends AppCompatActivity{
 
+    private static final String TAG = "Main Activity";
     private Toolbar toolbar;
 
     @Override
@@ -35,8 +36,13 @@ public class MainActivity extends AppCompatActivity{
 
         ParseUser currentUser = ParseUser.getCurrentUser();
         if (currentUser != null) {
-            currentUser.logOut();
+            Log.d(TAG, currentUser.getUsername().toString() + " is logged in");
         }
+        else {
+            Log.d(TAG, "no user logged in");
+        }
+
+
 
         ((AtEaseApplication) getApplicationContext()).getNewDrawerBuilder().withActivity(this).build();
 
@@ -63,6 +69,15 @@ public class MainActivity extends AppCompatActivity{
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(MainActivity.this, WorkOrderInboxActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        Button login = (Button) findViewById(R.id.login);
+        login.setOnClickListener(new View.OnClickListener()  {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(MainActivity.this, LoginActivity.class);
                 startActivity(intent);
             }
         });
@@ -262,6 +277,19 @@ public class MainActivity extends AppCompatActivity{
                         }
                     }
                 });
+            }
+        });
+
+        Button logout = (Button) findViewById(R.id.logout);
+        logout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                ParseUser currentUser = ParseUser.getCurrentUser();
+                if (currentUser != null) {
+                    currentUser.logOut();
+                }
+
+                Log.d(TAG, "no user logged in");
             }
         });
     }

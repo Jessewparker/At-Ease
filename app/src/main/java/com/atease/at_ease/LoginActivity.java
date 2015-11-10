@@ -3,15 +3,14 @@ package com.atease.at_ease;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-
-import com.parse.LogInCallback;
-import com.parse.ParseUser;
-import com.parse.SignUpCallback;
-
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
+
+import com.parse.LogInCallback;
+import com.parse.ParseUser;
+import com.parse.SignUpCallback;
 
 public class LoginActivity extends Activity {
 
@@ -22,19 +21,17 @@ public class LoginActivity extends Activity {
     private String username;
     private String password;
     private Intent intent;
-    private Intent serviceIntent;
+//    private Intent serviceIntent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        intent = new Intent(getApplicationContext(), ListUsersActivity.class);
-        serviceIntent = new Intent(getApplicationContext(), MessageService.class);
+        intent = new Intent(getApplicationContext(), MainActivity.class);
 
         ParseUser currentUser = ParseUser.getCurrentUser();
         if (currentUser != null) {
-            startActivity(intent);
-            startService(serviceIntent);
+//            startActivity(intent);
         }
 
         setContentView(R.layout.activity_login);
@@ -47,14 +44,19 @@ public class LoginActivity extends Activity {
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                intent = new Intent(getApplicationContext(), MainActivity.class);
                 username = usernameField.getText().toString();
                 password = passwordField.getText().toString();
+
+                ParseUser currentUser = ParseUser.getCurrentUser();
+                if (currentUser != null) {
+                    currentUser.logOut();
+                }
 
                 ParseUser.logInInBackground(username, password, new LogInCallback() {
                     public void done(ParseUser user, com.parse.ParseException e) {
                         if (user != null) {
                             startActivity(intent);
-                            startService(serviceIntent);
                         } else {
                             Toast.makeText(getApplicationContext(),
                                     "Wrong username/password combo",
@@ -68,33 +70,10 @@ public class LoginActivity extends Activity {
         signUpButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
-                username = usernameField.getText().toString();
-                password = passwordField.getText().toString();
-
-                ParseUser user = new ParseUser();
-                user.setUsername(username);
-                user.setPassword(password);
-
-                user.signUpInBackground(new SignUpCallback() {
-                    public void done(com.parse.ParseException e) {
-                        if (e == null) {
-                            startActivity(intent);
-                            startService(serviceIntent);
-                        } else {
-                            Toast.makeText(getApplicationContext(),
-                                    "There was an error signing up."
-                                    , Toast.LENGTH_LONG).show();
-                        }
-                    }
-                });
+                intent = new Intent(getApplicationContext(), SignUpActivity.class);
+                startActivity(intent);
             }
         });
     }
 
-    @Override
-    public void onDestroy() {
-        stopService(new Intent(this, MessageService.class));
-        super.onDestroy();
-    }
 }
