@@ -4,6 +4,20 @@
                 android:layout_height="match_parent"
                 >
 
+
+    <Button
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="talking to"
+        android:id="@+id/userButton"
+        android:gravity="center_vertical|center_horizontal"
+        android:background="@color/secondary"
+        android:textSize="24sp"
+        android:padding="15dp"
+        android:textColor="@color/primary"
+        android:layout_gravity="center_horizontal"
+        android:layout_alignParentTop="true" />
+
     <ListView
             android:id="@+id/listMessages"
             android:layout_width="match_parent"
@@ -12,7 +26,8 @@
             android:layout_above="@+id/divider"
             android:padding="0dip"
             android:divider="@null"
-            android:dividerHeight="0dp" android:stackFromBottom="true" tools:listitem="@layout/message_left"/>
+            android:dividerHeight="0dp" android:stackFromBottom="true" tools:listitem="@layout/message_left"
+        android:layout_below="@+id/userButton" />
     
     <RelativeLayout 
         android:id="@+id/divider"

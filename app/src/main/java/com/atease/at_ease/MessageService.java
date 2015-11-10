@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Binder;
 import android.os.IBinder;
 import android.support.v4.content.LocalBroadcastManager;
+import android.util.Log;
 
 import com.parse.ParseUser;
 import com.sinch.android.rtc.ClientRegistration;
@@ -26,14 +27,16 @@ public class MessageService extends Service implements SinchClientListener {
     private MessageClient messageClient = null;
     private String currentUserId;
     private LocalBroadcastManager broadcaster;
-    private Intent broadcastIntent = new Intent("com.atease.at_ease.ListUsersActivity");
+    private Intent broadcastIntent = new Intent("com.atease.at_ease.app.ListUsersActivity");
 
+    final String TAG = "MessageService";
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
 
         currentUserId = ParseUser.getCurrentUser().getObjectId();
 
         if (currentUserId != null && !isSinchClientStarted()) {
+            Log.d(TAG, currentUserId + " is logged in!");
             startSinchClient(currentUserId);
         }
 
@@ -43,7 +46,7 @@ public class MessageService extends Service implements SinchClientListener {
     }
 
     public void startSinchClient(String username) {
-        sinchClient = Sinch.getSinchClientBuilder().context(this).userId(username).applicationKey(APP_KEY)
+        sinchClient = Sinch.getSinchClientBuilder().context(this.getApplicationContext()).userId(username).applicationKey(APP_KEY)
                 .applicationSecret(APP_SECRET).environmentHost(ENVIRONMENT).build();
 
         sinchClient.addSinchClientListener(this);
@@ -53,6 +56,7 @@ public class MessageService extends Service implements SinchClientListener {
 
         sinchClient.checkManifest();
         sinchClient.start();
+        Log.d(TAG, "after the start.... should be started");
     }
 
     private boolean isSinchClientStarted() {
@@ -96,6 +100,7 @@ public class MessageService extends Service implements SinchClientListener {
 
     public void sendMessage(String recipientUserId, String textBody) {
         if (messageClient != null) {
+            Log.d(TAG, "client isn't null");
             WritableMessage message = new WritableMessage(recipientUserId, textBody);
             messageClient.send(message);
         }

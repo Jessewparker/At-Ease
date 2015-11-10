@@ -71,7 +71,10 @@ public class MainActivity extends AppCompatActivity{
         messaging.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(MainActivity.this, ListUsersActivity.class);
+                Intent intent = new Intent(getApplicationContext(), ListUsersActivity.class);
+                Intent serviceIntent = new Intent(getApplicationContext(), MessageService.class);
+
+                startService(serviceIntent);
                 startActivity(intent);
             }
         });
@@ -274,6 +277,17 @@ public class MainActivity extends AppCompatActivity{
                 });
             }
         });
+
+        Button logoutButton = (Button) findViewById(R.id.logoutButton);
+        logoutButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                stopService(new Intent(getApplicationContext(), MessageService.class));
+                ParseUser.logOut();
+            }
+        });
+
+
     }
 
     @Override
