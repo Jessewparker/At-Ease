@@ -1,21 +1,23 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context="com.sinch.messagingtutorial.app.ListUsersActivity"
+    tools:context="com.atease.at_ease.app.ListUsersActivity"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:orientation="vertical" >
 
-    <Button
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:text="logout"
-        android:id="@+id/logoutButton"
-        android:gravity="center_vertical|center_horizontal"
-        android:layout_gravity="center_horizontal"
-        android:background="@color/secondary"
-        android:textSize="24sp"
-        android:padding="15dp"
-        android:textColor="@color/primary" />
+
+        <Button
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="logout"
+            android:id="@+id/logoutButton"
+            android:gravity="center_vertical|center_horizontal"
+            android:background="@color/secondary"
+            android:textSize="24sp"
+            android:padding="15dp"
+            android:textColor="@color/primary"
+            android:layout_gravity="center_horizontal"
+            android:layout_alignParentTop="true" />
 
     <ListView xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"

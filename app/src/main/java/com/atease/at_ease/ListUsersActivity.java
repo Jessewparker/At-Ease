@@ -32,6 +32,8 @@ public class ListUsersActivity extends Activity {
     private ProgressDialog progressDialog;
     private BroadcastReceiver receiver = null;
 
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -49,6 +51,8 @@ public class ListUsersActivity extends Activity {
                 startActivity(intent);
             }
         });
+
+
     }
 
     //display clickable a list of all users
@@ -96,6 +100,7 @@ public class ListUsersActivity extends Activity {
                if (e == null) {
                    Intent intent = new Intent(getApplicationContext(), MessagingActivity.class);
                    intent.putExtra("RECIPIENT_ID", user.get(0).getObjectId());
+                   intent.putExtra("USER_ID", user.get(0).getUsername());
                    startActivity(intent);
                } else {
                    Toast.makeText(getApplicationContext(),
@@ -124,7 +129,7 @@ public class ListUsersActivity extends Activity {
             }
         };
 
-        LocalBroadcastManager.getInstance(this).registerReceiver(receiver, new IntentFilter("com.atease.at_ease.ListUsersActivity"));
+        LocalBroadcastManager.getInstance(this).registerReceiver(receiver, new IntentFilter("com.atease.at_ease.app.ListUsersActivity"));
     }
 
     @Override
