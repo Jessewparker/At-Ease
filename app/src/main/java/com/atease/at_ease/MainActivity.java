@@ -9,6 +9,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
 
 import com.mikepenz.materialdrawer.Drawer;
 import com.mikepenz.materialdrawer.DrawerBuilder;
@@ -71,7 +72,7 @@ public class MainActivity extends AppCompatActivity{
         messaging.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(getApplicationContext(), ListUsersActivity.class);
+                Intent intent = new Intent(MainActivity.this, ListUsersActivity.class);
                 Intent serviceIntent = new Intent(getApplicationContext(), MessageService.class);
 
                 startService(serviceIntent);
@@ -93,6 +94,7 @@ public class MainActivity extends AppCompatActivity{
                     public void done(ParseUser user, ParseException e) {
                         if (user != null) {
                             // Hooray! The user is logged in.
+                            toastLogin(user.getUsername());
                             Log.i("At-Ease", "User " + user.getUsername() + " Logged in");
                         } else {
                             Log.d("MYAPPTAG", "User Log-in Failed");
@@ -115,6 +117,7 @@ public class MainActivity extends AppCompatActivity{
                     public void done(ParseUser user, ParseException e) {
                         if (user != null) {
                             // Hooray! The user is logged in.
+                            toastLogin(user.getUsername());
                             Log.i("At-Ease", "User " + user.getUsername() + " Logged in");
                         } else {
                             Log.d("MYAPPTAG", "User Log-in Failed");
@@ -137,6 +140,7 @@ public class MainActivity extends AppCompatActivity{
                     public void done(ParseUser user, ParseException e) {
                         if (user != null) {
                             // Hooray! The user is logged in.
+                            toastLogin(user.getUsername());
                             Log.i("At-Ease", "User " + user.getUsername() + " Logged in");
                         } else {
                             Log.d("MYAPPTAG", "User Log-in Failed");
@@ -159,6 +163,7 @@ public class MainActivity extends AppCompatActivity{
                     public void done(ParseUser user, ParseException e) {
                         if (user != null) {
                             // Hooray! The user is logged in.
+                            toastLogin(user.getUsername());
                             Log.i("At-Ease", "User " + user.getUsername() + " Logged in");
                         } else {
                             Log.d("MYAPPTAG", "User Log-in Failed");
@@ -181,6 +186,7 @@ public class MainActivity extends AppCompatActivity{
                     public void done(ParseUser user, ParseException e) {
                         if (user != null) {
                             // Hooray! The user is logged in.
+                            toastLogin(user.getUsername());
                             Log.i("At-Ease", "User " + user.getUsername() + " Logged in");
                         } else {
                             Log.d("MYAPPTAG", "User Log-in Failed");
@@ -203,6 +209,7 @@ public class MainActivity extends AppCompatActivity{
                     public void done(ParseUser user, ParseException e) {
                         if (user != null) {
                             // Hooray! The user is logged in.
+                            toastLogin(user.getUsername());
                             Log.i("At-Ease", "User " + user.getUsername() + " Logged in");
                         } else {
                             Log.d("MYAPPTAG", "User Log-in Failed");
@@ -225,6 +232,7 @@ public class MainActivity extends AppCompatActivity{
                     public void done(ParseUser user, ParseException e) {
                         if (user != null) {
                             // Hooray! The user is logged in.
+                            toastLogin(user.getUsername());
                             Log.i("At-Ease", "User " + user.getUsername() + " Logged in");
                         } else {
                             Log.d("MYAPPTAG", "User Log-in Failed");
@@ -247,6 +255,7 @@ public class MainActivity extends AppCompatActivity{
                     public void done(ParseUser user, ParseException e) {
                         if (user != null) {
                             // Hooray! The user is logged in.
+                            toastLogin(user.getUsername());
                             Log.i("At-Ease", "User " + user.getUsername() + " Logged in");
                         } else {
                             Log.d("MYAPPTAG", "User Log-in Failed");
@@ -269,6 +278,7 @@ public class MainActivity extends AppCompatActivity{
                     public void done(ParseUser user, ParseException e) {
                         if (user != null) {
                             // Hooray! The user is logged in.
+                            toastLogin(user.getUsername());
                             Log.i("At-Ease", "User " + user.getUsername() + " Logged in");
                         } else {
                             Log.d("MYAPPTAG", "User Log-in Failed");
@@ -283,11 +293,23 @@ public class MainActivity extends AppCompatActivity{
             @Override
             public void onClick(View view) {
                 stopService(new Intent(getApplicationContext(), MessageService.class));
+                String username = ParseUser.getCurrentUser().getUsername();
                 ParseUser.logOut();
+                Toast.makeText(getApplicationContext(),
+                        username + " Logged out",
+                        Toast.LENGTH_LONG).show();
             }
         });
 
 
+
+
+    }
+
+    private void toastLogin(String name){
+        Toast.makeText(getApplicationContext(),
+                name + " Logged in",
+                Toast.LENGTH_LONG).show();
     }
 
     @Override
