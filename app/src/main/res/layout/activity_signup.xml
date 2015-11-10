@@ -114,6 +114,16 @@
             android:layout_toRightOf="@+id/username"
             android:layout_toEndOf="@+id/username"
             android:text="password" />
+
+        <Button
+            style="?android:attr/buttonStyleSmall"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="DONE"
+            android:id="@+id/doneSignUp"
+            android:layout_below="@+id/phoneNumber"
+            android:layout_alignRight="@+id/textView2"
+            android:layout_alignEnd="@+id/textView2" />
     </RelativeLayout>
 
 </LinearLayout>

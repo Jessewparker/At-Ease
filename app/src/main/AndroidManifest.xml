@@ -25,6 +25,7 @@
         <activity android:name=".WorkOrderInboxActivity"/>
         <activity android:name=".LoginActivity"/>
         <activity android:name=".SignUpActivity"/>
+        <activity android:name=".AddPropertyActivity"/>
     </application>
 
     <uses-permission android:name="android.permission.INTERNET" />

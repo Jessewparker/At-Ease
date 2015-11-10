@@ -44,7 +44,7 @@ public class LoginActivity extends Activity {
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                intent = new Intent(getApplicationContext(), MainActivity.class);
+                intent = new Intent(LoginActivity.this, MainActivity.class);
                 username = usernameField.getText().toString();
                 password = passwordField.getText().toString();
 
@@ -70,7 +70,7 @@ public class LoginActivity extends Activity {
         signUpButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                intent = new Intent(getApplicationContext(), SignUpActivity.class);
+                intent = new Intent(LoginActivity.this, SignUpActivity.class);
                 startActivity(intent);
             }
         });
