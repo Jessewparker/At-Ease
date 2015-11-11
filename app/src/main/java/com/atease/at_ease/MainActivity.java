@@ -88,6 +88,7 @@ public class MainActivity extends AppCompatActivity{
 
         Button btnTenantPayments = (Button) findViewById(R.id.tenant_payments);
         btnTenantPayments.setOnClickListener(new View.OnClickListener() {
+
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(MainActivity.this, TenantPaymentsActivity.class);

@@ -30,14 +30,11 @@
             </intent-filter>
         </activity>
 
-      
-
-        
 
         <activity android:name=".ListUsersActivity"/>
         <activity android:name=".MessagingActivity"/>
         <service android:name=".MessageService"></service>
-    
+
 
 
         <activity android:name=".ParseSIgnIn" />
