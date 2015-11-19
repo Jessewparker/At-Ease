@@ -285,6 +285,10 @@ public class RentPayActivity extends AppCompatActivity {
         property.saveInBackground();
     }
 
+    public boolean isNumeric(String str)
+    {
+        return str.matches("-?\\d+(\\.\\d+)?");  //match a number with optional '-' and decimal.
+    }
 
     private String fixAmount(String amount){
         String ans;
