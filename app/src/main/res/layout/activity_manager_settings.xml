@@ -33,14 +33,17 @@
             android:text="Connect Stripe Account"
             android:id="@+id/btnStripeConnect"
 
-       />
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="5dp" />
 
         <Switch
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Stripe Payments"
             android:id="@+id/swUseStripe"
-            android:checked="false" />
+            android:checked="false"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="5dp" />
     </LinearLayout>
 
     <RelativeLayout
@@ -127,7 +130,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             xmlns:app="http://schemas.android.com/apk/res-auto"
-            app:mcv_showOtherDates="all"
             app:mcv_selectionColor="@color/primary"
             android:layout_below="@+id/tvRentDue"
             android:layout_alignParentLeft="true"
