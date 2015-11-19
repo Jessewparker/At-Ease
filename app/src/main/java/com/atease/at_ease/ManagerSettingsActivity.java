@@ -166,11 +166,27 @@ public class ManagerSettingsActivity extends AppCompatActivity {
                                 dialog.dismiss();
                             }
                         }).onPositive(new MaterialDialog.SingleButtonCallback() {
-                    @Override
-                    public void onClick(MaterialDialog dialog, DialogAction which) {
-                        dialog.dismiss(); // change this to save this stuff
-                    }
-                })
+                            @Override
+                            public void onClick(MaterialDialog dialog, DialogAction which) {
+
+
+                                //save mgrSettings
+                                mgrSettings.put("useStripePayments", swUseStripe.isChecked());
+
+                                // save property settings
+                                String amount = fixAmountForStore(etMonthlyRentDue.getText().toString());
+                                property.put("monthlyRentDue", Integer.parseInt(amount) );
+                                property.put("occupied", cbOccupied.isChecked());
+                                property.put("prorateDays", Integer.parseInt(etProrateDays.getText().toString()));
+                                property.put("nextRentDue",calendar.getSelectedDate().getDate());
+
+                                //Save both mgrSettings and property in back ground
+                                mgrSettings.saveInBackground();
+                                property.saveInBackground();
+
+                                dialog.dismiss(); //done, so dismiss the dialog
+                            }
+                        })
                         .show();
             }
         });
