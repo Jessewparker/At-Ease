@@ -73,6 +73,7 @@ public class MessageService extends Service implements SinchClientListener {
 
     @Override
     public void onClientStarted(SinchClient client) {
+        Log.d(TAG,"client started successfully");
         broadcastIntent.putExtra("success", true);
         broadcaster.sendBroadcast(broadcastIntent);
 

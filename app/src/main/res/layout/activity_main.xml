@@ -164,8 +164,6 @@
             android:id="@+id/logoutButton"
             android:gravity="center_vertical|center_horizontal"
             android:background="@color/secondary"
-
-
             android:textColor="@color/primary"
             android:layout_gravity="center_horizontal"
             android:layout_above="@+id/signin"

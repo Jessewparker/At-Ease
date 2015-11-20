@@ -52,7 +52,7 @@ public class ListUsersActivity extends Activity {
             public void onClick(View view) {
                 stopService(new Intent(getApplicationContext(), MessageService.class));
                 ParseUser.logOut();
-                Intent intent = new Intent(ListUsersActivity.this, MainActivity.class);
+                Intent intent = new Intent(ListUsersActivity.this, NewMainActivity.class);
                 startActivity(intent);
             }
         });

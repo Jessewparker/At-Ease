@@ -21,7 +21,7 @@
         android:theme="@style/AppTheme"
         tools:replace="android:icon" >
         <activity
-            android:name=".MainActivity"
+            android:name=".NewMainActivity"
             android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -29,20 +29,17 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".ListUsersActivity" />
+        <activity android:name=".MessagingActivity" />
 
-
-        <activity android:name=".ListUsersActivity"/>
-        <activity android:name=".MessagingActivity"/>
-        <service android:name=".MessageService"></service>
-
-
+        <service android:name=".MessageService" />
 
         <activity android:name=".ParseSIgnIn" />
         <activity
             android:name=".NewWorkOrderExpandableActivity"
             android:windowSoftInputMode="adjustPan" />
         <activity android:name=".WorkOrderInboxActivity" />
-        <activity android:name=".ViewWorkOrderActivity"/>
+        <activity android:name=".ViewWorkOrderActivity" />
         <activity
             android:name=".ManagerPaymentsActivity"
             android:label="@string/title_activity_manager_payments" >
@@ -62,7 +59,7 @@
         <activity
             android:name=".RentPayActivity"
             android:label="@string/title_activity_rent_pay"
-            android:windowSoftInputMode="stateHidden">
+            android:windowSoftInputMode="stateHidden" >
         </activity>
         <activity
             android:name=".PaymentHistoryActivity"
@@ -71,9 +68,16 @@
         <activity
             android:name=".ManagerSettingsActivity"
             android:label="@string/title_activity_manager_settings"
-            android:windowSoftInputMode="stateHidden">
+            android:windowSoftInputMode="stateHidden" >
         </activity>
-
+      <!--  <activity
+            android:name=".NewMainActivity"
+            android:label="@string/title_activity_new_main" >
+        </activity> -->
+        <activity
+            android:name=".MainTenantActivity"
+            android:label="@string/title_activity_main_tenant" >
+        </activity>
     </application>
 
 </manifest>
