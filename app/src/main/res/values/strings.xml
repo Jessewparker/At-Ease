@@ -105,4 +105,6 @@
     <string name="title_activity_manager_settings">ManagerSettingsActivity</string>
     <string name="title_activity_new_main">NewMainActivity</string>
     <string name="title_activity_main_tenant">MainTenantActivity</string>
+    <string name="title_activity_main_single_manager">MainSingleManagerActivity</string>
+    <string name="title_activity_main_multiple_manager">MainMultipleManagerActivity</string>
 </resources>

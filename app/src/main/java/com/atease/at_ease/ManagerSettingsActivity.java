@@ -123,7 +123,7 @@ public class ManagerSettingsActivity extends AppCompatActivity {
         });
 
         ParseQuery<ParseObject> propertyQuery = ParseQuery.getQuery("Property");
-        propertyQuery.whereEqualTo("owner", currentUser);
+        propertyQuery.whereEqualTo("objectId", getIntent().getStringExtra("propId"));
         propertyQuery.getFirstInBackground(new GetCallback<ParseObject>() {
             @Override
             public void done(ParseObject prop, ParseException e) {

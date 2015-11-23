@@ -27,7 +27,7 @@
             android:layout_weight="1"
             android:padding="1dp"
             android:layout_margin="1dp"
-            android:background="#1bff58" />
+            android:background="@color/work_orders" />
 
         <Button
             android:layout_width="wrap_content"
@@ -37,7 +37,7 @@
             android:layout_weight="1"
             android:padding="1dp"
             android:layout_margin="0dp"
-            android:background="#f9ff60" />
+            android:background="@color/messaging" />
     </LinearLayout>
 
     <LinearLayout
@@ -51,11 +51,11 @@
         <Button
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:text="Pay Rent"
-            android:id="@+id/btnPayRent"
+            android:text="Payment\nSettings"
+            android:id="@+id/btnPaymentSettings"
             android:layout_weight="1"
             android:padding="0dp"
-            android:background="#22a9ff" />
+            android:background="@color/payment_settings" />
 
         <Button
             android:layout_width="wrap_content"
@@ -66,6 +66,6 @@
             android:singleLine="false"
             android:allowUndo="true"
             android:padding="1dp"
-            android:background="#ff6666" />
+            android:background="@color/payment_history" />
     </LinearLayout>
 </LinearLayout>

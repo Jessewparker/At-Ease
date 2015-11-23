@@ -57,6 +57,8 @@ public class ListUsersActivity extends Activity {
             }
         });
 
+        Log.d(TAG,getClass().getName());
+
 
     }
 
@@ -221,7 +223,7 @@ public class ListUsersActivity extends Activity {
             }
         };
 
-        LocalBroadcastManager.getInstance(this).registerReceiver(receiver, new IntentFilter("com.atease.at_ease.app.ListUsersActivity"));
+        LocalBroadcastManager.getInstance(this).registerReceiver(receiver, new IntentFilter("com.atease.at_ease.ListUsersActivity"));
     }
 
     @Override

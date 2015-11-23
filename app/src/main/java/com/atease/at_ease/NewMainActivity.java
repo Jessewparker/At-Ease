@@ -1,5 +1,7 @@
 package com.atease.at_ease;
 
+import android.app.ActivityManager;
+import android.content.Context;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -44,6 +46,7 @@ public class NewMainActivity extends AppCompatActivity {
                             //toastLogin(user.getUsername());
                             Intent serviceIntent = new Intent(getApplicationContext(), MessageService.class);
                             startService(serviceIntent);
+                            determineActivity(user);
 
                             Log.i(TAG, "User " + user.getUsername() + " Logged in");
                         } else {
@@ -64,6 +67,7 @@ public class NewMainActivity extends AppCompatActivity {
                             //toastLogin(user.getUsername());
                             Intent serviceIntent = new Intent(getApplicationContext(), MessageService.class);
                             startService(serviceIntent);
+                            determineActivity(user);
                             Log.i(TAG, "User " + user.getUsername() + " Logged in");
                         } else {
                             Log.d(TAG, "User Log-in Failed");
@@ -83,6 +87,7 @@ public class NewMainActivity extends AppCompatActivity {
                             //toastLogin(user.getUsername());
                             Intent serviceIntent = new Intent(getApplicationContext(), MessageService.class);
                             startService(serviceIntent);
+                            determineActivity(user);
                             Log.i(TAG, "User " + user.getUsername() + " Logged in");
                         } else {
                             Log.d(TAG, "User Log-in Failed");
@@ -128,6 +133,10 @@ public class NewMainActivity extends AppCompatActivity {
         });
 
         hideLogout();
+        if(isMyServiceRunning(MessageService.class)){
+            stopService(new Intent(getApplicationContext(), MessageService.class));
+            Log.d(TAG,"stopped the service!!!!!!!!!!!");
+        }
 
 
 
@@ -168,10 +177,12 @@ public class NewMainActivity extends AppCompatActivity {
         //else isTenant so go to MainTenantActivity
         if(user.getBoolean("isManager")){
             if(user.getInt("managedProperties") > 1){
-                //multiple manage activity
+                Intent intent = new Intent(NewMainActivity.this, MainMultipleManagerActivity.class);
+                startActivity(intent);
             }
             else if(user.getInt("managedProperties") == 1){
-                //single manager activity
+                Intent intent = new Intent(NewMainActivity.this, MainSingleManagerActivity.class);
+                startActivity(intent);
             }
             else{
                 //Force to add a property
@@ -183,6 +194,18 @@ public class NewMainActivity extends AppCompatActivity {
         }
 
     }
+
+    private boolean isMyServiceRunning(Class<?> serviceClass) {
+        ActivityManager manager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
+        for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
+            if (serviceClass.getName().equals(service.service.getClassName())) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+
 
     @Override
     public void onStop(){

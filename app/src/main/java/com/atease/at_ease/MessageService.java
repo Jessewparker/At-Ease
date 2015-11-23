@@ -27,7 +27,7 @@ public class MessageService extends Service implements SinchClientListener {
     private MessageClient messageClient = null;
     private String currentUserId;
     private LocalBroadcastManager broadcaster;
-    private Intent broadcastIntent = new Intent("com.atease.at_ease.app.ListUsersActivity");
+    private Intent broadcastIntent = new Intent("com.atease.at_ease.ListUsersActivity");
 
     final String TAG = "MessageService";
     @Override
@@ -74,9 +74,10 @@ public class MessageService extends Service implements SinchClientListener {
     @Override
     public void onClientStarted(SinchClient client) {
         Log.d(TAG,"client started successfully");
+
         broadcastIntent.putExtra("success", true);
         broadcaster.sendBroadcast(broadcastIntent);
-
+        Log.d(TAG, broadcaster.toString() + "doesn't look null to me?");
         client.startListeningOnActiveConnection();
         messageClient = client.getMessageClient();
     }
@@ -104,6 +105,9 @@ public class MessageService extends Service implements SinchClientListener {
             Log.d(TAG, "client isn't null");
             WritableMessage message = new WritableMessage(recipientUserId, textBody);
             messageClient.send(message);
+        }
+        else{
+            Log.d(TAG, "client is null, no message being sent");
         }
     }
 
