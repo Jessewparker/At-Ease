@@ -73,6 +73,9 @@ public class AddPropertyActivity extends Activity {
                 property.put("address", address);
                 property.put("nickname", nickname);
                 property.put("owner", currentUser);
+
+                currentUser.put("managedProperties", currentUser.getInt("managedProperties") + 1);
+                currentUser.saveInBackground();
                 property.saveInBackground();
 
                 startActivity(intent);

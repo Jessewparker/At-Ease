@@ -99,6 +99,22 @@ public class MainActivity extends AppCompatActivity{
             }
         });
 
+        Button addTenant = (Button) findViewById(R.id.addTenant);
+        addTenant.setOnClickListener(new View.OnClickListener()  {
+            @Override
+            public void onClick(View view) {
+                ParseUser currentUser = ParseUser.getCurrentUser();
+                Boolean isTenant = currentUser.getBoolean("isTenant");
+                if (isTenant) {
+                    Intent intent = new Intent(MainActivity.this, AddTenantToPropertyActivity.class);
+                    startActivity(intent);
+                }
+                else {
+                    Toast.makeText(MainActivity.this, "You must be a tenant", Toast.LENGTH_LONG).show();
+                }
+            }
+        });
+
         Button manny = (Button) findViewById(R.id.manny);
         manny.setOnClickListener(new View.OnClickListener() {
             @Override

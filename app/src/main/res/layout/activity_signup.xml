@@ -49,11 +49,11 @@
             android:inputType="textPersonName"
             android:text="First Name"
             android:ems="10"
-            android:id="@+id/firstName"
+            android:id="@+id/firstNameField"
             android:layout_below="@+id/isTenant"
             android:layout_marginTop="32dp"
-            android:layout_toStartOf="@+id/lastName"
-            android:layout_toLeftOf="@+id/lastName" />
+            android:layout_toStartOf="@+id/lastNameField"
+            android:layout_toLeftOf="@+id/lastNameField" />
 
         <EditText
             android:layout_width="wrap_content"
@@ -61,17 +61,17 @@
             android:inputType="textPersonName"
             android:text="Last Name"
             android:ems="10"
-            android:id="@+id/lastName"
-            android:layout_alignTop="@+id/firstName"
+            android:id="@+id/lastNameField"
+            android:layout_alignTop="@+id/firstNameField"
             android:layout_toRightOf="@+id/isTenant"
             android:layout_toEndOf="@+id/isTenant" />
 
         <EditText
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/username"
+            android:id="@+id/usernameField"
             android:text="username"
-            android:layout_below="@+id/firstName"
+            android:layout_below="@+id/firstNameField"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
             android:layout_marginTop="58dp"
@@ -83,10 +83,10 @@
             android:layout_height="wrap_content"
             android:inputType="textEmailAddress"
             android:ems="10"
-            android:id="@+id/email"
+            android:id="@+id/emailField"
             android:layout_marginTop="71dp"
             android:text="e-mail"
-            android:layout_below="@+id/username"
+            android:layout_below="@+id/usernameField"
             android:layout_alignRight="@+id/isManager"
             android:layout_alignEnd="@+id/isManager"
             android:layout_alignParentLeft="true"
@@ -97,10 +97,10 @@
             android:layout_height="wrap_content"
             android:inputType="phone"
             android:ems="10"
-            android:id="@+id/phoneNumber"
-            android:layout_below="@+id/email"
-            android:layout_alignRight="@+id/username"
-            android:layout_alignEnd="@+id/username"
+            android:id="@+id/phoneNumberField"
+            android:layout_below="@+id/emailField"
+            android:layout_alignRight="@+id/usernameField"
+            android:layout_alignEnd="@+id/usernameField"
             android:layout_marginTop="71dp"
             android:text="Phone Number" />
 
@@ -109,10 +109,10 @@
             android:layout_height="wrap_content"
             android:inputType="textPassword"
             android:ems="10"
-            android:id="@+id/password"
-            android:layout_alignTop="@+id/username"
-            android:layout_toRightOf="@+id/username"
-            android:layout_toEndOf="@+id/username"
+            android:id="@+id/passwordField"
+            android:layout_alignTop="@+id/usernameField"
+            android:layout_toRightOf="@+id/usernameField"
+            android:layout_toEndOf="@+id/usernameField"
             android:text="password" />
 
         <Button
@@ -121,7 +121,7 @@
             android:layout_height="wrap_content"
             android:text="DONE"
             android:id="@+id/doneSignUp"
-            android:layout_below="@+id/phoneNumber"
+            android:layout_below="@+id/phoneNumberField"
             android:layout_alignRight="@+id/textView2"
             android:layout_alignEnd="@+id/textView2" />
     </RelativeLayout>
