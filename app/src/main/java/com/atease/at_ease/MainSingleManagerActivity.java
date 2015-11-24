@@ -1,6 +1,11 @@
 package com.atease.at_ease;
 
+import android.app.ProgressDialog;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -8,8 +13,10 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import com.mikepenz.iconics.view.IconicsButton;
 import com.parse.GetCallback;
 import com.parse.ParseException;
 import com.parse.ParseObject;
@@ -20,27 +27,42 @@ import java.util.concurrent.Semaphore;
 
 public class MainSingleManagerActivity extends AppCompatActivity {
 
-    Button btnWorkOrder;
+    IconicsButton btnWorkOrder;
     Button btnPaymentSettings;
     Button btnPaymentHistory;
-    Button btnMessaging;
+    IconicsButton btnMessaging;
+    ProgressBar progress;
+    ProgressDialog progressDialog;
 
     ParseObject property;
     String propertyId;
-    Semaphore lock;
 
+
+
+    private BroadcastReceiver receiver = null;
+    private Intent broadcastIntent = new Intent("com.atease.at_ease.MessageService");
+    private LocalBroadcastManager broadcaster;
+
+    final String TAG = "Main Single Manager";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_single_manager);
 
-        btnWorkOrder = (Button) findViewById(R.id.btnWorkOrder);
+        btnWorkOrder = (IconicsButton) findViewById(R.id.btnWorkOrder);
         btnPaymentSettings = (Button) findViewById(R.id.btnPaymentSettings);
         btnPaymentHistory = (Button) findViewById(R.id.btnPaymentHistory);
-        btnMessaging = (Button) findViewById(R.id.btnMessaging);
+        btnMessaging = (IconicsButton) findViewById(R.id.btnMessaging);
 
-        lock = new Semaphore(0);
+        progress = (ProgressBar) findViewById(R.id.progressBar);
+        progress.setMax(100);
+        progress.setVisibility(View.GONE);
+
+        progressDialog = new ProgressDialog(this);
+
+        //lock = new Semaphore(0);
         propertyId = "";
+        retrieveProperty();
 
 
         btnWorkOrder.setOnClickListener(new View.OnClickListener() {
@@ -51,22 +73,6 @@ public class MainSingleManagerActivity extends AppCompatActivity {
             }
         });
 
-       /* btnPaymentSettings.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(MainSingleManagerActivity.this, RentPayActivity.class);
-                intent.putExtra("propId",propertyId);
-                startActivity(intent);
-
-            }
-        });*/
-        btnPaymentSettings.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View v) {
-                moveToSettings();
-                stopListener();
-            }
-        });
 
         btnPaymentHistory.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -81,38 +87,35 @@ public class MainSingleManagerActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Intent intent = new Intent(MainSingleManagerActivity.this, ListUsersActivity.class);
                 // Intent serviceIntent = new Intent(getApplicationContext(), MessageService.class);
-
+                intent.putExtra("propId", propertyId);
                 //startService(serviceIntent);
                 startActivity(intent);
 
             }
         });
-        retrieveProperty();
 
-    }
-
-    private void stopListener(){
         btnPaymentSettings.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(MainSingleManagerActivity.this, "Clicked", Toast.LENGTH_LONG).show();
+                Intent intent = new Intent(MainSingleManagerActivity.this, ManagerSettingsActivity.class);
+                intent.putExtra("propId", propertyId);
+                startActivity(intent);
             }
         });
-    }
 
-    private void moveToSettings(){
-       try{
-           lock.acquire();
-           Intent intent = new Intent(MainSingleManagerActivity.this, ManagerSettingsActivity.class);
-           intent.putExtra("propId", propertyId);
-           startActivity(intent);
-       }catch(Exception e){
-       }
+
 
     }
+
+
+
 
     private void retrieveProperty(){
 
+        progressDialog.setTitle("Loading");
+        progressDialog.setMessage("Please wait...");
+        progressDialog.setCancelable(false);
+        progressDialog.show();
 
         ParseQuery<ParseObject> propertyQuery = ParseQuery.getQuery("Property");
         propertyQuery.whereEqualTo("owner", ParseUser.getCurrentUser());
@@ -120,24 +123,12 @@ public class MainSingleManagerActivity extends AppCompatActivity {
             @Override
             public void done(ParseObject prop, ParseException e) {
                 if (e == null) {
-                    try{
-                        Thread.sleep(2000);
-                    }
-                    catch(Exception xe){
-
-                    }
                     property = prop;
                     propertyId = prop.getObjectId();
-                    lock.release();
+
+                    progressDialog.dismiss();
                     Toast.makeText(MainSingleManagerActivity.this, "property retrieved", Toast.LENGTH_LONG).show();
-                    btnPaymentSettings.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            Intent intent = new Intent(MainSingleManagerActivity.this, ManagerSettingsActivity.class);
-                            intent.putExtra("propId", propertyId);
-                            startActivity(intent);
-                        }
-                    });
+
 
                 } else {
                     Toast.makeText(MainSingleManagerActivity.this, "couldn't get property from parse", Toast.LENGTH_LONG).show();
@@ -146,6 +137,52 @@ public class MainSingleManagerActivity extends AppCompatActivity {
         });
     }
 
+    //show a loading spinner while the sinch client starts
+    private void showSpinner() {
+        progress.setVisibility(View.VISIBLE);
+        btnMessaging.setAlpha(0.25f);
+        broadcaster = LocalBroadcastManager.getInstance(this);
+        receiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                Boolean success = intent.getBooleanExtra("success", false);
+                //progressDialog.dismiss();
+                bindMessagingButton();
+                Log.d(TAG,"OnRecieve!?!?!");
+                if (!success) {
+                    Toast.makeText(getApplicationContext(), "Messaging service failed to start", Toast.LENGTH_LONG).show();
+                }
+                else{
+                    Toast.makeText(getApplicationContext(), "message service connected!", Toast.LENGTH_LONG).show();
+                }
+            }
+        };
+
+        broadcaster.registerReceiver(receiver, new IntentFilter("com.atease.at_ease.ListUsersActivity"));
+        broadcaster.sendBroadcast(broadcastIntent);
+
+    }
+
+    private void bindMessagingButton(){
+        progress.setVisibility(View.GONE);
+        btnMessaging.setAlpha(1);
+        btnMessaging.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainSingleManagerActivity.this, ListUsersActivity.class);
+                startActivity(intent);
+
+            }
+        });
+        Log.d(TAG, "btnMessaging has been set");
+    }
+
+    @Override
+    public void onDestroy(){
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(receiver);
+        Log.d(TAG, "OnDestroy");
+        super.onDestroy();
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

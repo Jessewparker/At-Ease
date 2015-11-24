@@ -14,13 +14,13 @@
         android:layout_width="match_parent"
         android:weightSum="2"
         android:layout_weight="1"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:layout_margin="0dp"
         android:padding="0dp">
 
 
-        <Button
-            android:layout_width="wrap_content"
+        <com.mikepenz.iconics.view.IconicsButton
+            android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:text="Work\nOrders"
             android:id="@+id/btnWorkOrder"
@@ -29,36 +29,55 @@
             android:layout_margin="1dp"
             android:background="@color/work_orders" />
 
-        <Button
-            android:layout_width="wrap_content"
+        <RelativeLayout
+            android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:text="Messaging"
-            android:id="@+id/btnMessaging"
-            android:layout_weight="1"
-            android:padding="1dp"
-            android:layout_margin="0dp"
-            android:background="@color/messaging" />
+            android:layout_weight="1">
+
+            <com.mikepenz.iconics.view.IconicsButton
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:text="Messaging"
+                android:id="@+id/btnMessaging"
+                android:padding="1dp"
+                android:stateListAnimator="@null"
+                android:background="#f9ff60" />
+
+            <ProgressBar
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/progressBar"
+                android:layout_centerVertical="true"
+                android:layout_centerHorizontal="true"
+                android:elevation="10dp"
+                android:translationZ="5dp" />
+
+
+        </RelativeLayout>
     </LinearLayout>
 
     <LinearLayout
         android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:weightSum="2"
         android:layout_weight="1"
         >
 
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:text="Payment\nSettings"
-            android:id="@+id/btnPaymentSettings"
-            android:layout_weight="1"
-            android:padding="0dp"
-            android:background="@color/payment_settings" />
 
-        <Button
-            android:layout_width="wrap_content"
+            <com.mikepenz.iconics.view.IconicsButton
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:text="Payment\nSettings"
+                android:id="@+id/btnPaymentSettings"
+                android:layout_weight="1"
+                android:padding="0dp"
+                android:background="@color/payment_settings" />
+
+
+
+        <com.mikepenz.iconics.view.IconicsButton
+            android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:text="Payment\nHistory"
             android:id="@+id/btnPaymentHistory"

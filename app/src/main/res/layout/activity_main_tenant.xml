@@ -5,7 +5,7 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     android:paddingBottom="@dimen/activity_vertical_margin"
     android:orientation="vertical"
-    android:weightSum="2"
+    android:weightSum="4"
     tools:context="com.atease.at_ease.MainTenantActivity">
 
 
@@ -13,56 +13,82 @@
         android:orientation="horizontal"
         android:layout_width="match_parent"
         android:weightSum="2"
-        android:layout_weight="1"
-        android:layout_height="wrap_content"
+        android:layout_weight="2"
+        android:layout_height="match_parent"
         android:layout_margin="0dp"
         android:padding="0dp">
 
 
-        <Button
-            android:layout_width="wrap_content"
+        <com.mikepenz.iconics.view.IconicsButton
+            android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:text="Work\nOrders"
+            android:text="{faw-wrench}\nWork\nOrders"
+            android:textSize="50dp"
             android:id="@+id/btnWorkOrder"
             android:layout_weight="1"
             android:padding="1dp"
             android:layout_margin="1dp"
             android:background="#1bff58" />
 
-        <Button
-            android:layout_width="wrap_content"
+
+        <RelativeLayout
+            android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:text="Messaging"
+            android:layout_weight="1">
+
+        <com.mikepenz.iconics.view.IconicsButton
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="{faw-envelope-o}\nMessaging"
             android:id="@+id/btnMessaging"
-            android:layout_weight="1"
             android:padding="1dp"
-            android:layout_margin="0dp"
-            android:background="#f9ff60" />
+            android:stateListAnimator="@null"
+            android:background="#f9ff60"
+            android:textSize="50dp" />
+
+            <ProgressBar
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/progressBar"
+                android:layout_centerVertical="true"
+                android:layout_centerHorizontal="true"
+                android:elevation="10dp"
+                android:translationZ="5dp" />
+
+
+        </RelativeLayout>
+
+
+
+
+
     </LinearLayout>
 
     <LinearLayout
         android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:weightSum="2"
-        android:layout_weight="1"
+        android:layout_weight="2"
         >
 
-        <Button
-            android:layout_width="wrap_content"
+        <com.mikepenz.iconics.view.IconicsButton
+            android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:text="Pay Rent"
+            android:text="{faw-money}\nPay Rent"
             android:id="@+id/btnPayRent"
+            android:textSize="50dp"
             android:layout_weight="1"
             android:padding="0dp"
             android:background="#22a9ff" />
 
-        <Button
-            android:layout_width="wrap_content"
+        <com.mikepenz.iconics.view.IconicsButton
+            android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:text="Payment\nHistory"
+            android:text="{faw-calendar-check-o}\nPayment\nHistory"
             android:id="@+id/btnPaymentHistory"
             android:layout_weight="1"
+            android:textSize="50dp"
             android:singleLine="false"
             android:allowUndo="true"
             android:padding="1dp"

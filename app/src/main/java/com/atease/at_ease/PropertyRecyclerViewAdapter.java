@@ -75,7 +75,7 @@ public class PropertyViewHolder extends RecyclerView.ViewHolder {
         holder.btnMessaging.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(mContext, ManagerSettingsActivity.class);
+                Intent intent = new Intent(mContext, ListUsersActivity.class);
                 intent.putExtra("propId", propId);
                 mContext.startActivity(intent);
             }

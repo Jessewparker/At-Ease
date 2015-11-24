@@ -7,6 +7,13 @@
     <!-- this is the item front view -->
     <LinearLayout
         android:tag="front"
+        android:background="#a0a0a0"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:paddingBottom="2dp"
+        android:orientation="vertical">
+    <LinearLayout
+        android:tag="front"
         android:background="@color/item_background"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -22,6 +29,7 @@
                 android:id="@+id/tvAmount"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:textColor="@color/primary"
                 android:textSize="20dp"
                 android:text="Paid $500" />
 
@@ -33,6 +41,7 @@
                 android:textSize="15dp"
                 android:text="Oct 25, 2015"
                 android:gravity="right"
+                android:textColor="@color/primary_text"
                 android:layout_alignParentTop="true"
                 android:layout_alignParentRight="true"
                 android:layout_alignParentEnd="true" />
@@ -44,9 +53,11 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="12dp"
-            android:text="Jesse ParkerManager"
+            android:text="test"
+            android:textColor="@color/primary_text"
             android:layout_gravity="right" />
 
+    </LinearLayout>
     </LinearLayout>
 
 </FrameLayout>

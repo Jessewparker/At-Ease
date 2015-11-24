@@ -44,10 +44,10 @@ public class ListUsersActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_list_users);
 
-        showSpinner();
+       // showSpinner();
 
         logoutButton = (Button) findViewById(R.id.logoutButton);
-        logoutButton.setOnClickListener(new View.OnClickListener() {
+        /*logoutButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 stopService(new Intent(getApplicationContext(), MessageService.class));
@@ -55,7 +55,7 @@ public class ListUsersActivity extends Activity {
                 Intent intent = new Intent(ListUsersActivity.this, NewMainActivity.class);
                 startActivity(intent);
             }
-        });
+        });*/
 
         Log.d(TAG,getClass().getName());
 
@@ -101,9 +101,10 @@ public class ListUsersActivity extends Activity {
             });
         }
         if(currentUser.getBoolean("isManager")){
+            //expect propId Extra
             Log.d(TAG,"is manager");
             ParseQuery<ParseObject> propQuery = ParseQuery.getQuery("Property");
-            propQuery.whereEqualTo("owner", currentUser);
+            propQuery.whereEqualTo("objectId", getIntent().getStringExtra("propId"));
             propQuery.include("User");
             propQuery.findInBackground(new FindCallback<ParseObject>() {
                 @Override
@@ -220,6 +221,9 @@ public class ListUsersActivity extends Activity {
                 if (!success) {
                     Toast.makeText(getApplicationContext(), "Messaging service failed to start", Toast.LENGTH_LONG).show();
                 }
+                else{
+                    Toast.makeText(getApplicationContext(), "message service connected!", Toast.LENGTH_LONG).show();
+                }
             }
         };
 
@@ -234,7 +238,7 @@ public class ListUsersActivity extends Activity {
 
     @Override
     public void onDestroy(){
-        LocalBroadcastManager.getInstance(this).unregisterReceiver(receiver);
+        //LocalBroadcastManager.getInstance(this).unregisterReceiver(receiver);
         super.onDestroy();
     }
 }

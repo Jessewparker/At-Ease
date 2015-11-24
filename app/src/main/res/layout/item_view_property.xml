@@ -45,7 +45,7 @@
                 android:layout_alignParentStart="true"
                 android:background="@color/payment_settings"
                 android:layout_marginTop="10dp"
-                android:layout_marginRight="5dp"
+                android:layout_marginRight="10dp"
                 android:layout_marginBottom="20dp"
                 android:text="{faw-cog}"
                 android:textSize="30dp" />
@@ -59,9 +59,9 @@
                 android:layout_toRightOf="@+id/btnPaymentSettings"
                 android:layout_toEndOf="@+id/btnPaymentSettings"
                 android:background="@color/messaging"
-                android:layout_marginLeft="5dp"
+                android:layout_marginLeft="10dp"
                 android:layout_marginTop="10dp"
-                android:layout_marginRight="5dp"
+                android:layout_marginRight="10dp"
                 android:layout_marginBottom="20dp"
                 android:text="{faw-envelope-o}"
                 android:textSize="30dp"/>
@@ -75,11 +75,27 @@
                 android:layout_below="@+id/tvNickname"
                 android:layout_toRightOf="@+id/btnMessaging"
                 android:layout_toEndOf="@+id/btnMessaging"
-                android:layout_marginLeft="5dp"
+                android:layout_marginLeft="10dp"
                 android:layout_marginTop="10dp"
-                android:layout_marginRight="5dp"
+                android:layout_marginRight="10dp"
                 android:layout_marginBottom="20dp"
                 android:text="{faw-wrench}"
+                android:textSize="30dp"/>
+
+            <com.mikepenz.iconics.view.IconicsButton
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:id="@+id/btnPaymentHistory"
+                android:layout_gravity="center_horizontal"
+                android:background="@color/payment_history"
+                android:layout_below="@+id/tvNickname"
+                android:layout_toRightOf="@+id/btnWorkOrders"
+                android:layout_toEndOf="@+id/btnMessaging"
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginBottom="20dp"
+                android:text="{faw-calendar-check-o}"
                 android:textSize="30dp"/>
 
         </RelativeLayout>

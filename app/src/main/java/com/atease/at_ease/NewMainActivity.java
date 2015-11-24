@@ -5,6 +5,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+
+import android.text.format.DateUtils;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -36,18 +38,22 @@ public class NewMainActivity extends AppCompatActivity {
         jesseManager = (Button) findViewById(R.id.btnJesseManager);
         logout = (Button) findViewById(R.id.logoutButton);
 
+        ParseUser currentUser = ParseUser.getCurrentUser();
+        if(currentUser != null){
+            determineActivity(currentUser);
+        }
+
+
+
         ggm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 ParseUser.logInInBackground("gusguymanager", "drowssap", new LogInCallback() {
                     public void done(ParseUser user, ParseException e) {
                         if (user != null) {
-                            // Hooray! The user is logged in.
-                            //toastLogin(user.getUsername());
                             Intent serviceIntent = new Intent(getApplicationContext(), MessageService.class);
+                            determineActivity(user);//will launch the activity
                             startService(serviceIntent);
-                            determineActivity(user);
-
                             Log.i(TAG, "User " + user.getUsername() + " Logged in");
                         } else {
                             Log.d(TAG, "User Log-in Failed");
@@ -63,11 +69,9 @@ public class NewMainActivity extends AppCompatActivity {
                 ParseUser.logInInBackground("gusguyman", "drowssap", new LogInCallback() {
                     public void done(ParseUser user, ParseException e) {
                         if (user != null) {
-                            // Hooray! The user is logged in.
-                            //toastLogin(user.getUsername());
                             Intent serviceIntent = new Intent(getApplicationContext(), MessageService.class);
+                            determineActivity(user);//will launch the activity
                             startService(serviceIntent);
-                            determineActivity(user);
                             Log.i(TAG, "User " + user.getUsername() + " Logged in");
                         } else {
                             Log.d(TAG, "User Log-in Failed");
@@ -83,11 +87,9 @@ public class NewMainActivity extends AppCompatActivity {
                 ParseUser.logInInBackground("jesseManager", "password", new LogInCallback() {
                     public void done(ParseUser user, ParseException e) {
                         if (user != null) {
-                            // Hooray! The user is logged in.
-                            //toastLogin(user.getUsername());
                             Intent serviceIntent = new Intent(getApplicationContext(), MessageService.class);
+                            determineActivity(user);//will launch the activity
                             startService(serviceIntent);
-                            determineActivity(user);
                             Log.i(TAG, "User " + user.getUsername() + " Logged in");
                         } else {
                             Log.d(TAG, "User Log-in Failed");
@@ -103,11 +105,9 @@ public class NewMainActivity extends AppCompatActivity {
                 ParseUser.logInInBackground("jesseTenant", "password", new LogInCallback() {
                     public void done(ParseUser user, ParseException e) {
                         if (user != null) {
-                            // Hooray! The user is logged in.
-                            //toastLogin(user.getUsername());
                             Intent serviceIntent = new Intent(getApplicationContext(), MessageService.class);
-                            startService(serviceIntent);
                             determineActivity(user);//will launch the activity
+                            startService(serviceIntent);
                             Log.i(TAG, "User " + user.getUsername() + " Logged in");
                         } else {
                             Log.d(TAG, "User Log-in Failed");
@@ -134,13 +134,15 @@ public class NewMainActivity extends AppCompatActivity {
 
         hideLogout();
         if(isMyServiceRunning(MessageService.class)){
-            stopService(new Intent(getApplicationContext(), MessageService.class));
-            Log.d(TAG,"stopped the service!!!!!!!!!!!");
+            //stopService(new Intent(getApplicationContext(), MessageService.class));
+            Log.d(TAG, "SERVICE IS RUNNING!!!");
         }
 
 
 
     }
+
+
 
 
     private void showLogout(){
