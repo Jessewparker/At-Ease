@@ -26,6 +26,7 @@ import com.parse.ParseUser;
 
 public class MainActivity extends AppCompatActivity{
 
+    private static final String TAG = "Main Activity";
     private Toolbar toolbar;
 
     @Override
@@ -36,10 +37,15 @@ public class MainActivity extends AppCompatActivity{
         toolbar = (Toolbar) findViewById(R.id.tool_bar); // Attaching the layout to the toolbar object
         setSupportActionBar(toolbar);                   // Setting toolbar as the ActionBar with setSupportActionBar() call
 
-        ParseUser currentUser = ParseUser.getCurrentUser();
+        final ParseUser currentUser = ParseUser.getCurrentUser();
         if (currentUser != null) {
-            currentUser.logOut();
+            Log.d(TAG, currentUser.getUsername().toString() + " is logged in");
         }
+        else {
+            Log.d(TAG, "no user logged in");
+        }
+
+
 
         AccountHeader header = new AccountHeaderBuilder()
                 .withActivity(this)
@@ -77,6 +83,7 @@ public class MainActivity extends AppCompatActivity{
         });
 
 
+
         Button btnManagerPayments = (Button) findViewById(R.id.manager_payments);
         btnManagerPayments.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -85,6 +92,17 @@ public class MainActivity extends AppCompatActivity{
                 startActivity(intent);
             }
         });
+
+        Button login = (Button) findViewById(R.id.login);
+        login.setOnClickListener(new View.OnClickListener()  {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(MainActivity.this, LoginActivity.class);
+
+                startActivity(intent);
+            }
+        });
+
 
         Button btnTenantPayments = (Button) findViewById(R.id.tenant_payments);
         btnTenantPayments.setOnClickListener(new View.OnClickListener() {
@@ -105,6 +123,39 @@ public class MainActivity extends AppCompatActivity{
 
                 startService(serviceIntent);
                 startActivity(intent);
+            }
+        });
+
+
+        Button addProperty = (Button) findViewById(R.id.add_property);
+        addProperty.setOnClickListener(new View.OnClickListener()  {
+            @Override
+            public void onClick(View view) {
+                ParseUser currentUser = ParseUser.getCurrentUser();
+                Boolean isManager = currentUser.getBoolean("isManager");
+                if (isManager) {
+                    Intent intent = new Intent(MainActivity.this, AddPropertyActivity.class);
+                    startActivity(intent);
+                }
+                else {
+                    Toast.makeText(MainActivity.this, "You must be a manager", Toast.LENGTH_LONG).show();
+                }
+            }
+        });
+
+        Button addTenant = (Button) findViewById(R.id.addTenant);
+        addTenant.setOnClickListener(new View.OnClickListener()  {
+            @Override
+            public void onClick(View view) {
+                ParseUser currentUser = ParseUser.getCurrentUser();
+                Boolean isTenant = currentUser.getBoolean("isTenant");
+                if (isTenant) {
+                    Intent intent = new Intent(MainActivity.this, AddTenantToPropertyActivity.class);
+                    startActivity(intent);
+                }
+                else {
+                    Toast.makeText(MainActivity.this, "You must be a tenant", Toast.LENGTH_LONG).show();
+                }
             }
         });
 
@@ -316,6 +367,7 @@ public class MainActivity extends AppCompatActivity{
             }
         });
 
+
         Button logoutButton = (Button) findViewById(R.id.logoutButton);
         logoutButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -329,9 +381,6 @@ public class MainActivity extends AppCompatActivity{
             }
         });
 
-
-
-
     }
 
     private void toastLogin(String name){
@@ -339,6 +388,7 @@ public class MainActivity extends AppCompatActivity{
                 name + " Logged in",
                 Toast.LENGTH_LONG).show();
     }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

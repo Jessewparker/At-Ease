@@ -90,8 +90,8 @@
             android:text="GG Manager"
             android:id="@+id/ggm"
             android:layout_below="@+id/mark"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentEnd="true" />
+            android:layout_alignRight="@+id/derek"
+            android:layout_alignEnd="@+id/derek" />
 
         <Button
             android:layout_width="wrap_content"
@@ -164,8 +164,6 @@
             android:id="@+id/logoutButton"
             android:gravity="center_vertical|center_horizontal"
             android:background="@color/secondary"
-
-
             android:textColor="@color/primary"
             android:layout_gravity="center_horizontal"
             android:layout_above="@+id/signin"
