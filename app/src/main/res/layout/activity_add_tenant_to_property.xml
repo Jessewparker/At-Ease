@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_gravity="center_horizontal">
+
 
         <TextView
             android:layout_width="wrap_content"
@@ -18,37 +17,33 @@
             android:layout_alignParentTop="true"
             android:layout_centerHorizontal="true" />
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="Property ID:"
-            android:id="@+id/textView5"
-            android:layout_below="@+id/textView4"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:layout_marginTop="38dp" />
-
-        <EditText
-            android:layout_width="wrap_content"
+        <com.rengwuxian.materialedittext.MaterialEditText
+            app:met_baseColor="@color/primary_text"
+            app:met_primaryColor="@color/primary_dark"
+            app:met_errorColor="@color/error"
+            app:met_floatingLabel="highlight"
+            app:met_floatingLabelText="Property Id (Provided by Manager)"
+            app:met_floatingLabelTextColor = "@color/primary"
+            android:hint="Property Id (Provided by Manager)"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/propertyID"
-            android:layout_alignTop="@+id/textView5"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentEnd="true"
-            android:layout_toRightOf="@+id/textView5"
-            android:layout_toEndOf="@+id/textView5" />
+            android:layout_below="@+id/textView4"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="50dp" />
 
         <Button
             style="?android:attr/buttonStyleSmall"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Join"
+            android:text="Join Property"
             android:id="@+id/addButton"
             android:layout_below="@+id/propertyID"
             android:layout_centerHorizontal="true"
-            android:layout_marginTop="62dp" />
+            android:layout_marginTop="62dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginLeft="60dp"
+            android:layout_marginRight="60dp" />
 
-    </RelativeLayout>
 
 </LinearLayout>

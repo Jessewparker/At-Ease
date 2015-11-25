@@ -44,7 +44,7 @@ public class LoginActivity extends Activity {
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                intent = new Intent(LoginActivity.this, MainActivity.class);
+               intent = new Intent(LoginActivity.this, NewMainActivity.class);
                 username = usernameField.getText().toString();
                 password = passwordField.getText().toString();
 

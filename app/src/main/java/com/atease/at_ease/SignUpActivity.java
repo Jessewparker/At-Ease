@@ -9,6 +9,7 @@ import android.widget.RadioButton;
 import android.content.Intent;
 
 
+import com.parse.ParseObject;
 import com.parse.ParseUser;
 
 /**
@@ -84,6 +85,13 @@ public class SignUpActivity extends Activity {
                     user.put("isManager", false);
                 }
                 user.signUpInBackground();
+                if(user.getBoolean("isManager")){
+                    ParseObject mgrSet = new ParseObject("ManagerSettings");
+                    mgrSet.add("manager",user);
+                    mgrSet.add("authorizedStripe",false);
+                    mgrSet.add("useStripePayments",false);
+                    mgrSet.saveInBackground();
+                }
 
                 ParseUser.logInInBackground(username, password);
                 startActivity(intent);

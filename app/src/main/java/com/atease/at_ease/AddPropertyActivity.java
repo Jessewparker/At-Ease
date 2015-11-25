@@ -12,6 +12,7 @@ import com.parse.LogInCallback;
 import com.parse.ParseObject;
 import com.parse.ParseUser;
 import com.parse.SignUpCallback;
+import com.rengwuxian.materialedittext.MaterialEditText;
 
 /**
  * Created by lguthrie825 on 11/9/15.
@@ -19,12 +20,12 @@ import com.parse.SignUpCallback;
 public class AddPropertyActivity extends Activity {
 
     private Button addPropertyButton;
-    private EditText streetField;
-    private EditText cityField;
-    private EditText stateField;
-    private EditText zipField;
-    private EditText countryField;
-    private EditText nicknameField;
+    private MaterialEditText streetField;
+    private MaterialEditText cityField;
+    private MaterialEditText stateField;
+    private MaterialEditText zipField;
+    private MaterialEditText countryField;
+    private MaterialEditText nicknameField;
     private String street;
     private String city;
     private String state;
@@ -40,13 +41,13 @@ public class AddPropertyActivity extends Activity {
         setContentView(R.layout.activity_add_property);
 
         addPropertyButton = (Button) findViewById(R.id.addButton);
-        streetField = (EditText) findViewById(R.id.streetField);
-        cityField = (EditText) findViewById(R.id.cityField);
-        stateField = (EditText) findViewById(R.id.stateField);
-        zipField = (EditText) findViewById(R.id.zipField);
-        streetField = (EditText) findViewById(R.id.streetField);
-        countryField = (EditText) findViewById(R.id.countryField);
-        nicknameField = (EditText) findViewById(R.id.nicknameField);
+        streetField = (MaterialEditText) findViewById(R.id.streetField);
+        cityField = (MaterialEditText) findViewById(R.id.cityField);
+        stateField = (MaterialEditText) findViewById(R.id.stateField);
+        zipField = (MaterialEditText) findViewById(R.id.zipField);
+        streetField = (MaterialEditText) findViewById(R.id.streetField);
+        countryField = (MaterialEditText) findViewById(R.id.countryField);
+        nicknameField = (MaterialEditText) findViewById(R.id.nicknameField);
 
         addPropertyButton.setOnClickListener(new View.OnClickListener(){
             @Override

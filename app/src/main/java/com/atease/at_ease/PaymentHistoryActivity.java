@@ -35,8 +35,19 @@ public class PaymentHistoryActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_payment_history);
 
+
         toolbar = (Toolbar) findViewById(R.id.tool_bar); // Attaching the layout to the toolbar object
-        setSupportActionBar(toolbar);                   // Setting toolbar as the ActionBar with setSupportActionBar() call
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                backUp();
+            }
+        });
+        setSupportActionBar(toolbar);// Setting toolbar as the ActionBar with setSupportActionBar() call
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+
+
 
         AtEaseApplication application = (AtEaseApplication) getApplicationContext();
         application.getNewDrawerBuilder().withActivity(this).build();
@@ -66,15 +77,23 @@ public class PaymentHistoryActivity extends AppCompatActivity {
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-
+        Log.d(TAG,"home: " + Integer.toString(R.id.home));
+        Log.d(TAG,"home2: " + Integer.toString(android.R.id.home));
+        Log.d(TAG,Integer.toString(id));
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             return true;
+        }
+        else if(id == android.R.id.home){
+            finish();
         }
 
         return super.onOptionsItemSelected(item);
     }
 
+    public void backUp(){
+        finish();
+    }
     private void populate(){
         ParseQuery<Payment> tenantQuery = ParseQuery.getQuery("Payment");
         ParseQuery<Payment> managerQuery = ParseQuery.getQuery("Payment");

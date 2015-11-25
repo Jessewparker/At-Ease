@@ -63,6 +63,7 @@ public class AtEaseApplication extends Application {
         PrimaryDrawerItem newWorkOrder = new PrimaryDrawerItem()
                 .withIcon(GoogleMaterial.Icon.gmd_add_box)
                 .withName("New Work Order");
+
         PrimaryDrawerItem newMessage = new PrimaryDrawerItem()
                 .withIcon(GoogleMaterial.Icon.gmd_add_box)
                 .withName("New Message");

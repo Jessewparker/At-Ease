@@ -93,6 +93,7 @@ public class MainActivity extends AppCompatActivity{
             }
         });
 
+        /*
         Button login = (Button) findViewById(R.id.login);
         login.setOnClickListener(new View.OnClickListener()  {
             @Override
@@ -101,7 +102,7 @@ public class MainActivity extends AppCompatActivity{
 
                 startActivity(intent);
             }
-        });
+        });*/
 
 
         Button btnTenantPayments = (Button) findViewById(R.id.tenant_payments);
@@ -126,7 +127,7 @@ public class MainActivity extends AppCompatActivity{
             }
         });
 
-
+        /*
         Button addProperty = (Button) findViewById(R.id.add_property);
         addProperty.setOnClickListener(new View.OnClickListener()  {
             @Override
@@ -142,6 +143,8 @@ public class MainActivity extends AppCompatActivity{
                 }
             }
         });
+        */
+        /*
 
         Button addTenant = (Button) findViewById(R.id.addTenant);
         addTenant.setOnClickListener(new View.OnClickListener()  {
@@ -158,6 +161,7 @@ public class MainActivity extends AppCompatActivity{
                 }
             }
         });
+        */
 
 
         Button manny = (Button) findViewById(R.id.manny);

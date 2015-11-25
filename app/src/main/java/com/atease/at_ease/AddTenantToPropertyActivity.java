@@ -10,13 +10,14 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.parse.*;
+import com.rengwuxian.materialedittext.MaterialEditText;
 
 /**
  * Created by lguthrie825 on 11/19/15.
  */
 public class AddTenantToPropertyActivity extends Activity {
     private Button add;
-    private EditText propertyID;
+    private MaterialEditText propertyID;
     private String id;
     private ParseObject place;
 
@@ -28,7 +29,7 @@ final String TAG = "AddTenantToProp";
         setContentView(R.layout.activity_add_tenant_to_property);
 
         add = (Button) findViewById(R.id.addButton);
-        propertyID = (EditText) findViewById(R.id.propertyID);
+        propertyID = (MaterialEditText) findViewById(R.id.propertyID);
         Log.d(TAG, "started Acitivity");
         add.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -37,7 +38,7 @@ final String TAG = "AddTenantToProp";
                 final Intent intentAdd = new Intent(AddTenantToPropertyActivity.this, AddTenantToPropertyActivity.class);
 
                 ParseQuery<ParseObject> placeQuery = ParseQuery.getQuery("Property");
-                placeQuery.whereEqualTo("nickname", id);
+                placeQuery.whereEqualTo("objectId", id);
                 placeQuery.getFirstInBackground(new GetCallback<ParseObject>() {
                     public void done(final ParseObject prop, ParseException e) {
                         if (prop == null) {
@@ -49,23 +50,7 @@ final String TAG = "AddTenantToProp";
                         }
                     }
                 });
-
-//                ParseQuery<ParseObject> personQuery = ParseQuery.getQuery("User");
-//                personQuery.whereEqualTo("username", username);
-//                personQuery.getFirstInBackground(new GetCallback<ParseObject>() {
-//                    public void done(ParseObject object, ParseException e) {
-//                        if (object == null) {
-//                            Toast.makeText(AddTenantToPropertyActivity.this, "User does not exist", Toast.LENGTH_LONG).show();
-//                            startActivity(intentAdd);
-//                        } else {
-//                            object.put("liveAt", place);
-//                            startActivity(intentAdd);
-//                        }
-//                    }
-//                });
-
             }
         });
-
     }
 }
