@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.Bundle;
 import android.os.IBinder;
+import android.text.format.DateUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -25,7 +26,13 @@ import com.sinch.android.rtc.messaging.MessageDeliveryInfo;
 import com.sinch.android.rtc.messaging.MessageFailureInfo;
 import com.sinch.android.rtc.messaging.WritableMessage;
 
+import org.joda.time.DateTime;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
+
+
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
 public class MessagingActivity extends Activity {
@@ -82,6 +89,7 @@ public class MessagingActivity extends Activity {
 
     //get previous messages from parse & display
     private void populateMessageHistory() {
+
         Log.d(TAG,"populate message history");
         String[] userIds = {currentUserId, recipientId};
         ParseQuery<ParseObject> query = ParseQuery.getQuery("Message");
@@ -92,11 +100,23 @@ public class MessagingActivity extends Activity {
             @Override
             public void done(List<ParseObject> messageList, com.parse.ParseException e) {
                 if (e == null) {
+                    messageAdapter.clearMessages(); // clear out the duplicates
                     for (int i = 0; i < messageList.size(); i++) {
-                        WritableMessage message = new WritableMessage(messageList.get(i).get("recipientId").toString(), messageList.get(i).get("messageText").toString());
+                        ParseObject curMessage = messageList.get(i);
+                        WritableMessage message = new WritableMessage(curMessage.get("recipientId").toString(), curMessage.get("messageText").toString());
+                        Date msgDate = curMessage.getCreatedAt();
+                        DateTime dt = new DateTime(msgDate);
+
+                        if(DateUtils.isToday(msgDate.getTime())){
+                            message.addHeader("date", dt.toString("h:mm a") );
+                        }
+                        else{
+                            message.addHeader("date", dt.toString("MMM d"));
+                        }
                         if (messageList.get(i).get("senderId").toString().equals(currentUserId)) {
                             messageAdapter.addMessage(message, MessageAdapter.DIRECTION_OUTGOING);
-                        } else {
+                        }
+                        else {
                             messageAdapter.addMessage(message, MessageAdapter.DIRECTION_INCOMING);
                         }
                     }
@@ -151,6 +171,14 @@ public class MessagingActivity extends Activity {
             Log.d(TAG, "onIncoming Message : " + message.getTextBody());
             if (message.getSenderId().equals(recipientId)) {
                 final WritableMessage writableMessage = new WritableMessage(message.getRecipientIds().get(0), message.getTextBody());
+                DateTime dt = new DateTime(message.getTimestamp());
+
+                if(DateUtils.isToday(message.getTimestamp().getTime())){
+                    writableMessage.addHeader("date", dt.toString("h:mm a") );
+                }
+                else{
+                    writableMessage.addHeader("date", dt.toString("MMM d"));
+                }
                 messageAdapter.addMessage(writableMessage, MessageAdapter.DIRECTION_INCOMING);
 
             }
@@ -179,6 +207,8 @@ public class MessagingActivity extends Activity {
                             parseMessage.put("sinchId", message.getMessageId());
                             parseMessage.saveInBackground();
 
+                            DateTime dt = new DateTime(new Date());//current time
+                            writableMessage.addHeader("date",dt.toString("h:mm a"));
                             messageAdapter.addMessage(writableMessage, MessageAdapter.DIRECTION_OUTGOING);
                         }
                     }

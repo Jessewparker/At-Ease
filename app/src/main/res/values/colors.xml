@@ -12,4 +12,8 @@
     <color name="item_background">#FFF</color>
     <color name="error">#ff090a</color>
     <color name="my_yellow">#ffe61f</color>
+    <color name="payment_settings">#22a9ff</color>
+    <color name="payment_history">#ff6666</color>
+    <color name="work_orders">#1bff58</color>
+    <color name="messaging">#f9ff60</color>
 </resources>

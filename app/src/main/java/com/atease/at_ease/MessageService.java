@@ -1,11 +1,16 @@
 package com.atease.at_ease;
 
 import android.app.Service;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Binder;
 import android.os.IBinder;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
+import android.view.View;
+import android.widget.Toast;
 
 import com.parse.ParseUser;
 import com.sinch.android.rtc.ClientRegistration;
@@ -27,7 +32,8 @@ public class MessageService extends Service implements SinchClientListener {
     private MessageClient messageClient = null;
     private String currentUserId;
     private LocalBroadcastManager broadcaster;
-    private Intent broadcastIntent = new Intent("com.atease.at_ease.app.ListUsersActivity");
+    private BroadcastReceiver receiver;
+    private Intent broadcastIntent = new Intent("com.atease.at_ease.ListUsersActivity");
 
     final String TAG = "MessageService";
     @Override
@@ -41,6 +47,18 @@ public class MessageService extends Service implements SinchClientListener {
         }
 
         broadcaster = LocalBroadcastManager.getInstance(this);
+        receiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                //Boolean success = intent.getBooleanExtra("success", false);
+                Log.d(TAG,"OnRecieve message service");
+                Intent broadIntent = new Intent("com.atease.at_ease.ListUsersActivity");
+                broadIntent.putExtra("success", isSinchClientStarted());
+                broadcaster.sendBroadcast(broadIntent);
+            }
+        };
+
+        broadcaster.registerReceiver(receiver, new IntentFilter("com.atease.at_ease.MessageService"));
 
         return super.onStartCommand(intent, flags, startId);
     }
@@ -56,7 +74,7 @@ public class MessageService extends Service implements SinchClientListener {
 
         sinchClient.checkManifest();
         sinchClient.start();
-        Log.d(TAG, "after the start.... should be started");
+        Log.d(TAG, "started sinch client");
     }
 
     private boolean isSinchClientStarted() {
@@ -73,9 +91,11 @@ public class MessageService extends Service implements SinchClientListener {
 
     @Override
     public void onClientStarted(SinchClient client) {
+        Log.d(TAG,"client started successfully");
+
         broadcastIntent.putExtra("success", true);
         broadcaster.sendBroadcast(broadcastIntent);
-
+        //Log.d(TAG, broadcaster.toString() + "doesn't look null to me?");
         client.startListeningOnActiveConnection();
         messageClient = client.getMessageClient();
     }
@@ -104,6 +124,9 @@ public class MessageService extends Service implements SinchClientListener {
             WritableMessage message = new WritableMessage(recipientUserId, textBody);
             messageClient.send(message);
         }
+        else{
+            Log.d(TAG, "client is null, no message being sent");
+        }
     }
 
     public void addMessageClientListener(MessageClientListener listener) {
@@ -122,6 +145,7 @@ public class MessageService extends Service implements SinchClientListener {
     public void onDestroy() {
         sinchClient.stopListeningOnActiveConnection();
         sinchClient.terminate();
+        broadcaster.unregisterReceiver(receiver);
     }
 
     public class MessageServiceInterface extends Binder {

@@ -31,6 +31,15 @@ public class MessageAdapter extends BaseAdapter {
         notifyDataSetChanged();
     }
 
+    public void removeMessage(int i){
+        messages.remove(i);
+        notifyDataSetChanged();
+    }
+
+    public void clearMessages(){
+        messages = new ArrayList<Pair<WritableMessage, Integer>>();
+    }
+
     @Override
     public int getCount() {
         return messages.size();
@@ -75,9 +84,13 @@ public class MessageAdapter extends BaseAdapter {
         WritableMessage message = messages.get(i).first;
 
         TextView txtMessage = (TextView) convertView.findViewById(R.id.txtMessage);
+        TextView txtDate = (TextView) convertView.findViewById(R.id.txtDate);
+
         txtMessage.setText(message.getTextBody());
+        txtDate.setText(message.getHeaders().get("date"));
 
         return convertView;
     }
+
 }
 
