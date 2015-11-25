@@ -1,5 +1,6 @@
 package com.atease.at_ease;
 
+import android.app.ActionBar;
 import android.app.ActivityManager;
 import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
@@ -9,11 +10,13 @@ import android.content.IntentFilter;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.text.Html;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.style.RelativeSizeSpan;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -22,9 +25,13 @@ import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.mikepenz.iconics.view.IconicsButton;
+import com.mikepenz.iconics.view.IconicsTextView;
+import com.mikepenz.materialdrawer.Drawer;
+import com.mikepenz.materialdrawer.DrawerBuilder;
 
 public class MainTenantActivity extends AppCompatActivity {
 
+    Toolbar toolbar;
     IconicsButton btnWorkOrder;
     IconicsButton btnPayRent;
     IconicsButton btnPaymentHistory;
@@ -42,6 +49,29 @@ public class MainTenantActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_tenant);
+
+        //Drawer Stuff
+        AtEaseApplication application = (AtEaseApplication) getApplicationContext();
+        final Drawer myDrawer = application.getNewDrawerBuilder().withActivity(this).build();
+
+        //Toolbar stuff
+        toolbar = (Toolbar) findViewById(R.id.tool_bar); // Attaching the layout to the toolbar object
+        toolbar.setTitle("At Ease");
+
+        IconicsTextView rightToggle = (IconicsTextView) toolbar.findViewById(R.id.rightToggle);
+        rightToggle.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (myDrawer.isDrawerOpen()) {
+                    myDrawer.closeDrawer();
+                } else {
+                    myDrawer.openDrawer();
+                }
+            }
+        });
+
+        setSupportActionBar(toolbar);// Setting toolbar as the ActionBar with setSupportActionBar() call
+        getSupportActionBar().setDisplayShowCustomEnabled(true);
 
 
 
@@ -116,6 +146,12 @@ public class MainTenantActivity extends AppCompatActivity {
 
     }
 
+
+
+
+
+
+
     private void bindMessagingButton(){
         progress.setVisibility(View.GONE);
         btnMessaging.setAlpha(1);
@@ -140,7 +176,7 @@ public class MainTenantActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);
+       // getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
     }
 

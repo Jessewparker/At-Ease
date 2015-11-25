@@ -97,7 +97,7 @@ public class StripeUtils {
     }
 
 
-    public static void getAccessToken( final String code, final ParseUser user) {
+    /*public static void getAccessToken( final String code, final ParseUser user) {
         //mProgress.setMessage("Connecting with Stripe");
        // mProgress.show();
         try {
@@ -137,8 +137,8 @@ public class StripeUtils {
             ex.printStackTrace();
             Log.d("ERROR in StripeUtils", ex.toString());
         }
-    }
-    /* public static void getAccessToken( final String code, final ParseUser user) {
+    } */
+     public static void getAccessToken( final String code, final ParseUser user) {
        //mProgress.setMessage("Connecting with Stripe");
        // mProgress.show();
 
@@ -188,5 +188,5 @@ public class StripeUtils {
 
             }
         }.start();
-    } */
+    }
 }

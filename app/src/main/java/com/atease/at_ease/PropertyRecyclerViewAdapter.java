@@ -38,6 +38,7 @@ public class PropertyViewHolder extends RecyclerView.ViewHolder {
     public Button btnMessaging;
     public IconicsButton btnPaymentSettings;
     public Button btnWorkOrders;
+    public IconicsButton btnPaymentHistory;
 
 
     public PropertyViewHolder(View view) {
@@ -47,6 +48,7 @@ public class PropertyViewHolder extends RecyclerView.ViewHolder {
         btnMessaging = (Button) view.findViewById(R.id.btnMessaging);
         btnPaymentSettings = (IconicsButton) view.findViewById(R.id.btnPaymentSettings);
         btnWorkOrders = (Button) view.findViewById(R.id.btnWorkOrders);
+        btnPaymentHistory = (IconicsButton) view.findViewById(R.id.btnPaymentHistory);
 
 
     }
@@ -84,6 +86,14 @@ public class PropertyViewHolder extends RecyclerView.ViewHolder {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(mContext, ManagerSettingsActivity.class);
+                intent.putExtra("propId", propId);
+                mContext.startActivity(intent);
+            }
+        });
+        holder.btnPaymentHistory.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(mContext,PaymentHistoryActivity.class);
                 intent.putExtra("propId", propId);
                 mContext.startActivity(intent);
             }

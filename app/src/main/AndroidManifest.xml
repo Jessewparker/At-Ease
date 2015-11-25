@@ -64,7 +64,9 @@
         <activity
             android:name=".RentPayActivity"
             android:label="@string/title_activity_rent_pay"
-            android:windowSoftInputMode="stateHidden" >
+            android:windowSoftInputMode="stateHidden|adjustPan">
+            <!--android:windowSoftInputMode="stateHidden" -->
+
         </activity>
         <activity
             android:name=".PaymentHistoryActivity"

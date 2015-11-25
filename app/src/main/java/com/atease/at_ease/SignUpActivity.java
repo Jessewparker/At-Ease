@@ -7,6 +7,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RadioButton;
 import android.content.Intent;
+import android.widget.Switch;
 
 
 import com.parse.ParseObject;
@@ -53,6 +54,23 @@ public class SignUpActivity extends Activity {
         emailField = (EditText) findViewById(R.id.emailField);
         phoneNumberField = (EditText) findViewById(R.id.phoneNumberField);
 
+        isTenantField.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(isTenantField.isChecked()){
+                    isManagerField.setChecked(false);
+                }
+            }
+        });
+        isManagerField.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(isManagerField.isChecked()){
+                    isTenantField.setChecked(false);
+                }
+            }
+        });
+
         done.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -72,18 +90,10 @@ public class SignUpActivity extends Activity {
                 user.put("firstName", firstName);
                 user.put("lastName", lastName);
                 user.put("phone", phoneNumber);
-                if (tenantChecked) {
-                    user.put("isTenant", true);
-                }
-                else {
-                    user.put("isTenant", false);
-                }
-                if (managerChecked) {
-                    user.put("isManager", true);
-                }
-                else {
-                    user.put("isManager", false);
-                }
+                user.put("isTenant", tenantChecked);
+                user.put("isManager", managerChecked);
+
+
                 user.signUpInBackground();
                 if(user.getBoolean("isManager")){
                     ParseObject mgrSet = new ParseObject("ManagerSettings");
@@ -103,6 +113,34 @@ public class SignUpActivity extends Activity {
 
 
 
+
+    }
+    private void determineActivity(ParseUser user){
+        Intent serviceIntent = new Intent(getApplicationContext(), MessageService.class);
+
+        if(user.getBoolean("isManager")){
+            if(user.getInt("managedProperties") > 1){
+                Intent intent = new Intent(SignUpActivity.this, MainMultipleManagerActivity.class);
+                startActivity(intent);
+                startService(serviceIntent);
+                finish();
+            }
+            else if(user.getInt("managedProperties") == 1){
+                Intent intent = new Intent(SignUpActivity.this, MainSingleManagerActivity.class);
+                startActivity(intent);
+                startService(serviceIntent);
+                finish();
+            }
+            else{
+                //Force to add a property
+            }
+        }
+        else if(user.getBoolean("isTenant")){
+            Intent intent = new Intent(SignUpActivity.this, MainTenantActivity.class);
+            startActivity(intent);
+            startService(serviceIntent);
+            finish();
+        }
 
     }
 }

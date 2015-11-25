@@ -57,6 +57,7 @@ public class LoginActivity extends Activity {
                     public void done(ParseUser user, com.parse.ParseException e) {
                         if (user != null) {
                             startActivity(intent);
+                            finish();
                         } else {
                             Toast.makeText(getApplicationContext(),
                                     "Wrong username/password combo",
@@ -72,8 +73,39 @@ public class LoginActivity extends Activity {
             public void onClick(View view) {
                 intent = new Intent(LoginActivity.this, SignUpActivity.class);
                 startActivity(intent);
+                finish();
             }
         });
+    }
+
+    private void determineActivity(ParseUser user){
+
+        Intent serviceIntent = new Intent(getApplicationContext(), MessageService.class);
+
+        if(user.getBoolean("isManager")){
+            if(user.getInt("managedProperties") > 1){
+                Intent intent = new Intent(LoginActivity.this, MainMultipleManagerActivity.class);
+                startActivity(intent);
+                startService(serviceIntent);
+                finish();
+            }
+            else if(user.getInt("managedProperties") == 1){
+                Intent intent = new Intent(LoginActivity.this, MainSingleManagerActivity.class);
+                startActivity(intent);
+                startService(serviceIntent);
+                finish();
+            }
+            else{
+                //Force to add a property
+            }
+        }
+        else if(user.getBoolean("isTenant")){
+            Intent intent = new Intent(LoginActivity.this, MainTenantActivity.class);
+            startActivity(intent);
+            startService(serviceIntent);
+            finish();
+        }
+
     }
 
 }

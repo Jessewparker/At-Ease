@@ -101,9 +101,10 @@ public class StripeConnectActivity extends AppCompatActivity {
                 Log.d(TAG, "got the url: " + url);
                 String queryString = url.replace(redirectURL + "?", ""); // cut out the url part, just want params
                 Map<String, String> params = StripeUtils.splitQuery(queryString);
-                Intent intent = new Intent(StripeConnectActivity.this, ManagerPaymentsActivity.class);
-                if(!url.contains("error")) {
+                Intent intent = new Intent(StripeConnectActivity.this, NewMainActivity.class);
+                if(url.contains("error")) {
                     Log.d(TAG,"got error no auth");
+                    //need toast
                     // mListener.onComplete(params);
                 }
                 else {
@@ -112,8 +113,8 @@ public class StripeConnectActivity extends AppCompatActivity {
                     // mListener.onError(params);
                 }
                 //StripeDialog.this.dismiss();
-                StripeConnectActivity.this.finish();
-                startActivity(intent);
+               //finish();
+               startActivity(intent);
                 return true;
 
             }

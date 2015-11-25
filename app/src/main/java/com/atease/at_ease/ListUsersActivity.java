@@ -8,7 +8,11 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.v4.content.LocalBroadcastManager;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -16,6 +20,8 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.mikepenz.iconics.view.IconicsTextView;
+import com.mikepenz.materialdrawer.Drawer;
 import com.parse.FindCallback;
 import com.parse.GetCallback;
 import com.parse.ParseObject;
@@ -26,13 +32,13 @@ import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ListUsersActivity extends Activity {
+public class ListUsersActivity extends AppCompatActivity {
 
+    private Toolbar toolbar;
     private String currentUserId;
     private ArrayAdapter<String> namesArrayAdapter;
     private ArrayList<String> names;
     private ListView usersListView;
-    private Button logoutButton;
     private ProgressDialog progressDialog;
     private BroadcastReceiver receiver = null;
     private ParseUser currentUser;
@@ -44,18 +50,34 @@ public class ListUsersActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_list_users);
 
+        AtEaseApplication application = (AtEaseApplication) getApplicationContext();
+        final Drawer myDrawer = application.getNewDrawerBuilder().withActivity(this).build();
+
+        //Toolbar stuff
+        toolbar = (Toolbar) findViewById(R.id.tool_bar); // Attaching the layout to the toolbar object
+        toolbar.setTitle("Messaging");
+        IconicsTextView rightToggle = (IconicsTextView) toolbar.findViewById(R.id.rightToggle);
+        rightToggle.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (myDrawer.isDrawerOpen()) {
+                    myDrawer.closeDrawer();
+                } else {
+                    myDrawer.openDrawer();
+                }
+            }
+        });
+
+        setSupportActionBar(toolbar);// Setting toolbar as the ActionBar with setSupportActionBar() call
+        getSupportActionBar().setDisplayShowCustomEnabled(true);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+
+
+
        // showSpinner();
 
-        logoutButton = (Button) findViewById(R.id.logoutButton);
-        /*logoutButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                stopService(new Intent(getApplicationContext(), MessageService.class));
-                ParseUser.logOut();
-                Intent intent = new Intent(ListUsersActivity.this, NewMainActivity.class);
-                startActivity(intent);
-            }
-        });*/
+
 
         Log.d(TAG,getClass().getName());
 
@@ -191,18 +213,18 @@ public class ListUsersActivity extends Activity {
         ParseQuery<ParseUser> query = ParseUser.getQuery();
         query.whereEqualTo("username", names.get(pos));
         query.findInBackground(new FindCallback<ParseUser>() {
-           public void done(List<ParseUser> user, com.parse.ParseException e) {
-               if (e == null) {
-                   Intent intent = new Intent(getApplicationContext(), MessagingActivity.class);
-                   intent.putExtra("RECIPIENT_ID", user.get(0).getObjectId());
-                   intent.putExtra("USER_ID", user.get(0).getUsername());
-                   startActivity(intent);
-               } else {
-                   Toast.makeText(getApplicationContext(),
-                           "Error finding that user",
-                           Toast.LENGTH_SHORT).show();
-               }
-           }
+            public void done(List<ParseUser> user, com.parse.ParseException e) {
+                if (e == null) {
+                    Intent intent = new Intent(getApplicationContext(), MessagingActivity.class);
+                    intent.putExtra("RECIPIENT_ID", user.get(0).getObjectId());
+                    intent.putExtra("USER_ID", user.get(0).getUsername());
+                    startActivity(intent);
+                } else {
+                    Toast.makeText(getApplicationContext(),
+                            "Error finding that user",
+                            Toast.LENGTH_SHORT).show();
+                }
+            }
         });
     }
 
@@ -240,6 +262,25 @@ public class ListUsersActivity extends Activity {
     public void onDestroy(){
         //LocalBroadcastManager.getInstance(this).unregisterReceiver(receiver);
         super.onDestroy();
+    }
+
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+        //noinspection SimplifiableIfStatement
+        if (id == R.id.action_settings) {
+            return true;
+        }
+        else if(id == android.R.id.home){
+            finish();
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 }
 

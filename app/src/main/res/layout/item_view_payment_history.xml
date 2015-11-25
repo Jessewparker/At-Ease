@@ -7,11 +7,18 @@
     <!-- this is the item front view -->
     <LinearLayout
         android:tag="front"
+        android:background="#ffffff"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+    <LinearLayout
+
         android:background="#a0a0a0"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:paddingBottom="2dp"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp">
     <LinearLayout
         android:tag="front"
         android:background="@color/item_background"
@@ -57,6 +64,7 @@
             android:textColor="@color/primary_text"
             android:layout_gravity="right" />
 
+    </LinearLayout>
     </LinearLayout>
     </LinearLayout>
 

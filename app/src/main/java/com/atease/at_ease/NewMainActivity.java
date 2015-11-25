@@ -14,6 +14,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
+import com.mikepenz.materialdrawer.Drawer;
 import com.parse.LogInCallback;
 import com.parse.ParseException;
 import com.parse.ParseUser;
@@ -25,6 +26,8 @@ public class NewMainActivity extends AppCompatActivity {
     Button jesseTenant;
     Button jesseManager;
     Button logout;
+    Button signUp;
+    Button login;
 
     final String TAG = "NewMainActivity";
     @Override
@@ -32,18 +35,38 @@ public class NewMainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_main);
 
+        AtEaseApplication application = (AtEaseApplication) getApplicationContext();
+        final Drawer myDrawer = application.getNewDrawerBuilder().withActivity(this).build();
+
         ggm = (Button) findViewById(R.id.btnGGManager);
         gus = (Button) findViewById(R.id.btnGusGuy );
         jesseTenant = (Button) findViewById(R.id.btnJesseTenant);
         jesseManager = (Button) findViewById(R.id.btnJesseManager);
         logout = (Button) findViewById(R.id.logoutButton);
+        login = (Button) findViewById(R.id.btnLogin);
+        signUp = (Button) findViewById(R.id.btnSignUp);
 
         ParseUser currentUser = ParseUser.getCurrentUser();
         if(currentUser != null){
             determineActivity(currentUser);
         }
 
+        login.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(NewMainActivity.this, LoginActivity.class);
+                startActivity(intent);
 
+            }
+        });
+        signUp.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(NewMainActivity.this, SignUpActivity.class);
+                startActivity(intent);
+
+            }
+        });
 
         ggm.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -51,9 +74,8 @@ public class NewMainActivity extends AppCompatActivity {
                 ParseUser.logInInBackground("gusguymanager", "drowssap", new LogInCallback() {
                     public void done(ParseUser user, ParseException e) {
                         if (user != null) {
-                            Intent serviceIntent = new Intent(getApplicationContext(), MessageService.class);
                             determineActivity(user);//will launch the activity
-                            startService(serviceIntent);
+
                             Log.i(TAG, "User " + user.getUsername() + " Logged in");
                         } else {
                             Log.d(TAG, "User Log-in Failed");
@@ -69,9 +91,9 @@ public class NewMainActivity extends AppCompatActivity {
                 ParseUser.logInInBackground("gusguyman", "drowssap", new LogInCallback() {
                     public void done(ParseUser user, ParseException e) {
                         if (user != null) {
-                            Intent serviceIntent = new Intent(getApplicationContext(), MessageService.class);
+
                             determineActivity(user);//will launch the activity
-                            startService(serviceIntent);
+
                             Log.i(TAG, "User " + user.getUsername() + " Logged in");
                         } else {
                             Log.d(TAG, "User Log-in Failed");
@@ -87,9 +109,7 @@ public class NewMainActivity extends AppCompatActivity {
                 ParseUser.logInInBackground("jesseManager", "password", new LogInCallback() {
                     public void done(ParseUser user, ParseException e) {
                         if (user != null) {
-                            Intent serviceIntent = new Intent(getApplicationContext(), MessageService.class);
                             determineActivity(user);//will launch the activity
-                            startService(serviceIntent);
                             Log.i(TAG, "User " + user.getUsername() + " Logged in");
                         } else {
                             Log.d(TAG, "User Log-in Failed");
@@ -105,9 +125,8 @@ public class NewMainActivity extends AppCompatActivity {
                 ParseUser.logInInBackground("jesseTenant", "password", new LogInCallback() {
                     public void done(ParseUser user, ParseException e) {
                         if (user != null) {
-                            Intent serviceIntent = new Intent(getApplicationContext(), MessageService.class);
                             determineActivity(user);//will launch the activity
-                            startService(serviceIntent);
+
                             Log.i(TAG, "User " + user.getUsername() + " Logged in");
                         } else {
                             Log.d(TAG, "User Log-in Failed");
@@ -177,14 +196,20 @@ public class NewMainActivity extends AppCompatActivity {
         //else if manager && 1 property (even if is also a tenant)
             //go to MainSingleManagerActivity
         //else isTenant so go to MainTenantActivity
+        Intent serviceIntent = new Intent(getApplicationContext(), MessageService.class);
+
         if(user.getBoolean("isManager")){
             if(user.getInt("managedProperties") > 1){
                 Intent intent = new Intent(NewMainActivity.this, MainMultipleManagerActivity.class);
                 startActivity(intent);
+                startService(serviceIntent);
+                finish();
             }
             else if(user.getInt("managedProperties") == 1){
                 Intent intent = new Intent(NewMainActivity.this, MainSingleManagerActivity.class);
                 startActivity(intent);
+                startService(serviceIntent);
+                finish();
             }
             else{
                 //Force to add a property
@@ -193,6 +218,8 @@ public class NewMainActivity extends AppCompatActivity {
         else if(user.getBoolean("isTenant")){
             Intent intent = new Intent(NewMainActivity.this, MainTenantActivity.class);
             startActivity(intent);
+            startService(serviceIntent);
+            finish();
         }
 
     }
@@ -212,17 +239,11 @@ public class NewMainActivity extends AppCompatActivity {
     @Override
     public void onStop(){
         super.onStop();
-        hideUsers();
-        showLogout();
+       // hideUsers();
+        //showLogout();
 
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        return true;
-    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {

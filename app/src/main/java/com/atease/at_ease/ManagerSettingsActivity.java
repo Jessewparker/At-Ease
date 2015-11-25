@@ -1,7 +1,9 @@
 package com.atease.at_ease;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -15,6 +17,8 @@ import android.widget.TextView;
 
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
+import com.mikepenz.iconics.view.IconicsTextView;
+import com.mikepenz.materialdrawer.Drawer;
 import com.parse.GetCallback;
 import com.parse.ParseException;
 import com.parse.ParseObject;
@@ -33,6 +37,7 @@ import java.util.Date;
 
 public class ManagerSettingsActivity extends AppCompatActivity {
 
+    Toolbar toolbar;
     TextView tvTitle;
     Button btnStripeConnect;
     Switch swUseStripe;
@@ -61,6 +66,29 @@ public class ManagerSettingsActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_manager_settings);
+
+        AtEaseApplication application = (AtEaseApplication) getApplicationContext();
+        final Drawer myDrawer = application.getNewDrawerBuilder().withActivity(this).build();
+
+        //Toolbar stuff
+        toolbar = (Toolbar) findViewById(R.id.tool_bar); // Attaching the layout to the toolbar object
+        toolbar.setTitle("Property Settings");
+        IconicsTextView rightToggle = (IconicsTextView) toolbar.findViewById(R.id.rightToggle);
+        rightToggle.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (myDrawer.isDrawerOpen()) {
+                    myDrawer.closeDrawer();
+                } else {
+                    myDrawer.openDrawer();
+                }
+            }
+        });
+
+        setSupportActionBar(toolbar);// Setting toolbar as the ActionBar with setSupportActionBar() call
+        getSupportActionBar().setDisplayShowCustomEnabled(true);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
 
 
         ParseUser currentUser = ParseUser.getCurrentUser();
@@ -104,13 +132,12 @@ public class ManagerSettingsActivity extends AppCompatActivity {
                 if (e == null) {
                     mgrSettings = mgr;
                     stripeAuthorized = mgrSettings.getBoolean("authorizedStripe");
-                    if(stripeAuthorized){
+                    if (stripeAuthorized) {
                         btnStripeConnect.setVisibility(View.GONE);
                         tvTitle.setText("Here you can choose if you want to turn Stripe Payments on or off");
                         stripePay = mgrSettings.getBoolean("useStripePayments");
                         swUseStripe.setChecked(stripePay);
-                    }
-                    else{
+                    } else {
                         swUseStripe.setVisibility(View.GONE);
                         stripePay = false;
                     }
@@ -119,6 +146,13 @@ public class ManagerSettingsActivity extends AppCompatActivity {
                 } else {
                     Log.d(TAG, "couldn't get ManagerSettings from Parse");
                 }
+            }
+        });
+        btnStripeConnect.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(ManagerSettingsActivity.this, StripeConnectActivity.class);
+                startActivity(intent);
             }
         });
 
@@ -308,12 +342,6 @@ public class ManagerSettingsActivity extends AppCompatActivity {
     }
 
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        return true;
-    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -324,6 +352,10 @@ public class ManagerSettingsActivity extends AppCompatActivity {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
+            return true;
+        }
+        else if(id == android.R.id.home){
+            finish();
             return true;
         }
 

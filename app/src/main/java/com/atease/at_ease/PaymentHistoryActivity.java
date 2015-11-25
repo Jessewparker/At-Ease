@@ -1,5 +1,6 @@
 package com.atease.at_ease;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -11,8 +12,11 @@ import android.view.MenuItem;
 import android.view.View;
 
 import com.atease.at_ease.models.Payment;
+import com.mikepenz.iconics.view.IconicsTextView;
+import com.mikepenz.materialdrawer.Drawer;
 import com.parse.FindCallback;
 import com.parse.ParseException;
+import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
 
@@ -35,22 +39,28 @@ public class PaymentHistoryActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_payment_history);
 
+        AtEaseApplication application = (AtEaseApplication) getApplicationContext();
+        final Drawer myDrawer = application.getNewDrawerBuilder().withActivity(this).build();
 
+        //Toolbar stuff
         toolbar = (Toolbar) findViewById(R.id.tool_bar); // Attaching the layout to the toolbar object
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+        toolbar.setTitle("Payment History");
+        IconicsTextView rightToggle = (IconicsTextView) toolbar.findViewById(R.id.rightToggle);
+        rightToggle.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                backUp();
+                if (myDrawer.isDrawerOpen()) {
+                    myDrawer.closeDrawer();
+                } else {
+                    myDrawer.openDrawer();
+                }
             }
         });
+
         setSupportActionBar(toolbar);// Setting toolbar as the ActionBar with setSupportActionBar() call
+        getSupportActionBar().setDisplayShowCustomEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
-
-
-
-        AtEaseApplication application = (AtEaseApplication) getApplicationContext();
-        application.getNewDrawerBuilder().withActivity(this).build();
 
         recyclerView = (RecyclerView) findViewById(R.id.recycler);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
@@ -64,12 +74,6 @@ public class PaymentHistoryActivity extends AppCompatActivity {
 
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        return true;
-    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -77,15 +81,13 @@ public class PaymentHistoryActivity extends AppCompatActivity {
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-        Log.d(TAG,"home: " + Integer.toString(R.id.home));
-        Log.d(TAG,"home2: " + Integer.toString(android.R.id.home));
-        Log.d(TAG,Integer.toString(id));
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             return true;
         }
         else if(id == android.R.id.home){
             finish();
+            return true;
         }
 
         return super.onOptionsItemSelected(item);
@@ -95,10 +97,29 @@ public class PaymentHistoryActivity extends AppCompatActivity {
         finish();
     }
     private void populate(){
+        Intent old = getIntent();
+        ParseObject property = null;
+
+        if(old.getStringExtra("propId") != null){
+            ParseQuery<ParseObject> propertyQuery = ParseQuery.getQuery("Property");
+            try {
+               property = propertyQuery.get(old.getStringExtra("propId"));
+            }
+            catch(Exception e){
+
+            }
+        }
+
         ParseQuery<Payment> tenantQuery = ParseQuery.getQuery("Payment");
         ParseQuery<Payment> managerQuery = ParseQuery.getQuery("Payment");
         tenantQuery.whereEqualTo("tenant",ParseUser.getCurrentUser());
+        if(property != null){
+            tenantQuery.whereEqualTo("property",property);
+        }
         managerQuery.whereEqualTo("manager", ParseUser.getCurrentUser());
+        if(property != null){
+            managerQuery.whereEqualTo("property",property);
+        }
         List<ParseQuery<Payment>> queries = new ArrayList<ParseQuery<Payment>>();
         queries.add(tenantQuery);
         queries.add(managerQuery);
