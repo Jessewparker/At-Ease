@@ -143,9 +143,9 @@ public class ViewWorkOrderActivity extends Activity {
             Drawable pic1 = workOrder.getPic1AsDrawable();
             Drawable pic2 = workOrder.getPic2AsDrawable();
             Drawable pic3 = workOrder.getPic3AsDrawable();
-            File mypath1 =new File(directory,"pic1.png");
-            File mypath2 =new File(directory,"pic2.png");
-            File mypath3 =new File(directory,"pic3.png");
+            File mypath1 = new File(directory,"pic1.png");
+            File mypath2 = new File(directory,"pic2.png");
+            File mypath3 = new File(directory,"pic3.png");
             if (pic1 != null)
             {
                 FileOutputStream out = null;
@@ -164,12 +164,62 @@ public class ViewWorkOrderActivity extends Activity {
                         e.printStackTrace();
                     }
                 }
-                TextSliderView textSliderView = new TextSliderView(this);
-                textSliderView
+                TextSliderView textSliderView1 = new TextSliderView(this);
+                textSliderView1
                         .description("Picture 1")
                         .image(mypath1);
 
-                sliderShow.addSlider(textSliderView);
+                sliderShow.addSlider(textSliderView1);
+            }
+            if (pic2 != null)
+            {
+                FileOutputStream out = null;
+                try {
+                    out = new FileOutputStream(mypath2);
+                    ((BitmapDrawable) pic2).getBitmap().compress(Bitmap.CompressFormat.PNG, 100, out); // bmp is your Bitmap instance
+                    // PNG is a lossless format, the compression factor (100) is ignored
+                } catch (Exception e) {
+                    e.printStackTrace();
+                } finally {
+                    try {
+                        if (out != null) {
+                            out.close();
+                        }
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+                TextSliderView textSliderView2 = new TextSliderView(this);
+                textSliderView2
+                        .description("Picture 2")
+                        .image(mypath2);
+
+                sliderShow.addSlider(textSliderView2);
+            }
+            if (pic3 != null)
+            {
+                FileOutputStream out = null;
+                try {
+                    out = new FileOutputStream(mypath3);
+                    ((BitmapDrawable) pic3).getBitmap().compress(Bitmap.CompressFormat.PNG, 100, out); // bmp is your Bitmap instance
+                    // PNG is a lossless format, the compression factor (100) is ignored
+                } catch (Exception e) {
+                    e.printStackTrace();
+                } finally {
+                    try {
+                        if (out != null) {
+                            out.close();
+                        }
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+                TextSliderView textSliderView3 = new TextSliderView(this);
+                textSliderView3
+                        .description("Picture 3")
+                        .image(mypath3);
+
+                sliderShow.addSlider(textSliderView3);
             }
         } catch (ParseException e) {
             e.printStackTrace();

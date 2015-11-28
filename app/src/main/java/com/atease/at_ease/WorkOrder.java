@@ -5,6 +5,7 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.util.Log;
 
 import com.parse.ParseClassName;
 import com.parse.ParseException;
@@ -56,10 +57,16 @@ public class WorkOrder extends ParseObject implements Parcelable{
     }
 
     public Drawable getPic1AsDrawable() throws ParseException {
-        byte[] b = getPic1().getData();
-        ByteArrayInputStream is = new ByteArrayInputStream(b);
-        Drawable pic1 = Drawable.createFromStream(is, "pic1.jpg");
-        return pic1;
+        ParseFile pic1File = getPic1();
+        if (pic1File != null) {
+            byte[] b = pic1File.getData();
+            ByteArrayInputStream is = new ByteArrayInputStream(b);
+            Drawable pic1 = Drawable.createFromStream(is, "pic1.jpg");
+            return pic1;
+        }
+        else {
+            return null;
+        }
     }
 
     public void setPic1(ParseFile inPic1) {
@@ -141,7 +148,9 @@ public class WorkOrder extends ParseObject implements Parcelable{
 
     public String getTextAsString() throws ParseException {
         ParseFile textFile = getText();
-        String text = textFile.getData().toString();
+        byte[] textBytes = textFile.getData();
+        String text = new String(textBytes);
+        Log.d("AT-EASE", "text after parse: " + text);
         return text;
     }
 
@@ -150,7 +159,10 @@ public class WorkOrder extends ParseObject implements Parcelable{
     }
 
     public void setTextFromString(String inText) {
+        Log.d("AT-EASE", "InText is: " + inText);
         byte[] b = inText.getBytes();
+        String text = new String(b);
+        Log.d("AT-EASE", "after conversion, text is: " + text);
         ParseFile textFile = new ParseFile("text.txt", b);
         setText(textFile);
     }

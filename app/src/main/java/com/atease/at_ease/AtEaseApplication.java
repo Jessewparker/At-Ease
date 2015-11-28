@@ -121,9 +121,6 @@ public class AtEaseApplication extends Application {
 
                                 }
                                     }).show();
-
-
-
                         }
                         return true;
                     }
