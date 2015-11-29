@@ -4,6 +4,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.support.annotation.NonNull;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -17,6 +18,8 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
+import com.afollestad.materialdialogs.DialogAction;
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.atease.at_ease.models.Payment;
 import com.mikepenz.iconics.view.IconicsTextView;
 import com.mikepenz.materialdrawer.Drawer;
@@ -25,6 +28,7 @@ import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
+import com.parse.SaveCallback;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -39,6 +43,7 @@ public class MainMultipleManagerActivity extends AppCompatActivity {
     private List<ParseObject> propertyList = new ArrayList<ParseObject>();
     Button btnWorkOrder;
     Button btnPaymentHistory;
+    Button btnDelete;
 
 
     private BroadcastReceiver receiver = null;
@@ -78,11 +83,12 @@ public class MainMultipleManagerActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setHasFixedSize(true);
 
-        adapter = new PropertyRecyclerViewAdapter(MainMultipleManagerActivity.this,this.propertyList);
+        adapter = new PropertyRecyclerViewAdapter(MainMultipleManagerActivity.this, this.propertyList);
         recyclerView.setAdapter(adapter);
 
         btnPaymentHistory = (Button) findViewById(R.id.btnPaymentHistory);
         btnWorkOrder = (Button) findViewById(R.id.btnWorkOrder);
+        btnDelete = (Button) findViewById(R.id.btnDelete);
 
         btnPaymentHistory.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -91,6 +97,8 @@ public class MainMultipleManagerActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+
+
 
         populate();
     }

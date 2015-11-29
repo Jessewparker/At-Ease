@@ -18,94 +18,113 @@
         android:paddingTop="@dimen/activity_vertical_margin"
         android:paddingBottom="@dimen/activity_vertical_margin"
         android:orientation="vertical"
-        android:weightSum="4"
        >
 
 
-    <LinearLayout
-        android:orientation="horizontal"
-        android:layout_width="match_parent"
-        android:weightSum="2"
-        android:layout_weight="2"
-        android:layout_height="match_parent"
-        android:layout_margin="0dp"
-        android:padding="0dp">
-
-
-        <com.mikepenz.iconics.view.IconicsButton
+        <LinearLayout
+            android:orientation="horizontal"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:text="{faw-wrench}\nWork\nOrders"
-            android:textSize="50dp"
-            android:id="@+id/btnWorkOrder"
-            android:layout_weight="1"
-            android:padding="1dp"
-            android:layout_margin="1dp"
-            android:background="#1bff58" />
+            android:weightSum="2"
+            android:layout_weight="5"
+            android:layout_height="0dp"
+            android:layout_margin="0dp"
+            android:padding="0dp">
 
 
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="1">
-
-        <com.mikepenz.iconics.view.IconicsButton
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:text="{faw-envelope-o}\nMessaging"
-            android:id="@+id/btnMessaging"
-            android:padding="1dp"
-            android:stateListAnimator="@null"
-            android:background="#f9ff60"
-            android:textSize="50dp" />
-
-            <ProgressBar
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/progressBar"
-                android:layout_centerVertical="true"
-                android:layout_centerHorizontal="true"
-                android:elevation="10dp"
-                android:translationZ="5dp" />
+            <com.mikepenz.iconics.view.IconicsButton
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:text="{faw-wrench}\nWork\nOrders"
+                android:textSize="50dp"
+                android:id="@+id/btnWorkOrder"
+                android:layout_weight="1"
+                android:padding="1dp"
+                android:layout_margin="1dp"
+                android:background="#1bff58" />
 
 
-        </RelativeLayout>
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1">
+
+            <com.mikepenz.iconics.view.IconicsButton
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:text="{faw-envelope-o}\nMessaging"
+                android:id="@+id/btnMessaging"
+                android:padding="1dp"
+                android:stateListAnimator="@null"
+                android:background="#f9ff60"
+                android:textSize="50dp" />
+
+                <ProgressBar
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/progressBar"
+                    android:layout_centerVertical="true"
+                    android:layout_centerHorizontal="true"
+                    android:elevation="10dp"
+                    android:translationZ="5dp" />
+
+
+            </RelativeLayout>
 
 
 
 
 
-    </LinearLayout>
-
-    <LinearLayout
-        android:orientation="horizontal"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:weightSum="2"
-        android:layout_weight="2"
-        >
-
-        <com.mikepenz.iconics.view.IconicsButton
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:text="{faw-money}\nPay Rent"
-            android:id="@+id/btnPayRent"
-            android:textSize="50dp"
-            android:layout_weight="1"
-            android:padding="0dp"
-            android:background="#22a9ff" />
-
-        <com.mikepenz.iconics.view.IconicsButton
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:text="{faw-calendar-check-o}\nPayment\nHistory"
-            android:id="@+id/btnPaymentHistory"
-            android:layout_weight="1"
-            android:textSize="50dp"
-            android:singleLine="false"
-            android:allowUndo="true"
-            android:padding="1dp"
-            android:background="#ff6666" />
-    </LinearLayout>
         </LinearLayout>
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:weightSum="2"
+            android:layout_weight="5"
+            >
+
+            <com.mikepenz.iconics.view.IconicsButton
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:text="{faw-money}\nPay Rent"
+                android:id="@+id/btnPayRent"
+                android:textSize="50dp"
+                android:layout_weight="1"
+                android:padding="0dp"
+                android:background="#22a9ff" />
+
+            <com.mikepenz.iconics.view.IconicsButton
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:text="{faw-calendar-check-o}\nPayment\nHistory"
+                android:id="@+id/btnPaymentHistory"
+                android:layout_weight="1"
+                android:textSize="50dp"
+                android:singleLine="false"
+                android:allowUndo="true"
+                android:padding="1dp"
+                android:background="#ff6666" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:weightSum="1"
+            android:layout_weight="2"
+            >
+
+            <com.mikepenz.iconics.view.IconicsButton
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:text="{faw-truck} Leave Property"
+                android:id="@+id/btnLeave"
+                android:textSize="50dp"
+                android:padding="0dp"
+                android:background="@color/primary" />
+
+        </LinearLayout>
+
+    </LinearLayout>
 </LinearLayout>

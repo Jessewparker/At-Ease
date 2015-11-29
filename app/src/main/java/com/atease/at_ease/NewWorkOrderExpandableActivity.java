@@ -258,6 +258,9 @@ public class NewWorkOrderExpandableActivity extends Activity {
         if (currentUser != null) {
             // do stuff with the user
             WorkOrder workOrder = new WorkOrder();
+            workOrder.setDeleted(false);
+            workOrder.setManagerDone(false);
+            workOrder.setTenantDone(false);
 
             String text = ((EditText) findViewById(R.id.new_work_order_text)).getText().toString();
             String subject = ((EditText) findViewById(R.id.new_work_order_subject)).getText().toString();

@@ -3,6 +3,8 @@ package com.atease.at_ease;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
@@ -19,6 +21,7 @@ import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.mikepenz.iconics.view.IconicsTextView;
 import com.mikepenz.materialdrawer.Drawer;
+import com.parse.FindCallback;
 import com.parse.GetCallback;
 import com.parse.ParseException;
 import com.parse.ParseObject;
@@ -33,7 +36,9 @@ import com.rey.material.widget.CheckBox;
 import com.prolificinteractive.materialcalendarview.MaterialCalendarView;
 import com.rey.material.widget.EditText;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 public class ManagerSettingsActivity extends AppCompatActivity {
 
@@ -58,6 +63,11 @@ public class ManagerSettingsActivity extends AppCompatActivity {
     ParseObject stripeAuth;
     ParseObject mgrSettings;
     ParseObject property;
+
+    private RecyclerView recyclerView;
+    private TenantRecyclerViewAdapter adapter;
+    private TenantRecyclerViewAdapter.TenantViewHolder viewHolder;
+    private List<ParseUser> tenantList = new ArrayList<ParseUser>();
 
 
 
@@ -124,6 +134,13 @@ public class ManagerSettingsActivity extends AppCompatActivity {
             }
         });
 */
+        recyclerView = (RecyclerView) findViewById(R.id.recycler_tenant);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
+        recyclerView.setLayoutManager(layoutManager);
+        recyclerView.setHasFixedSize(true);
+        adapter = new TenantRecyclerViewAdapter(ManagerSettingsActivity.this, this.tenantList);
+        recyclerView.setAdapter(adapter);
+
         ParseQuery<ParseObject> mgrSettingsQuery = ParseQuery.getQuery("ManagerSettings");
         mgrSettingsQuery.whereEqualTo("manager", currentUser);
         mgrSettingsQuery.getFirstInBackground(new GetCallback<ParseObject>() {
@@ -186,6 +203,13 @@ public class ManagerSettingsActivity extends AppCompatActivity {
                 }
             }
         });
+
+        try {
+            populateTenants();
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
         btnSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -200,31 +224,65 @@ public class ManagerSettingsActivity extends AppCompatActivity {
                                 dialog.dismiss();
                             }
                         }).onPositive(new MaterialDialog.SingleButtonCallback() {
-                            @Override
-                            public void onClick(MaterialDialog dialog, DialogAction which) {
+                    @Override
+                    public void onClick(MaterialDialog dialog, DialogAction which) {
 
 
-                                //save mgrSettings
-                                mgrSettings.put("useStripePayments", swUseStripe.isChecked());
+                        //save mgrSettings
+                        mgrSettings.put("useStripePayments", swUseStripe.isChecked());
 
-                                // save property settings
-                                String amount = fixAmountForStore(etMonthlyRentDue.getText().toString());
-                                property.put("monthlyRentDue", Integer.parseInt(amount) );
-                                property.put("occupied", cbOccupied.isChecked());
-                                property.put("prorateDays", Integer.parseInt(etProrateDays.getText().toString()));
-                                property.put("nextRentDue",calendar.getSelectedDate().getDate());
+                        // save property settings
+                        String amount = fixAmountForStore(etMonthlyRentDue.getText().toString());
+                        property.put("monthlyRentDue", Integer.parseInt(amount));
+                        property.put("occupied", cbOccupied.isChecked());
+                        property.put("prorateDays", Integer.parseInt(etProrateDays.getText().toString()));
+                        property.put("nextRentDue", calendar.getSelectedDate().getDate());
 
-                                //Save both mgrSettings and property in back ground
-                                mgrSettings.saveInBackground();
-                                property.saveInBackground();
+                        //Save both mgrSettings and property in back ground
+                        mgrSettings.saveInBackground();
+                        property.saveInBackground();
 
-                                dialog.dismiss(); //done, so dismiss the dialog
-                            }
-                        })
+                        dialog.dismiss(); //done, so dismiss the dialog
+                    }
+                })
                         .show();
             }
         });
 
+    }
+
+    private void populateTenants() throws ParseException {
+        ParseQuery<ParseObject> propertyQuery = ParseQuery.getQuery("Property");
+        propertyQuery.whereEqualTo("objectId", getIntent().getStringExtra("propId"));
+        propertyQuery.getFirstInBackground(new GetCallback<ParseObject>() {
+            @Override
+            public void done(ParseObject prop, ParseException e) {
+                if (e == null) {
+                    Log.i("AT-EASE", "Property found for tenant search");
+                    ParseQuery<ParseUser> userParseQuery = ParseUser.getQuery();
+                    userParseQuery.whereExists("liveAt");
+                    userParseQuery.whereEqualTo("liveAt", prop);
+                    //        userParseQuery.whereEqualTo("isManager", false);
+                    userParseQuery.findInBackground(new FindCallback<ParseUser>() {
+                        @Override
+                        public void done(List<ParseUser> tmpPropList, ParseException e) {
+                            Log.d("AT-EASE", "tmpPropList Size: " + tmpPropList.size());
+                            if (e == null) {
+                                for (ParseUser entry : tmpPropList) {
+                                    Log.d("AT-EASE", "Adding tenant to property list: " + entry.getString("firstName") + " " + entry.getString("lastName"));
+                                    tenantList.add(entry);
+                                }
+                                adapter.notifyDataSetChanged();
+                            } else {
+                                Log.d(TAG, "tenant populate method broke");
+                            }
+                        }
+                    });
+                } else {
+                    Log.d("AT-EASE", "Error finding property for tenant search. Error: " + e.toString());
+                }
+            }
+        });
     }
 
     private String combineChecks(){

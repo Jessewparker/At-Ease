@@ -20,6 +20,7 @@ import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
+import com.parse.SaveCallback;
 import com.software.shell.fab.ActionButton;
 
 import java.util.ArrayList;
@@ -34,7 +35,6 @@ public class WorkOrderInboxActivity extends AppCompatActivity {
     private Toolbar toolbar;
     RecyclerView recyclerView;
     WorkOrderInboxRecyclerViewAdapter adapter;
-    SwipeToAction swipeToAction;
 
     List<WorkOrder> workOrderList = new ArrayList<>();
 
@@ -63,79 +63,8 @@ public class WorkOrderInboxActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setHasFixedSize(true);
 
-        adapter = new WorkOrderInboxRecyclerViewAdapter(this.workOrderList);
+        adapter = new WorkOrderInboxRecyclerViewAdapter(WorkOrderInboxActivity.this, this.workOrderList);
         recyclerView.setAdapter(adapter);
-
-        swipeToAction = new SwipeToAction(recyclerView, new SwipeToAction.SwipeListener<WorkOrder>() {
-            @Override
-            public boolean swipeLeft(final WorkOrder inWorkOrder) {
-                final int pos = removeWorkOrder(inWorkOrder);
-                new MaterialDialog.Builder(WorkOrderInboxActivity.this)
-                        .title("Confirm Deletion")
-                        .content("Are you sure you want to cancel this Work Order? This action can not be undone!")
-                        .positiveText("Delete")
-                        .negativeText("Cancel")
-                        .onNegative(new MaterialDialog.SingleButtonCallback() {
-                            @Override
-                            public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                                return;
-                            }
-                        })
-                        .onPositive(new MaterialDialog.SingleButtonCallback() {
-                            @Override
-                            public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                                ParseUser currentUser = ParseUser.getCurrentUser();
-                                if(inWorkOrder.getTenant() == currentUser) {
-                                    inWorkOrder.deleteInBackground(new DeleteCallback() {
-                                        public void done(ParseException e) {
-                                            if (e != null) {
-                                                // There was some error.
-                                                Log.d("At-Ease", "Work order deletion not successful: " + e.getMessage());
-                                                displaySnackbar(inWorkOrder.getSubject() + " deletion not successful", null, null);
-                                                return;
-                                            } else {
-                                                Log.i("At-Ease", "Work order deleted");
-                                                displaySnackbar(inWorkOrder.getSubject() + " deleted", null, null);
-                                            }
-                                        }
-                                    });
-                                } else {
-                                    Log.i("At-Ease", "Managers are not allowed to cancel a work order");
-                                    displaySnackbar("Managers are not allowed to cancel a work order", null, null);
-                                }
-
-                            }
-                        })
-                        .show();
-//                displaySnackbar(inWorkOrder.getSubject() + " removed", "Undo", new View.OnClickListener() {
-//                    @Override
-//                    public void onClick(View v) {
-//                        addWorkOrder(pos, inWorkOrder);
-//                    }
-//                });
-                return true;
-            }
-
-            @Override
-            public boolean swipeRight(WorkOrder inWorkOrder) {
-                displaySnackbar(inWorkOrder.getSubject() + " loved", null, null);
-                return true;
-            }
-
-            @Override
-            public void onClick(WorkOrder inWorkOrder) {
-                displaySnackbar(inWorkOrder.getSubject() + " clicked", null, null);
-                Intent intent = new Intent(WorkOrderInboxActivity.this, ViewWorkOrderActivity.class);
-                Log.d("At-Ease", ":" + inWorkOrder.getObjectId());
-                intent.putExtra("workOrder", inWorkOrder.getObjectId());
-                startActivity(intent);
-            }
-
-            @Override
-            public void onLongClick(WorkOrder inWorkOrder) {
-                displaySnackbar(inWorkOrder.getSubject() + " long-clicked", null, null);
-            }
-        });
 
         ParseUser currentUser = ParseUser.getCurrentUser();
         if (currentUser != null) {
@@ -173,6 +102,8 @@ public class WorkOrderInboxActivity extends AppCompatActivity {
             query.whereEqualTo("manager", user);
         }
 
+        query.whereEqualTo("isDeleted", false);
+
         query.findInBackground(new FindCallback<WorkOrder>() {
             @Override
             public void done(List<WorkOrder> results, ParseException e) {
@@ -206,10 +137,10 @@ public class WorkOrderInboxActivity extends AppCompatActivity {
         snackbar.show();
     }
 
-    private int removeWorkOrder(WorkOrder workOrder) {
-        int pos = workOrderList.indexOf(workOrder);
-        workOrderList.remove(workOrder);
-        adapter.notifyItemRemoved(pos);
+    public static int removeWorkOrder(WorkOrder inWorkOrder, List<WorkOrder> inWorkOrderList, WorkOrderInboxRecyclerViewAdapter inAdapter) {
+        int pos = inWorkOrderList.indexOf(inWorkOrder);
+        inWorkOrderList.remove(inWorkOrder);
+        inAdapter.notifyItemRemoved(pos);
         return pos;
     }
 

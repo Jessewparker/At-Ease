@@ -7,6 +7,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.support.annotation.NonNull;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -24,10 +25,18 @@ import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import com.afollestad.materialdialogs.DialogAction;
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.mikepenz.iconics.view.IconicsButton;
 import com.mikepenz.iconics.view.IconicsTextView;
 import com.mikepenz.materialdrawer.Drawer;
 import com.mikepenz.materialdrawer.DrawerBuilder;
+import com.parse.DeleteCallback;
+import com.parse.ParseException;
+import com.parse.ParseUser;
+import com.parse.SaveCallback;
+
+import org.json.JSONObject;
 
 public class MainTenantActivity extends AppCompatActivity {
 
@@ -36,6 +45,7 @@ public class MainTenantActivity extends AppCompatActivity {
     IconicsButton btnPayRent;
     IconicsButton btnPaymentHistory;
     IconicsButton btnMessaging;
+    IconicsButton btnLeave;
     ProgressBar progress;
 
     private ProgressDialog progressDialog;
@@ -80,6 +90,7 @@ public class MainTenantActivity extends AppCompatActivity {
         btnPayRent = (IconicsButton) findViewById(R.id.btnPayRent);
         btnPaymentHistory = (IconicsButton) findViewById(R.id.btnPaymentHistory);
         btnMessaging = (IconicsButton) findViewById(R.id.btnMessaging);
+        btnLeave = (IconicsButton) findViewById(R.id.btnLeave);
         progress = (ProgressBar) findViewById(R.id.progressBar);
         progress.setMax(100);
         progress.setVisibility(View.GONE);
@@ -112,6 +123,41 @@ public class MainTenantActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Intent intent = new Intent(MainTenantActivity.this, PaymentHistoryActivity.class);
                 startActivity(intent);
+            }
+        });
+
+        btnLeave.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                new MaterialDialog.Builder(MainTenantActivity.this)
+                        .title("Confirm Leaving Property")
+                        .content("Are you sure you want to leave this property? This action can not be undone!")
+                        .positiveText("Leave")
+                        .negativeText("Cancel")
+                        .onNegative(new MaterialDialog.SingleButtonCallback() {
+                            @Override
+                            public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                                return;
+                            }
+                        })
+                        .onPositive(new MaterialDialog.SingleButtonCallback() {
+                            @Override
+                            public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                                ParseUser currentUser = ParseUser.getCurrentUser();
+                                currentUser.remove("liveAt");
+                                currentUser.saveInBackground(new SaveCallback() {
+                                    @Override
+                                    public void done(ParseException e) {
+                                        if (e == null) {
+                                            Log.i("AT-EASE", "User has succesfully left property");
+                                        } else {
+                                            Log.d("AT-EASE", "User has not left the property. Error: " + e.toString());
+                                        }
+                                    }
+                                });
+                            }
+                        })
+                        .show();
             }
         });
 
