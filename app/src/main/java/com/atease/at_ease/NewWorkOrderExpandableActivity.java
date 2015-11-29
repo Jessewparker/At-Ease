@@ -61,14 +61,49 @@ public class NewWorkOrderExpandableActivity extends Activity {
             ParseObject lives = null;
             ParseObject address = null;
             String addressString = null;
+            ParseObject building = null;
+            ParseObject complex = null;
+            String locString = "N/A";
             try {
-                lives = currentUser.getParseObject("liveAt").fetchIfNeeded();
-                address = lives.getParseObject("address").fetchIfNeeded();
-                addressString = address.getString("street") + ", " +
-                        address.getString("city") + ", " +
-                        address.getString("state") + " " +
-                        address.getString("zipcode");
-
+                lives = currentUser.getParseObject("liveAt");
+                if (lives != null) {
+                    lives.fetchIfNeeded();
+                    locString = lives.getString("name");
+                    address = lives.getParseObject("address");
+                    if (address != null) {
+                        address.fetchIfNeeded();
+                        addressString = address.getString("street") + ", " +
+                                address.getString("city") + ", " +
+                                address.getString("state") + " " +
+                                address.getString("zipcode");
+                    } else {
+                        addressString = "N/A";
+                    }
+                    building = lives.getParseObject("building");
+                    if (building != null) {
+                        building.fetchIfNeeded();
+                        locString = building.getString("name") + "-" + locString;
+                        complex = building.getParseObject("complex");
+                        if (complex != null) {
+                            complex.fetchIfNeeded();
+                            locString = complex.getString("name") + " - " + locString;
+                        }
+                    }
+                } else {
+                    // User does not live anywhere currently, can not file a work order!
+                    new MaterialDialog.Builder(this)
+                            .title("User Access Error")
+                            .content("Current user has no registered property. Therefore, a work order can not be filed!")
+                            .positiveText("Back")
+                            .onPositive(new MaterialDialog.SingleButtonCallback() {
+                                @Override
+                                public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                                    finish();
+                                }
+                            })
+                            .show();
+                    finish();
+                }
             } catch (ParseException e) {
                 e.printStackTrace();
             }
@@ -81,58 +116,34 @@ public class NewWorkOrderExpandableActivity extends Activity {
                     + phoneString.substring(6, 10));
 
             tenantTextViewAddress.setText(addressString);
-            ParseObject building = null;
-            ParseObject complex = null;
-            try {
-                building = lives.getParseObject("building").fetchIfNeeded();
-                complex = building.getParseObject("complex").fetchIfNeeded();
-            } catch (ParseException e) {
-                e.printStackTrace();
-            }
-            String locString = complex.getString("name") + " - " +
-                    building.getString("name") + "-" +
-                    lives.getString("name");
+
             tenantTextViewLocation.setText(locString);
 
             Log.d("At-Ease", currentUser.toString());
 //            Log.d("At-Ease", currentUser.get("manager").toString());
             ParseUser manager = null;
+            TextView managerTextViewName = (TextView) findViewById(R.id.new_work_order_manager_name);
+            TextView managerTextViewEmail = (TextView) findViewById(R.id.new_work_order_manager_email);
+            TextView managerTextViewNumber = (TextView) findViewById(R.id.new_work_order_manager_phone);
             try {
-                manager = lives.getParseUser("owner").fetchIfNeeded();
-                Log.d("At-Ease", manager.getUsername());
+                manager = lives.getParseUser("owner");
+                if (manager != null) {
+                    manager.fetchIfNeeded();
+                    Log.d("At-Ease", manager.getUsername());
+                    managerTextViewName.setText(manager.getString("firstName") + " " + manager.getString("lastName"));
+                    managerTextViewEmail.setText(manager.getString("email"));
+                    String phoneStringM = manager.getString("phone");
+                    managerTextViewNumber.setText(phoneStringM.substring(0, 3) + "-"
+                            + phoneStringM.substring(3, 6) + "-"
+                            + phoneStringM.substring(6, 10));
+                } else {
+                    managerTextViewName.setText("N/A");
+                    managerTextViewEmail.setText("N/A");
+                    managerTextViewNumber.setText("N/A");
+                }
             } catch (ParseException e) {
                 e.printStackTrace();
             }
-
-//            ParseQuery<ParseUser> query = ParseUser.getQuery();
-//            query.whereEqualTo("objectId", currentUser.get("manager"));
-//            query.findInBackground(new FindCallback<ParseUser>() {
-//                public void done(List<ParseUser> objects, ParseException e) {
-//                    if (e == null) {
-//                        ParseUser manager = objects.get(0);
-                        TextView managerTextViewName = (TextView) findViewById(R.id.new_work_order_manager_name);
-                        TextView managerTextViewEmail = (TextView) findViewById(R.id.new_work_order_manager_email);
-                        TextView managerTextViewNumber = (TextView) findViewById(R.id.new_work_order_manager_phone);
-//                        TextView managerTextViewLocation = (TextView) findViewById(R.id.new_work_order_manager_location);
-
-                        managerTextViewName.setText(manager.getString("firstName") + " " + manager.getString("lastName"));
-                        managerTextViewEmail.setText(manager.getString("email"));
-                        String phoneStringM = manager.getString("phone");
-                        managerTextViewNumber.setText(phoneStringM.substring(0, 3) + "-"
-                                + phoneStringM.substring(3, 6) + "-"
-                                + phoneStringM.substring(6, 10));
-//                        String addressStringM = manager.getString("address") + ", " +
-//                                manager.getString("city") + ", " +
-//                                manager.getString("state") + " " +
-//                                manager.getString("zip");
-//                        managerTextViewAddress.setText(addressStringM);
-//                        managerTextViewLocation.setText(manager.getString("building") +
-//                                " - " + manager.getString("room"));
-//                    } else {
-//                        Log.d("At-Ease", "Manager not found: " + e.getMessage());
-//                    }
-//                }
-//            });
         } else {
             // show the signup or login screen
             Log.d("MYAPPTAG", "No Current User");
@@ -147,6 +158,11 @@ public class NewWorkOrderExpandableActivity extends Activity {
                 startActivityForResult(photoPickerIntent, 1);
             }
         });
+    }
+
+    @Override
+    public void onBackPressed() {
+        finish();
     }
 
     @Override
@@ -279,9 +295,10 @@ public class NewWorkOrderExpandableActivity extends Activity {
             }
 
             ParseObject liveAt = currentUser.getParseObject("liveAt").fetchIfNeeded();
-            ParseUser manager = liveAt.getParseUser("owner").fetchIfNeeded();
+            ParseUser manager = liveAt.getParseUser("owner");
 
             if (manager != null) {
+                manager.fetchIfNeeded();
                 workOrder.setManager(manager);
             }
 

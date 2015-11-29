@@ -96,6 +96,8 @@ public class MainSingleManagerActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(MainSingleManagerActivity.this, WorkOrderInboxActivity.class);
+                String propId = null;
+                intent.putExtra("propId", propId);
                 startActivity(intent);
             }
         });

@@ -98,6 +98,15 @@ public class MainMultipleManagerActivity extends AppCompatActivity {
             }
         });
 
+        btnWorkOrder.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainMultipleManagerActivity.this, WorkOrderInboxActivity.class);
+                String propId = null;
+                intent.putExtra("propId", propId);
+                startActivity(intent);
+            }
+        });
 
 
         populate();

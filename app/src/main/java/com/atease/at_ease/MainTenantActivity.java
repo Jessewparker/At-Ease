@@ -106,6 +106,8 @@ public class MainTenantActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(MainTenantActivity.this, WorkOrderInboxActivity.class);
+                String propId = null;
+                intent.putExtra("propId", propId);
                 startActivity(intent);
             }
         });

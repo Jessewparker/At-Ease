@@ -18,6 +18,7 @@ import com.afollestad.materialdialogs.MaterialDialog;
 import com.parse.DeleteCallback;
 import com.parse.FindCallback;
 import com.parse.ParseException;
+import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
@@ -42,6 +43,7 @@ public class WorkOrderInboxActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_work_order_inbox);
+
 
         toolbar = (Toolbar) findViewById(R.id.tool_bar); // Attaching the layout to the toolbar object
         setSupportActionBar(toolbar);                   // Setting toolbar as the ActionBar with setSupportActionBar() call
@@ -69,9 +71,20 @@ public class WorkOrderInboxActivity extends AppCompatActivity {
         ParseUser currentUser = ParseUser.getCurrentUser();
         if (currentUser != null) {
             // do stuff with the user
+            ParseObject lives = currentUser.getParseObject("liveAt");
+            if (lives == null) {
+                Log.d("AT-EASE", "New work order disabled");
+                actionButton.setEnabled(false);
+                actionButton.setClickable(false);
+                actionButton.setButtonColor(getResources().getColor(R.color.fab_material_blue_grey_500));
+                actionButton.setButtonColorPressed(getResources().getColor(R.color.fab_material_blue_grey_900));
+            } else {
+                Log.d("AT-EASE", "Lives: " + lives.toString());
+            }
             Log.i("At-Ease", "Populating inbox for current user: "
                     + currentUser.getUsername());
             populateFromParse(currentUser);
+
         } else {
             // show the signup or login screen
             Log.d("MYAPPTAG", "No Current User, populating with default");
@@ -103,6 +116,11 @@ public class WorkOrderInboxActivity extends AppCompatActivity {
         }
 
         query.whereEqualTo("isDeleted", false);
+
+        String propId = getIntent().getStringExtra("propId");
+        if (propId != null) {
+            query.whereEqualTo("propId", propId);
+        }
 
         query.findInBackground(new FindCallback<WorkOrder>() {
             @Override
