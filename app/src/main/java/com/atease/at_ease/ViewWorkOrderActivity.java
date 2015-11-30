@@ -122,7 +122,9 @@ public class ViewWorkOrderActivity extends Activity {
                     + phoneString.substring(6, 10));
 
             tenantTextViewAddress.setText(addressString);
-
+            if(locString.trim() == ""){
+                tenantTextViewLocation.setVisibility(View.GONE);
+            }
             tenantTextViewLocation.setText(locString);
 
             Log.d("At-Ease", currentUser.toString());

@@ -37,8 +37,15 @@ public class WorkOrderInboxActivity extends AppCompatActivity {
     RecyclerView recyclerView;
     WorkOrderInboxRecyclerViewAdapter adapter;
 
+    ParseUser currentUser;
     List<WorkOrder> workOrderList = new ArrayList<>();
 
+
+    @Override
+    protected void onResume(){
+        super.onResume();
+        populateFromParse(currentUser);
+    }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -68,7 +75,7 @@ public class WorkOrderInboxActivity extends AppCompatActivity {
         adapter = new WorkOrderInboxRecyclerViewAdapter(WorkOrderInboxActivity.this, this.workOrderList);
         recyclerView.setAdapter(adapter);
 
-        ParseUser currentUser = ParseUser.getCurrentUser();
+        currentUser = ParseUser.getCurrentUser();
         if (currentUser != null) {
             // do stuff with the user
             ParseObject lives = currentUser.getParseObject("liveAt");
@@ -83,12 +90,12 @@ public class WorkOrderInboxActivity extends AppCompatActivity {
             }
             Log.i("At-Ease", "Populating inbox for current user: "
                     + currentUser.getUsername());
-            populateFromParse(currentUser);
+            //populateFromParse(currentUser);
 
         } else {
             // show the signup or login screen
             Log.d("MYAPPTAG", "No Current User, populating with default");
-            populate();
+            //populate();
         }
 
     }
@@ -121,6 +128,8 @@ public class WorkOrderInboxActivity extends AppCompatActivity {
         if (propId != null) {
             query.whereEqualTo("propId", propId);
         }
+
+        WorkOrderInboxActivity.this.workOrderList.clear();
 
         query.findInBackground(new FindCallback<WorkOrder>() {
             @Override

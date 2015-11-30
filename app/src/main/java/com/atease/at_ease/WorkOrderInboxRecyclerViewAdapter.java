@@ -99,9 +99,10 @@ public class WorkOrderInboxRecyclerViewAdapter extends RecyclerView.Adapter<Work
                 mcontext.startActivity(intent);
             }
         });
+        holder.btnDelete.setTag(position);
         holder.btnDelete.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
+            public void onClick(final View v) {
 //                final int pos = WorkOrderInboxActivity.removeWorkOrder(item, workOrders, WorkOrderInboxRecyclerViewAdapter.this);
                 new MaterialDialog.Builder(mcontext)
                         .title("Confirm Deletion")
@@ -119,17 +120,22 @@ public class WorkOrderInboxRecyclerViewAdapter extends RecyclerView.Adapter<Work
                             public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
                                 ParseUser currentUser = ParseUser.getCurrentUser();
                                 if(item.getTenant() == currentUser) {
+                                    final int pos = (Integer) v.getTag();
                                     item.setDeleted(true);
                                     item.saveInBackground(new SaveCallback() {
                                         @Override
                                         public void done(ParseException e) {
                                             if (e != null) {
+
                                                 // There was some error.
                                                 Log.d("At-Ease", "Work order confirmation not successful: " + e.getMessage());
 //                                                displaySnackbar(inWorkOrder.getSubject() + " completion not successful", null, null);
                                                 return;
                                             } else {
+                                                workOrders.remove(pos);
+                                                notifyItemRemoved(pos);
                                                 Log.i("At-Ease", "Work order completed");
+
 //                                                displaySnackbar(inWorkOrder.getSubject() + " completed", null, null);
                                             }
                                         }
@@ -147,7 +153,7 @@ public class WorkOrderInboxRecyclerViewAdapter extends RecyclerView.Adapter<Work
         final IconicsButton btnDone = (IconicsButton) holder.btnDone;
         holder.btnDone.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
+            public void onClick(final View v) {
                 //                final int pos = removeWorkOrder(inWorkOrder);
                 new MaterialDialog.Builder(mcontext)
                         .title("Confirm Completion")
@@ -198,7 +204,9 @@ public class WorkOrderInboxRecyclerViewAdapter extends RecyclerView.Adapter<Work
                                         }
                                     });
                                 }
+                                //only not sure part? double saves back to back
                                 if (item.isManagerDone() && item.isTenantDone()) {
+                                    final int pos = (Integer) v.getTag();
                                     item.setDeleted(true);
                                     item.saveInBackground(new SaveCallback() {
                                         @Override
@@ -208,6 +216,8 @@ public class WorkOrderInboxRecyclerViewAdapter extends RecyclerView.Adapter<Work
                                                 Log.d("At-Ease", "Work order double confirmed not successful: " + e.getMessage());
                                                 return;
                                             } else {
+                                                workOrders.remove(pos);
+                                                notifyItemRemoved(pos);
                                                 Log.i("At-Ease", "Work order double confirmed");
                                             }
                                         }

@@ -40,6 +40,7 @@ public class NewWorkOrderExpandableActivity extends Activity {
     ArrayList<String> image_description =new ArrayList<String>();
     ArrayList<String> image_list=new ArrayList<String>();
     ArrayList<Drawable> image_drawable=new ArrayList<Drawable>();
+    ParseObject lives;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -58,7 +59,7 @@ public class NewWorkOrderExpandableActivity extends Activity {
             TextView tenantTextViewAddress = (TextView) findViewById(R.id.new_work_order_tenant_address);
             TextView tenantTextViewLocation = (TextView) findViewById(R.id.new_work_order_tenant_location);
 
-            ParseObject lives = null;
+            lives = null;
             ParseObject address = null;
             String addressString = null;
             ParseObject building = null;
@@ -282,6 +283,7 @@ public class NewWorkOrderExpandableActivity extends Activity {
             String subject = ((EditText) findViewById(R.id.new_work_order_subject)).getText().toString();
             workOrder.setTextFromString(text);
             workOrder.setSubject(subject);
+            workOrder.put("propId", lives.getObjectId());
 
             switch (image_drawable.size()) {
                 case 3: workOrder.setPic3FromDrawable(image_drawable.get(2));
@@ -308,10 +310,11 @@ public class NewWorkOrderExpandableActivity extends Activity {
             workOrder.saveInBackground(new SaveCallback() {
                 @Override
                 public void done(ParseException e) {
+                    finish();
                     Log.d("Activity", "Callback Called 1");
                 }
             });
-            finish();
+            //finish();
         } else {
             // show the signup or login screen
             Log.d("MYAPPTAG", "No Current User");
