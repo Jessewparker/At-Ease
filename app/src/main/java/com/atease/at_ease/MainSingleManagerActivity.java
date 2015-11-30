@@ -36,7 +36,7 @@ public class MainSingleManagerActivity extends AppCompatActivity {
     IconicsButton btnMessaging;
     ProgressBar progress;
     ProgressDialog progressDialog;
-
+    ParseUser currentUser;
     ParseObject property;
     String propertyId;
 
@@ -54,12 +54,12 @@ public class MainSingleManagerActivity extends AppCompatActivity {
 
 
 
+        currentUser = ParseUser.getCurrentUser();
         AtEaseApplication application = (AtEaseApplication) getApplicationContext();
-        final Drawer myDrawer = application.getNewDrawerBuilder().withActivity(this).build();
-
+        final Drawer myDrawer = application.getNewDrawerBuilder(currentUser.getBoolean("isManager"),this).withActivity(this).build();
         //Toolbar stuff
         toolbar = (Toolbar) findViewById(R.id.tool_bar); // Attaching the layout to the toolbar object
-        toolbar.setTitle("At Ease");
+
 
         IconicsTextView rightToggle = (IconicsTextView) toolbar.findViewById(R.id.rightToggle);
         rightToggle.setOnClickListener(new View.OnClickListener() {
@@ -147,7 +147,7 @@ public class MainSingleManagerActivity extends AppCompatActivity {
         progressDialog.show();
 
         ParseQuery<ParseObject> propertyQuery = ParseQuery.getQuery("Property");
-        propertyQuery.whereEqualTo("owner", ParseUser.getCurrentUser());
+        propertyQuery.whereEqualTo("owner", currentUser);
         propertyQuery.getFirstInBackground(new GetCallback<ParseObject>() {
             @Override
             public void done(ParseObject prop, ParseException e) {
@@ -220,9 +220,12 @@ public class MainSingleManagerActivity extends AppCompatActivity {
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
+            return true;
+        }
+        else if(id == android.R.id.home){
+            finish();
             return true;
         }
 

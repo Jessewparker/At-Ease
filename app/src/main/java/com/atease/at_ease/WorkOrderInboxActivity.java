@@ -10,11 +10,14 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
+import com.mikepenz.iconics.view.IconicsTextView;
+import com.mikepenz.materialdrawer.Drawer;
 import com.parse.DeleteCallback;
 import com.parse.FindCallback;
 import com.parse.ParseException;
@@ -52,11 +55,34 @@ public class WorkOrderInboxActivity extends AppCompatActivity {
         setContentView(R.layout.activity_work_order_inbox);
 
 
-        toolbar = (Toolbar) findViewById(R.id.tool_bar); // Attaching the layout to the toolbar object
-        setSupportActionBar(toolbar);                   // Setting toolbar as the ActionBar with setSupportActionBar() call
 
+
+        currentUser = ParseUser.getCurrentUser();
         AtEaseApplication application = (AtEaseApplication) getApplicationContext();
-        application.getNewDrawerBuilder().withActivity(this).build();
+        final Drawer myDrawer = application.getNewDrawerBuilder(currentUser.getBoolean("isManager"),this).withActivity(this).build();
+
+        //Toolbar stuff
+        toolbar = (Toolbar) findViewById(R.id.tool_bar); // Attaching the layout to the toolbar object
+        TextView title = (TextView) toolbar.findViewById(R.id.title);
+        title.setText("Work Orders");
+        IconicsTextView rightToggle = (IconicsTextView) toolbar.findViewById(R.id.rightToggle);
+        rightToggle.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (myDrawer.isDrawerOpen()) {
+                    myDrawer.closeDrawer();
+                } else {
+                    myDrawer.openDrawer();
+                }
+            }
+        });
+
+        setSupportActionBar(toolbar);// Setting toolbar as the ActionBar with setSupportActionBar() call
+        getSupportActionBar().setDisplayShowCustomEnabled(true);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+
+
 
         ActionButton actionButton = (ActionButton) findViewById(R.id.action_button);
         actionButton.setOnClickListener(new View.OnClickListener() {
@@ -75,7 +101,7 @@ public class WorkOrderInboxActivity extends AppCompatActivity {
         adapter = new WorkOrderInboxRecyclerViewAdapter(WorkOrderInboxActivity.this, this.workOrderList);
         recyclerView.setAdapter(adapter);
 
-        currentUser = ParseUser.getCurrentUser();
+
         if (currentUser != null) {
             // do stuff with the user
             ParseObject lives = currentUser.getParseObject("liveAt");
@@ -174,6 +200,25 @@ public class WorkOrderInboxActivity extends AppCompatActivity {
     private void addWorkOrder(int pos, WorkOrder workOrder) {
         workOrderList.add(pos, workOrder);
         adapter.notifyItemInserted(pos);
+    }
+
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+        //noinspection SimplifiableIfStatement
+        if (id == R.id.action_settings) {
+            return true;
+        }
+        else if(id == android.R.id.home){
+            finish();
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 }
 

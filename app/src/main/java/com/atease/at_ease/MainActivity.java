@@ -45,15 +45,17 @@ public class MainActivity extends AppCompatActivity{
             Log.d(TAG, "no user logged in");
         }
 
-
-
+        /*
         AccountHeader header = new AccountHeaderBuilder()
                 .withActivity(this)
                 .build();
 
-        ((AtEaseApplication) getApplicationContext()).getNewDrawerBuilder()
+                        ((AtEaseApplication) getApplicationContext()).getNewDrawerBuilder()
                 .withAccountHeader(header)
                 .withActivity(this).build();
+        */
+
+
 
         Button signin = (Button) findViewById(R.id.signin);
         signin.setOnClickListener(new View.OnClickListener() {

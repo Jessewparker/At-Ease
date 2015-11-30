@@ -45,9 +45,10 @@ public class MainTenantActivity extends AppCompatActivity {
     IconicsButton btnPayRent;
     IconicsButton btnPaymentHistory;
     IconicsButton btnMessaging;
-    IconicsButton btnLeave;
+    //IconicsButton btnLeave;
     ProgressBar progress;
 
+    private ParseUser currentUser;
     private ProgressDialog progressDialog;
     private BroadcastReceiver receiver = null;
     private Intent broadcastIntent = new Intent("com.atease.at_ease.MessageService");
@@ -61,12 +62,25 @@ public class MainTenantActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main_tenant);
 
         //Drawer Stuff
+        currentUser = ParseUser.getCurrentUser();
+        if(currentUser == null){
+            Intent login = new Intent(MainTenantActivity.this, LoginActivity.class);
+            startActivity(login);
+            finish();
+        }
+        //Log.d("Tenant main",currentUser.getParseObject("liveAt").getObjectId());
+        if(currentUser.getParseObject("liveAt") == null){
+            //no property,
+            Intent addProp = new Intent(MainTenantActivity.this, AddTenantToPropertyActivity.class);
+            startActivity(addProp);
+            finish();
+        }
         AtEaseApplication application = (AtEaseApplication) getApplicationContext();
-        final Drawer myDrawer = application.getNewDrawerBuilder().withActivity(this).build();
+        final Drawer myDrawer = application.getNewDrawerBuilder(currentUser.getBoolean("isManager"),MainTenantActivity.this).withActivity(this).build();
 
         //Toolbar stuff
         toolbar = (Toolbar) findViewById(R.id.tool_bar); // Attaching the layout to the toolbar object
-        toolbar.setTitle("At Ease");
+
 
         IconicsTextView rightToggle = (IconicsTextView) toolbar.findViewById(R.id.rightToggle);
         rightToggle.setOnClickListener(new View.OnClickListener() {
@@ -90,7 +104,7 @@ public class MainTenantActivity extends AppCompatActivity {
         btnPayRent = (IconicsButton) findViewById(R.id.btnPayRent);
         btnPaymentHistory = (IconicsButton) findViewById(R.id.btnPaymentHistory);
         btnMessaging = (IconicsButton) findViewById(R.id.btnMessaging);
-        btnLeave = (IconicsButton) findViewById(R.id.btnLeave);
+        //btnLeave = (IconicsButton) findViewById(R.id.btnLeave);
         progress = (ProgressBar) findViewById(R.id.progressBar);
         progress.setMax(100);
         progress.setVisibility(View.GONE);
@@ -128,7 +142,7 @@ public class MainTenantActivity extends AppCompatActivity {
             }
         });
 
-        btnLeave.setOnClickListener(new View.OnClickListener() {
+       /* btnLeave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 new MaterialDialog.Builder(MainTenantActivity.this)
@@ -162,6 +176,7 @@ public class MainTenantActivity extends AppCompatActivity {
                         .show();
             }
         });
+        */
 
 
 

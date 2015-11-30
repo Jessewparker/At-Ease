@@ -25,6 +25,14 @@ final String TAG = "AddTenantToProp";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        ParseUser currentUser = ParseUser.getCurrentUser();
+
+        if(currentUser == null){
+            Intent login = new Intent(AddTenantToPropertyActivity.this, LoginActivity.class);
+            startActivity(login);
+            finish();
+
+        }
 
         setContentView(R.layout.activity_add_tenant_to_property);
 
@@ -35,7 +43,7 @@ final String TAG = "AddTenantToProp";
             @Override
             public void onClick(View v) {
                 id = propertyID.getText().toString();
-                final Intent intentAdd = new Intent(AddTenantToPropertyActivity.this, AddTenantToPropertyActivity.class);
+                final Intent intentAdd = new Intent(AddTenantToPropertyActivity.this, MainTenantActivity.class);
 
                 ParseQuery<ParseObject> placeQuery = ParseQuery.getQuery("Property");
                 placeQuery.whereEqualTo("objectId", id);
@@ -43,10 +51,13 @@ final String TAG = "AddTenantToProp";
                     public void done(final ParseObject prop, ParseException e) {
                         if (prop == null) {
                             Toast.makeText(AddTenantToPropertyActivity.this, "Property does not exist", Toast.LENGTH_LONG).show();
-                            startActivity(intentAdd);
+                            //startActivity(intentAdd);
                         } else {
                             ParseUser user = ParseUser.getCurrentUser();
                             user.put("liveAt", prop);
+                            user.saveInBackground();
+                            startActivity(intentAdd);
+                            finish();
                         }
                     }
                 });

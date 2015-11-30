@@ -107,7 +107,7 @@
                 android:background="#ff6666" />
         </LinearLayout>
 
-        <LinearLayout
+       <!-- <LinearLayout
             android:orientation="horizontal"
             android:layout_width="match_parent"
             android:layout_height="0dp"
@@ -124,7 +124,7 @@
                 android:padding="0dp"
                 android:background="@color/primary" />
 
-        </LinearLayout>
+        </LinearLayout> -->
 
     </LinearLayout>
 </LinearLayout>

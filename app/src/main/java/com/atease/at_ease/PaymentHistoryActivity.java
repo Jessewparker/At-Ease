@@ -10,6 +10,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.TextView;
 
 import com.atease.at_ease.models.Payment;
 import com.mikepenz.iconics.view.IconicsTextView;
@@ -30,7 +31,7 @@ public class PaymentHistoryActivity extends AppCompatActivity {
     private RecyclerView recyclerView;
     private PaymentHistoryRecyclerViewAdapter adapter;
     private RecyclerView.ViewHolder viewHolder;
-
+    private ParseUser currentUser;
     private List<Payment> paymentsList = new ArrayList<Payment>();
 
 
@@ -39,12 +40,14 @@ public class PaymentHistoryActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_payment_history);
 
+        currentUser = ParseUser.getCurrentUser();
         AtEaseApplication application = (AtEaseApplication) getApplicationContext();
-        final Drawer myDrawer = application.getNewDrawerBuilder().withActivity(this).build();
+        final Drawer myDrawer = application.getNewDrawerBuilder(currentUser.getBoolean("isManager"),this).withActivity(this).build();
 
         //Toolbar stuff
         toolbar = (Toolbar) findViewById(R.id.tool_bar); // Attaching the layout to the toolbar object
-        toolbar.setTitle("Payment History");
+        TextView title = (TextView) toolbar.findViewById(R.id.title);
+        title.setText("Payment History");
         IconicsTextView rightToggle = (IconicsTextView) toolbar.findViewById(R.id.rightToggle);
         rightToggle.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -61,7 +64,7 @@ public class PaymentHistoryActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayShowCustomEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
-
+        getSupportActionBar().setDisplayShowTitleEnabled(true);
         recyclerView = (RecyclerView) findViewById(R.id.recycler);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
@@ -112,11 +115,11 @@ public class PaymentHistoryActivity extends AppCompatActivity {
 
         ParseQuery<Payment> tenantQuery = ParseQuery.getQuery("Payment");
         ParseQuery<Payment> managerQuery = ParseQuery.getQuery("Payment");
-        tenantQuery.whereEqualTo("tenant",ParseUser.getCurrentUser());
+        tenantQuery.whereEqualTo("tenant",currentUser);
         if(property != null){
             tenantQuery.whereEqualTo("property",property);
         }
-        managerQuery.whereEqualTo("manager", ParseUser.getCurrentUser());
+        managerQuery.whereEqualTo("manager", currentUser);
         if(property != null){
             managerQuery.whereEqualTo("property",property);
         }

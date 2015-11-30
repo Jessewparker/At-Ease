@@ -81,12 +81,15 @@ public class RentPayActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_rent_pay);
 
-        AtEaseApplication application = (AtEaseApplication) getApplicationContext();
-        final Drawer myDrawer = application.getNewDrawerBuilder().withActivity(this).build();
 
+        currentUser = ParseUser.getCurrentUser();
+        AtEaseApplication application = (AtEaseApplication) getApplicationContext();
+        final Drawer myDrawer = application.getNewDrawerBuilder(currentUser.getBoolean("isManager"),this).withActivity(this).build();
+        myDrawer.keyboardSupportEnabled(this, true);
         //Toolbar stuff
         toolbar = (Toolbar) findViewById(R.id.tool_bar); // Attaching the layout to the toolbar object
-        toolbar.setTitle("Rent Pay");
+        TextView title = (TextView) toolbar.findViewById(R.id.title);
+        title.setText("Rent Pay");
         IconicsTextView rightToggle = (IconicsTextView) toolbar.findViewById(R.id.rightToggle);
         rightToggle.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -105,7 +108,6 @@ public class RentPayActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayShowHomeEnabled(true);
         getSupportActionBar().setDisplayShowTitleEnabled(true);
 
-        currentUser = ParseUser.getCurrentUser();
         try{
             currentUser.fetch();
             property = currentUser.getParseObject("liveAt");

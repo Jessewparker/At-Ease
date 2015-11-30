@@ -9,8 +9,9 @@
         />
 
 
+
     <Button
-        android:layout_width="fill_parent"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="talking to"
         android:id="@+id/userButton"
@@ -19,6 +20,7 @@
         android:textSize="24sp"
         android:padding="15dp"
         android:textColor="@color/primary"
+        android:layout_below="@+id/tool_bar"
         android:layout_gravity="center_horizontal"
         android:layout_alignParentTop="true" />
 
@@ -69,6 +71,7 @@
                 android:layout_height="match_parent"
                 android:layout_alignParentRight="true"
                 android:layout_margin="4dp"
+
             android:text="send" />
     </RelativeLayout>
 

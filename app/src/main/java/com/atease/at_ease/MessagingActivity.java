@@ -16,6 +16,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.mikepenz.iconics.view.IconicsTextView;
@@ -52,6 +53,7 @@ public class MessagingActivity extends AppCompatActivity {
     private MessageAdapter messageAdapter;
     private ListView messagesList;
     private String currentUserId;
+    private ParseUser currentUser;
     private ServiceConnection serviceConnection = new MyServiceConnection();
     private MessageClientListener messageClientListener = new MyMessageClientListener();
     private final String TAG = "Messaging Activity";
@@ -63,12 +65,15 @@ public class MessagingActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.messaging);
 
-        AtEaseApplication application = (AtEaseApplication) getApplicationContext();
-        final Drawer myDrawer = application.getNewDrawerBuilder().withActivity(this).build();
 
+        currentUser = ParseUser.getCurrentUser();
+        AtEaseApplication application = (AtEaseApplication) getApplicationContext();
+        final Drawer myDrawer = application.getNewDrawerBuilder(currentUser.getBoolean("isManager"),this).withActivity(this).build();
+        myDrawer.keyboardSupportEnabled(this, true);
         //Toolbar stuff
         toolbar = (Toolbar) findViewById(R.id.tool_bar); // Attaching the layout to the toolbar object
-        toolbar.setTitle("Messaging");
+        TextView title = (TextView) toolbar.findViewById(R.id.title);
+        title.setText("Messaging"); // change to name of user
         IconicsTextView rightToggle = (IconicsTextView) toolbar.findViewById(R.id.rightToggle);
         rightToggle.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -90,14 +95,17 @@ public class MessagingActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
         recipientId = intent.getStringExtra("RECIPIENT_ID");
-        currentUserId = ParseUser.getCurrentUser().getObjectId();
+        currentUserId = currentUser.getObjectId();
 
         //System.out.println(currentUserId);
 
         //Jesse added
         recipientUsername = intent.getStringExtra("USER_ID");
-        userButton = (Button) findViewById(R.id.userButton);
-        userButton.setText(recipientUsername);
+        String recipientFullname = intent.getStringExtra("USER_FULLNAME");
+        title.setText(recipientFullname);
+        //userButton = (Button) findViewById(R.id.userButton);
+        //userButton.setText(recipientUsername);
+
 
         //End Jesse
 

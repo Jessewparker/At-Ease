@@ -37,6 +37,7 @@ import java.util.List;
 public class MainMultipleManagerActivity extends AppCompatActivity {
     static final String TAG = "MultipleManagerActivity";
     Toolbar toolbar;
+    private ParseUser currentUser;
     private RecyclerView recyclerView;
     private PropertyRecyclerViewAdapter adapter;
     private PropertyRecyclerViewAdapter.PropertyViewHolder viewHolder;
@@ -55,12 +56,12 @@ public class MainMultipleManagerActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_multiple_manager);
 
+        currentUser = ParseUser.getCurrentUser();
         AtEaseApplication application = (AtEaseApplication) getApplicationContext();
-        final Drawer myDrawer = application.getNewDrawerBuilder().withActivity(this).build();
+        final Drawer myDrawer = application.getNewDrawerBuilder(currentUser.getBoolean("isManager"),this).withActivity(this).build();
 
         //Toolbar stuff
         toolbar = (Toolbar) findViewById(R.id.tool_bar); // Attaching the layout to the toolbar object
-        toolbar.setTitle("At Ease");
 
         IconicsTextView rightToggle = (IconicsTextView) toolbar.findViewById(R.id.rightToggle);
         rightToggle.setOnClickListener(new View.OnClickListener() {
@@ -161,7 +162,7 @@ public class MainMultipleManagerActivity extends AppCompatActivity {
 
     private void populate(){
         ParseQuery<ParseObject> propertyQuery = ParseQuery.getQuery("Property");
-        propertyQuery.whereEqualTo("owner", ParseUser.getCurrentUser());
+        propertyQuery.whereEqualTo("owner", currentUser);
         propertyQuery.selectKeys(Arrays.asList("nickname"));
         propertyQuery.findInBackground(new FindCallback<ParseObject>() {
             @Override

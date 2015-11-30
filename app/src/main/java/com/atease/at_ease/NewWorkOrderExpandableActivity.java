@@ -13,7 +13,10 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -23,6 +26,8 @@ import com.afollestad.materialdialogs.MaterialDialog;
 import com.daimajia.slider.library.SliderLayout;
 import com.daimajia.slider.library.SliderTypes.TextSliderView;
 import com.gc.materialdesign.views.ButtonFlat;
+import com.mikepenz.iconics.view.IconicsTextView;
+import com.mikepenz.materialdrawer.Drawer;
 import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.ParseUser;
@@ -34,23 +39,52 @@ import java.util.ArrayList;
 /**
  * Created by Mark on 10/4/2015.
  */
-public class NewWorkOrderExpandableActivity extends Activity {
+public class NewWorkOrderExpandableActivity extends AppCompatActivity {
     SliderLayout sliderShow;
-
+    Toolbar toolbar;
     ArrayList<String> image_description =new ArrayList<String>();
     ArrayList<String> image_list=new ArrayList<String>();
     ArrayList<Drawable> image_drawable=new ArrayList<Drawable>();
+    ParseUser currentUser;
     ParseObject lives;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_work_order_expandable);
 
+        //get the currentUser
+        currentUser = ParseUser.getCurrentUser();
+        AtEaseApplication application = (AtEaseApplication) getApplicationContext();
+        final Drawer myDrawer = application.getNewDrawerBuilder(currentUser.getBoolean("isManager"),this).withActivity(this).build();
+
+        //Toolbar stuff
+        toolbar = (Toolbar) findViewById(R.id.tool_bar); // Attaching the layout to the toolbar object
+        TextView title = (TextView) toolbar.findViewById(R.id.title);
+        title.setText("New Work Order");
+        IconicsTextView rightToggle = (IconicsTextView) toolbar.findViewById(R.id.rightToggle);
+        rightToggle.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (myDrawer.isDrawerOpen()) {
+                    myDrawer.closeDrawer();
+                } else {
+                    myDrawer.openDrawer();
+                }
+            }
+        });
+
+
+        setSupportActionBar(toolbar);// Setting toolbar as the ActionBar with setSupportActionBar() call
+        getSupportActionBar().setDisplayShowCustomEnabled(true);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+
+
         sliderShow = (SliderLayout) findViewById(R.id.slider);
         sliderShow.setPresetTransformer(SliderLayout.Transformer.FlipPage);
         sliderShow.stopAutoCycle();
 
-        ParseUser currentUser = ParseUser.getCurrentUser();
+
         if (currentUser != null) {
             // do stuff with the user
             TextView tenantTextViewName = (TextView) findViewById(R.id.new_work_order_tenant_name);
@@ -319,6 +353,24 @@ public class NewWorkOrderExpandableActivity extends Activity {
             // show the signup or login screen
             Log.d("MYAPPTAG", "No Current User");
         }
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+        //noinspection SimplifiableIfStatement
+        if (id == R.id.action_settings) {
+            return true;
+        }
+        else if(id == android.R.id.home){
+            finish();
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 
 }

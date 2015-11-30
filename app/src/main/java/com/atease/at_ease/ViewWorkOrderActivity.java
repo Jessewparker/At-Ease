@@ -8,7 +8,10 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
@@ -16,6 +19,8 @@ import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.daimajia.slider.library.SliderLayout;
 import com.daimajia.slider.library.SliderTypes.TextSliderView;
+import com.mikepenz.iconics.view.IconicsTextView;
+import com.mikepenz.materialdrawer.Drawer;
 import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.ParseUser;
@@ -29,8 +34,10 @@ import java.util.ArrayList;
 /**
  * Created by Mark on 10/23/2015.
  */
-public class ViewWorkOrderActivity extends Activity {
+public class ViewWorkOrderActivity extends AppCompatActivity {
     SliderLayout sliderShow;
+    ParseUser currentUser;
+    Toolbar toolbar;
 
     ArrayList<String> image_description =new ArrayList<String>();
     ArrayList<String> image_list=new ArrayList<String>();
@@ -39,6 +46,31 @@ public class ViewWorkOrderActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view_work_order);
+
+        currentUser = ParseUser.getCurrentUser();
+        AtEaseApplication application = (AtEaseApplication) getApplicationContext();
+        final Drawer myDrawer = application.getNewDrawerBuilder(currentUser.getBoolean("isManager"),this).withActivity(this).build();
+
+        //Toolbar stuff
+        toolbar = (Toolbar) findViewById(R.id.tool_bar); // Attaching the layout to the toolbar object
+        TextView title = (TextView) toolbar.findViewById(R.id.title);
+        title.setText("Viewing Work Order");
+        IconicsTextView rightToggle = (IconicsTextView) toolbar.findViewById(R.id.rightToggle);
+        rightToggle.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (myDrawer.isDrawerOpen()) {
+                    myDrawer.closeDrawer();
+                } else {
+                    myDrawer.openDrawer();
+                }
+            }
+        });
+
+        setSupportActionBar(toolbar);// Setting toolbar as the ActionBar with setSupportActionBar() call
+        getSupportActionBar().setDisplayShowCustomEnabled(true);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
 
         String objID = getIntent().getStringExtra("workOrder");
         Log.d("At-Ease", ":" + objID);
@@ -69,8 +101,8 @@ public class ViewWorkOrderActivity extends Activity {
             }
         });
 
-        ParseUser currentUser = workOrder.getTenant();
-        if (currentUser != null) {
+        ParseUser tenant = workOrder.getTenant();
+        if (tenant != null) {
             // do stuff with the user
             TextView tenantTextViewName = (TextView) findViewById(R.id.new_work_order_tenant_name);
             TextView tenantTextViewEmail = (TextView) findViewById(R.id.new_work_order_tenant_email);
@@ -85,7 +117,7 @@ public class ViewWorkOrderActivity extends Activity {
             ParseObject complex = null;
             String locString = "N/A";
             try {
-                lives = currentUser.getParseObject("liveAt");
+                lives = tenant.getParseObject("liveAt");
                 if (lives != null) {
                     lives.fetchIfNeeded();
                     locString = lives.getString("name");
@@ -114,20 +146,20 @@ public class ViewWorkOrderActivity extends Activity {
                 e.printStackTrace();
             }
 
-            tenantTextViewName.setText(currentUser.getString("firstName") + " " + currentUser.getString("lastName"));
-            tenantTextViewEmail.setText(currentUser.getString("email"));
-            String phoneString = currentUser.getString("phone");
+            tenantTextViewName.setText(tenant.getString("firstName") + " " + tenant.getString("lastName"));
+            tenantTextViewEmail.setText(tenant.getString("email"));
+            String phoneString = tenant.getString("phone");
             tenantTextViewNumber.setText(phoneString.substring(0,3) + "-"
                     + phoneString.substring(3, 6) + "-"
                     + phoneString.substring(6, 10));
 
             tenantTextViewAddress.setText(addressString);
-            if(locString.trim() == ""){
+            if(locString == null){
                 tenantTextViewLocation.setVisibility(View.GONE);
             }
             tenantTextViewLocation.setText(locString);
 
-            Log.d("At-Ease", currentUser.toString());
+            Log.d("At-Ease", tenant.toString());
 
             ParseUser manager = null;
             TextView managerTextViewName = (TextView) findViewById(R.id.new_work_order_manager_name);
@@ -264,6 +296,24 @@ public class ViewWorkOrderActivity extends Activity {
     protected void onStop() {
         sliderShow.stopAutoCycle();
         super.onStop();
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+        //noinspection SimplifiableIfStatement
+        if (id == R.id.action_settings) {
+            return true;
+        }
+        else if(id == android.R.id.home){
+            finish();
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 
 }

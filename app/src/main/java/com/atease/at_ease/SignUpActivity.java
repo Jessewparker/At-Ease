@@ -53,7 +53,7 @@ public class SignUpActivity extends Activity {
         passwordField = (EditText) findViewById(R.id.passwordField);
         emailField = (EditText) findViewById(R.id.emailField);
         phoneNumberField = (EditText) findViewById(R.id.phoneNumberField);
-
+        isTenantField.setChecked(true);
         isTenantField.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

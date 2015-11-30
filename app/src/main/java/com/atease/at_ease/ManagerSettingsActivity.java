@@ -63,11 +63,13 @@ public class ManagerSettingsActivity extends AppCompatActivity {
     ParseObject stripeAuth;
     ParseObject mgrSettings;
     ParseObject property;
-
+    ParseUser currentUser;
+    /*
     private RecyclerView recyclerView;
     private TenantRecyclerViewAdapter adapter;
     private TenantRecyclerViewAdapter.TenantViewHolder viewHolder;
     private List<ParseUser> tenantList = new ArrayList<ParseUser>();
+    */
 
 
 
@@ -77,12 +79,14 @@ public class ManagerSettingsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_manager_settings);
 
+        currentUser = ParseUser.getCurrentUser();
         AtEaseApplication application = (AtEaseApplication) getApplicationContext();
-        final Drawer myDrawer = application.getNewDrawerBuilder().withActivity(this).build();
+        final Drawer myDrawer = application.getNewDrawerBuilder(currentUser.getBoolean("isManager"),this).withActivity(this).build();
 
         //Toolbar stuff
         toolbar = (Toolbar) findViewById(R.id.tool_bar); // Attaching the layout to the toolbar object
-        toolbar.setTitle("Property Settings");
+        TextView title = (TextView) toolbar.findViewById(R.id.title);
+        title.setText("Property Settings");
         IconicsTextView rightToggle = (IconicsTextView) toolbar.findViewById(R.id.rightToggle);
         rightToggle.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -101,7 +105,7 @@ public class ManagerSettingsActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayShowHomeEnabled(true);
 
 
-        ParseUser currentUser = ParseUser.getCurrentUser();
+
 
         tvTitle = (TextView) findViewById(R.id.tvTitle);
         btnStripeConnect = (Button) findViewById(R.id.btnStripeConnect);
@@ -133,14 +137,14 @@ public class ManagerSettingsActivity extends AppCompatActivity {
                 }
             }
         });
-*/
+*/  /*
         recyclerView = (RecyclerView) findViewById(R.id.recycler_tenant);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setHasFixedSize(true);
         adapter = new TenantRecyclerViewAdapter(ManagerSettingsActivity.this, this.tenantList);
         recyclerView.setAdapter(adapter);
-
+*/
         ParseQuery<ParseObject> mgrSettingsQuery = ParseQuery.getQuery("ManagerSettings");
         mgrSettingsQuery.whereEqualTo("manager", currentUser);
         mgrSettingsQuery.getFirstInBackground(new GetCallback<ParseObject>() {
@@ -204,11 +208,11 @@ public class ManagerSettingsActivity extends AppCompatActivity {
             }
         });
 
-        try {
+      /*  try {
             populateTenants();
         } catch (ParseException e) {
             e.printStackTrace();
-        }
+        }  */
 
         btnSave.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -251,39 +255,7 @@ public class ManagerSettingsActivity extends AppCompatActivity {
 
     }
 
-    private void populateTenants() throws ParseException {
-        ParseQuery<ParseObject> propertyQuery = ParseQuery.getQuery("Property");
-        propertyQuery.whereEqualTo("objectId", getIntent().getStringExtra("propId"));
-        propertyQuery.getFirstInBackground(new GetCallback<ParseObject>() {
-            @Override
-            public void done(ParseObject prop, ParseException e) {
-                if (e == null) {
-                    Log.i("AT-EASE", "Property found for tenant search");
-                    ParseQuery<ParseUser> userParseQuery = ParseUser.getQuery();
-                    userParseQuery.whereExists("liveAt");
-                    userParseQuery.whereEqualTo("liveAt", prop);
-                    //        userParseQuery.whereEqualTo("isManager", false);
-                    userParseQuery.findInBackground(new FindCallback<ParseUser>() {
-                        @Override
-                        public void done(List<ParseUser> tmpPropList, ParseException e) {
-                            Log.d("AT-EASE", "tmpPropList Size: " + tmpPropList.size());
-                            if (e == null) {
-                                for (ParseUser entry : tmpPropList) {
-                                    Log.d("AT-EASE", "Adding tenant to property list: " + entry.getString("firstName") + " " + entry.getString("lastName"));
-                                    tenantList.add(entry);
-                                }
-                                adapter.notifyDataSetChanged();
-                            } else {
-                                Log.d(TAG, "tenant populate method broke");
-                            }
-                        }
-                    });
-                } else {
-                    Log.d("AT-EASE", "Error finding property for tenant search. Error: " + e.toString());
-                }
-            }
-        });
-    }
+
 
     private String combineChecks(){
         String ans = checkStripePay() + checkOccupied() + checkRent() + checkProrate() + checkDate();

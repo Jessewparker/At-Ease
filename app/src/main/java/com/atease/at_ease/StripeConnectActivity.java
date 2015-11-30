@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -11,7 +12,10 @@ import android.view.View;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
+import com.mikepenz.iconics.view.IconicsTextView;
+import com.mikepenz.materialdrawer.Drawer;
 import com.parse.LogInCallback;
 import com.parse.ParseException;
 import com.parse.ParseUser;
@@ -28,6 +32,7 @@ public class StripeConnectActivity extends AppCompatActivity {
     String redirectURL = "http://ua-atease.github.io/At-Ease/";
     ProgressBar progress;
     ParseUser currentUser;
+    Toolbar toolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,6 +42,30 @@ public class StripeConnectActivity extends AppCompatActivity {
 
         //get the currentUser
         currentUser = ParseUser.getCurrentUser();
+        AtEaseApplication application = (AtEaseApplication) getApplicationContext();
+        final Drawer myDrawer = application.getNewDrawerBuilder(currentUser.getBoolean("isManager"),this).withActivity(this).build();
+
+        //Toolbar stuff
+        toolbar = (Toolbar) findViewById(R.id.tool_bar); // Attaching the layout to the toolbar object
+        TextView title = (TextView) toolbar.findViewById(R.id.title);
+        title.setText("Stripe Connect");
+        IconicsTextView rightToggle = (IconicsTextView) toolbar.findViewById(R.id.rightToggle);
+        rightToggle.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (myDrawer.isDrawerOpen()) {
+                    myDrawer.closeDrawer();
+                } else {
+                    myDrawer.openDrawer();
+                }
+            }
+        });
+
+
+        setSupportActionBar(toolbar);// Setting toolbar as the ActionBar with setSupportActionBar() call
+        getSupportActionBar().setDisplayShowCustomEnabled(true);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
 
         /*if (currentUser != null) {
             currentUser.logOut();
@@ -158,12 +187,6 @@ public class StripeConnectActivity extends AppCompatActivity {
         }
     }
     */
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        return true;
-    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -171,9 +194,12 @@ public class StripeConnectActivity extends AppCompatActivity {
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
+            return true;
+        }
+        else if(id == android.R.id.home){
+            finish();
             return true;
         }
 

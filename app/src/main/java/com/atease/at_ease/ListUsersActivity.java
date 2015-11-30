@@ -18,6 +18,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.mikepenz.iconics.view.IconicsTextView;
@@ -30,6 +31,7 @@ import com.parse.ParseUser;
 
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class ListUsersActivity extends AppCompatActivity {
@@ -38,6 +40,7 @@ public class ListUsersActivity extends AppCompatActivity {
     private String currentUserId;
     private ArrayAdapter<String> namesArrayAdapter;
     private ArrayList<String> names;
+    private HashMap<String,String> usernames;
     private ListView usersListView;
     private ProgressDialog progressDialog;
     private BroadcastReceiver receiver = null;
@@ -50,12 +53,14 @@ public class ListUsersActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_list_users);
 
+        currentUser = ParseUser.getCurrentUser();
         AtEaseApplication application = (AtEaseApplication) getApplicationContext();
-        final Drawer myDrawer = application.getNewDrawerBuilder().withActivity(this).build();
+        final Drawer myDrawer = application.getNewDrawerBuilder(currentUser.getBoolean("isManager"),this).withActivity(this).build();
 
         //Toolbar stuff
         toolbar = (Toolbar) findViewById(R.id.tool_bar); // Attaching the layout to the toolbar object
-        toolbar.setTitle("Messaging");
+        TextView title = (TextView) toolbar.findViewById(R.id.title);
+        title.setText("Messaging");
         IconicsTextView rightToggle = (IconicsTextView) toolbar.findViewById(R.id.rightToggle);
         rightToggle.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -86,9 +91,10 @@ public class ListUsersActivity extends AppCompatActivity {
 
     //display clickable a list of all users
     private void setConversationsList() {
-        currentUser = ParseUser.getCurrentUser();
-        currentUserId = ParseUser.getCurrentUser().getObjectId();
+
+        currentUserId = currentUser.getObjectId();
         names = new ArrayList<String>();
+        usernames = new HashMap<String,String>();
 
         if(currentUser.getBoolean("isTenant")){
             Log.d(TAG,"isTenant");
@@ -102,7 +108,8 @@ public class ListUsersActivity extends AppCompatActivity {
                     owner.fetchInBackground(new GetCallback<ParseUser>() {
                         @Override
                         public void done(ParseUser pu, com.parse.ParseException e) {
-                            names.add( pu.getUsername() );
+                            names.add( pu.getString("firstName") + " " + pu.getString("lastName") );
+                            usernames.put(pu.getString("firstName") + " " + pu.getString("lastName"), pu.getUsername() );
                             usersListView = (ListView)findViewById(R.id.usersListView);
                             namesArrayAdapter =
                                     new ArrayAdapter<String>(getApplicationContext(),
@@ -211,13 +218,14 @@ public class ListUsersActivity extends AppCompatActivity {
     //open a conversation with one person
     public void openConversation(ArrayList<String> names, int pos) {
         ParseQuery<ParseUser> query = ParseUser.getQuery();
-        query.whereEqualTo("username", names.get(pos));
+        query.whereEqualTo("username", usernames.get(names.get(pos)));
         query.findInBackground(new FindCallback<ParseUser>() {
             public void done(List<ParseUser> user, com.parse.ParseException e) {
                 if (e == null) {
-                    Intent intent = new Intent(getApplicationContext(), MessagingActivity.class);
+                    Intent intent = new Intent(ListUsersActivity.this, MessagingActivity.class);
                     intent.putExtra("RECIPIENT_ID", user.get(0).getObjectId());
                     intent.putExtra("USER_ID", user.get(0).getUsername());
+                    intent.putExtra("USER_FULLNAME",user.get(0).getString("firstName") + " " + user.get(0).getString("lastName"));
                     startActivity(intent);
                 } else {
                     Toast.makeText(getApplicationContext(),
