@@ -60,6 +60,7 @@ public class MainMultipleManagerActivity extends AppCompatActivity {
         AtEaseApplication application = (AtEaseApplication) getApplicationContext();
         final Drawer myDrawer = application.getNewDrawerBuilder(currentUser.getBoolean("isManager"),this).withActivity(this).build();
 
+
         //Toolbar stuff
         toolbar = (Toolbar) findViewById(R.id.tool_bar); // Attaching the layout to the toolbar object
 
@@ -110,9 +111,16 @@ public class MainMultipleManagerActivity extends AppCompatActivity {
         });
 
 
-        populate();
-    }
 
+        populate();
+
+        if(getIntent().getStringExtra("delete") != null){
+            toggleDelete();
+        }
+    }
+    public void toggleDelete(){
+        viewHolder.toggleDelete();
+    }
     private void showSpinner() {
         //progress.setVisibility(View.VISIBLE);
         //btnMessaging.setAlpha(0.25f);

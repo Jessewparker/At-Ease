@@ -1,6 +1,8 @@
 package com.atease.at_ease;
 
 import android.app.Activity;
+import android.app.ActivityManager;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -171,18 +173,23 @@ public class LoginActivity extends Activity {
     private void determineActivity(ParseUser user){
 
         Intent serviceIntent = new Intent(getApplicationContext(), MessageService.class);
-
+        Log.d("DETTTTT","determineActivity");
         if(user.getBoolean("isManager")){
             if(user.getInt("managedProperties") > 1){
                 Intent intent = new Intent(LoginActivity.this, MainMultipleManagerActivity.class);
                 startActivity(intent);
-                startService(serviceIntent);
+                if(!isMyServiceRunning(MessageService.class)){
+                    startService(serviceIntent);
+                }
+
                 finish();
             }
             else if(user.getInt("managedProperties") == 1){
                 Intent intent = new Intent(LoginActivity.this, MainSingleManagerActivity.class);
                 startActivity(intent);
-                startService(serviceIntent);
+                if(!isMyServiceRunning(MessageService.class)){
+                    startService(serviceIntent);
+                }
                 finish();
             }
             else{
@@ -215,6 +222,16 @@ public class LoginActivity extends Activity {
         }
        //either null or actually username
         return username;
+    }
+
+    private boolean isMyServiceRunning(Class<?> serviceClass) {
+        ActivityManager manager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
+        for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
+            if (serviceClass.getName().equals(service.service.getClassName())) {
+                return true;
+            }
+        }
+        return false;
     }
 
 }

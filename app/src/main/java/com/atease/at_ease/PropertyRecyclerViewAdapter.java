@@ -20,6 +20,7 @@ import com.parse.DeleteCallback;
 import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.ParseUser;
+import com.parse.SaveCallback;
 
 import java.util.List;
 
@@ -57,6 +58,16 @@ public class PropertyViewHolder extends RecyclerView.ViewHolder {
         btnWorkOrders = (Button) view.findViewById(R.id.btnWorkOrders);
         btnPaymentHistory = (IconicsButton) view.findViewById(R.id.btnPaymentHistory);
         btnDelete = (IconicsButton) view.findViewById(R.id.btnDelete);
+
+    }
+
+    public void toggleDelete(){
+        if(btnDelete.getVisibility() == View.VISIBLE){
+            btnDelete.setVisibility(View.GONE);
+        }
+        else{
+            btnDelete.setVisibility(View.VISIBLE);
+        }
 
     }
 }
@@ -126,9 +137,23 @@ public class PropertyViewHolder extends RecyclerView.ViewHolder {
                                     @Override
                                     public void done(ParseException e) {
                                         if (e == null) {
-                                            Log.i("AT-EASE", "Property deletion successful");
-                                            removeAt(pos);
-                                        } else {
+                                            ParseUser currentUser = ParseUser.getCurrentUser();
+                                            currentUser.put("managedProperties",currentUser.getInt("managedProperties") - 1 );
+                                            currentUser.saveInBackground(new SaveCallback() {
+                                                @Override
+                                                public void done(ParseException e) {
+                                                    if(e == null){
+                                                        removeAt(pos);
+                                                        Log.i("AT-EASE", "Property deletion successful");
+                                                    }
+                                                    else{
+                                                        Log.d("At-EASE", "User saving problem");
+                                                    }
+
+                                                }
+                                            });
+                                        }
+                                        else {
                                             Log.d("AT-EASE", "Property deletion unsuccessful. Error: " + e.toString());
                                         }
                                     }
@@ -138,6 +163,9 @@ public class PropertyViewHolder extends RecyclerView.ViewHolder {
                         .show();
             }
         });
+        //holder.btnDelete.setVisibility(View.GONE);
+
+
 
 
 

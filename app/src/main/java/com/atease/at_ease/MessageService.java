@@ -31,6 +31,7 @@ public class MessageService extends Service implements SinchClientListener {
     private SinchClient sinchClient = null;
     private MessageClient messageClient = null;
     private String currentUserId;
+    private int count = 0;
     private LocalBroadcastManager broadcaster;
     private BroadcastReceiver receiver;
     private Intent broadcastIntent = new Intent("com.atease.at_ease.ListUsersActivity");
@@ -42,7 +43,8 @@ public class MessageService extends Service implements SinchClientListener {
         currentUserId = ParseUser.getCurrentUser().getObjectId();
 
         if (currentUserId != null && !isSinchClientStarted()) {
-            Log.d(TAG, currentUserId + " is logged in!");
+            Log.d(TAG, currentUserId + " is logged in! " + Integer.toString(count) );
+            count += 1;
             startSinchClient(currentUserId);
         }
 
@@ -91,18 +93,20 @@ public class MessageService extends Service implements SinchClientListener {
 
     @Override
     public void onClientStarted(SinchClient client) {
-        Log.d(TAG,"client started successfully");
+
 
         broadcastIntent.putExtra("success", true);
         broadcaster.sendBroadcast(broadcastIntent);
         //Log.d(TAG, broadcaster.toString() + "doesn't look null to me?");
         client.startListeningOnActiveConnection();
         messageClient = client.getMessageClient();
+        Log.d(TAG,"client started successfully");
     }
 
     @Override
     public void onClientStopped(SinchClient client) {
         sinchClient = null;
+        Log.d(TAG,"sinch client stopped");
     }
 
     @Override
@@ -146,6 +150,7 @@ public class MessageService extends Service implements SinchClientListener {
         sinchClient.stopListeningOnActiveConnection();
         sinchClient.terminate();
         broadcaster.unregisterReceiver(receiver);
+        Log.d("MESSAGING SERVICE", "On Destroy");
     }
 
     public class MessageServiceInterface extends Binder {

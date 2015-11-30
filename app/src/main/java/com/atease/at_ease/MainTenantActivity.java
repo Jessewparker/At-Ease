@@ -205,6 +205,7 @@ public class MainTenantActivity extends AppCompatActivity {
         };
 
         broadcaster.registerReceiver(receiver, new IntentFilter("com.atease.at_ease.ListUsersActivity"));
+        Log.d(TAG,"sending broadcast");
         broadcaster.sendBroadcast(broadcastIntent);
 
     }
@@ -237,11 +238,18 @@ public class MainTenantActivity extends AppCompatActivity {
     }
 
     @Override
+    public void onStop(){
+        Log.d(TAG, "OnStop");
+        super.onStop();
+    }
+
+    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
        // getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
     }
+
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {

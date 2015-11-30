@@ -3,14 +3,17 @@ package com.atease.at_ease;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
 import com.parse.LogInCallback;
+import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.ParseUser;
+import com.parse.SaveCallback;
 import com.parse.SignUpCallback;
 import com.rengwuxian.materialedittext.MaterialEditText;
 
@@ -49,10 +52,11 @@ public class AddPropertyActivity extends Activity {
         countryField = (MaterialEditText) findViewById(R.id.countryField);
         nicknameField = (MaterialEditText) findViewById(R.id.nicknameField);
 
+        /** pretend there is error checking atm **/
         addPropertyButton.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view){
-                Intent intent = new Intent(AddPropertyActivity.this, MainActivity.class);
+
                 street = streetField.getText().toString();
                 city = cityField.getText().toString();
                 state = stateField.getText().toString();
@@ -69,17 +73,36 @@ public class AddPropertyActivity extends Activity {
                 address.saveInBackground();
 
                 //get address objectID
-                ParseUser currentUser = ParseUser.getCurrentUser();
-                ParseObject property = new ParseObject("Property");
+                final ParseUser currentUser = ParseUser.getCurrentUser();
+                ParseObject property = ParseObject.create("Property");
                 property.put("address", address);
                 property.put("nickname", nickname);
                 property.put("owner", currentUser);
 
                 currentUser.put("managedProperties", currentUser.getInt("managedProperties") + 1);
                 currentUser.saveInBackground();
-                property.saveInBackground();
+                property.saveInBackground(new SaveCallback() {
+                    @Override
+                    public void done(ParseException e) {
+                        if (e == null) {
+                            currentUser.saveInBackground();
+                            Intent intent = new Intent(AddPropertyActivity.this, LoginActivity.class);
+                            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                            intent.putExtra("EXIT", true);
+                            startActivity(intent);
+                            finish();
+                        } else {
+                            Log.d("add property", "Error with saving");
+                            Toast.makeText(getApplicationContext(),
+                                    "Could not create the property, check connection",
+                                    Toast.LENGTH_LONG).show();
+                        }
+                    }
+                });
 
-                startActivity(intent);
+
+
 
             }
         });
