@@ -2,8 +2,12 @@ package com.atease.at_ease;
 
 import android.util.Log;
 
+import com.parse.GetCallback;
+import com.parse.ParseException;
 import com.parse.ParseObject;
+import com.parse.ParseQuery;
 import com.parse.ParseUser;
+import com.parse.SaveCallback;
 
 import org.json.JSONObject;
 
@@ -169,7 +173,31 @@ public class StripeUtils {
                     stripeAuth.put("stripe_user_id",obj.getString("stripe_user_id"));
                     stripeAuth.put("scope",obj.getString("scope"));
                     stripeAuth.put("manager",user);
-                    stripeAuth.saveInBackground();
+                    stripeAuth.saveInBackground(new SaveCallback() {
+                        @Override
+                        public void done(ParseException e) {
+                            if(e == null){
+                                ParseQuery<ParseObject> query = new ParseQuery<ParseObject>("ManagerSettings");
+                                query.whereEqualTo("manager",user);
+                                query.getFirstInBackground(new GetCallback<ParseObject>() {
+                                    @Override
+                                    public void done(ParseObject parseObject, ParseException e) {
+                                        if(e == null){
+                                            parseObject.put("authorizedStripe", true);
+                                            parseObject.saveInBackground();
+                                            Log.d("Stripe Utils", "Saved in mgr settings");
+                                        }
+                                        else{
+                                            Log.d("Stripe Utils", "error with Mgr Settings");
+                                        }
+                                    }
+                                });
+                            }
+                            else{
+                                Log.d("Stripe Utils", "error with stripeAuth");
+                            }
+                        }
+                    });
 
                     Log.d("getAccessToken", "String data[access_token]:			" + obj.getString("access_token"));
                     Log.d("getAccessToken", "String data[livemode]:				" + obj.getBoolean("livemode"));

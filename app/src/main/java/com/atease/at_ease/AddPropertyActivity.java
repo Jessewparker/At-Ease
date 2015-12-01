@@ -17,6 +17,8 @@ import com.parse.SaveCallback;
 import com.parse.SignUpCallback;
 import com.rengwuxian.materialedittext.MaterialEditText;
 
+import java.util.Date;
+
 /**
  * Created by lguthrie825 on 11/9/15.
  */
@@ -29,12 +31,14 @@ public class AddPropertyActivity extends Activity {
     private MaterialEditText zipField;
     private MaterialEditText countryField;
     private MaterialEditText nicknameField;
+    private MaterialEditText secondaryAddressField;
     private String street;
     private String city;
     private String state;
     private String zip;
     private String country;
     private String nickname;
+    String secondaryAddress;
 
 
     @Override
@@ -51,6 +55,7 @@ public class AddPropertyActivity extends Activity {
         streetField = (MaterialEditText) findViewById(R.id.streetField);
         countryField = (MaterialEditText) findViewById(R.id.countryField);
         nicknameField = (MaterialEditText) findViewById(R.id.nicknameField);
+        secondaryAddressField = (MaterialEditText) findViewById(R.id.secondaryAddressField);
 
         /** pretend there is error checking atm **/
         addPropertyButton.setOnClickListener(new View.OnClickListener(){
@@ -63,6 +68,7 @@ public class AddPropertyActivity extends Activity {
                 zip = zipField.getText().toString();
                 country = countryField.getText().toString();
                 nickname = nicknameField.getText().toString();
+                secondaryAddress = secondaryAddressField.getText().toString();
 
                 ParseObject address = new ParseObject("Address");
                 address.put("street", street);
@@ -71,13 +77,22 @@ public class AddPropertyActivity extends Activity {
                 address.put("zipcode", zip);
                 address.put("country", country);
                 address.saveInBackground();
-
+                Date date = new Date();
                 //get address objectID
+                if(nickname.equals("")){
+                    nickname = street + secondaryAddress;
+                }
                 final ParseUser currentUser = ParseUser.getCurrentUser();
                 ParseObject property = ParseObject.create("Property");
                 property.put("address", address);
                 property.put("nickname", nickname);
                 property.put("owner", currentUser);
+                property.put("secondaryAddress", secondaryAddress);
+                property.put("monthlyRentDue", 0);
+                property.put("rentAmount",0);
+                property.put("nextRentDue", date);
+                property.put("occupied", false);
+
 
                 currentUser.put("managedProperties", currentUser.getInt("managedProperties") + 1);
                 currentUser.saveInBackground();
@@ -86,6 +101,7 @@ public class AddPropertyActivity extends Activity {
                     public void done(ParseException e) {
                         if (e == null) {
                             currentUser.saveInBackground();
+
                             Intent intent = new Intent(AddPropertyActivity.this, LoginActivity.class);
                             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);

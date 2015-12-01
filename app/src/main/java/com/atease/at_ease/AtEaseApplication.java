@@ -57,8 +57,14 @@ public class AtEaseApplication extends Application {
         ParseObject.registerSubclass(ManagerSettings.class);
         ParseObject.registerSubclass(Property.class);
         Parse.initialize(this, "RWYMOqEP4OgQ4oZIqFjyqHGxG7uYzbaPDWuzvZPq", "WJgweZXzSzoCgsdwgv5h5VzHwryAiAV1FvTFrZyF");
+        ParseUser.enableRevocableSessionInBackground();
         JodaTimeAndroid.init(this);
     }
+
+    public String getFullName(ParseUser user){
+        return (user.getString("firstName") + " " + user.getString("lastName"));
+    }
+
 
     public DrawerBuilder getNewDrawerBuilder(Boolean isManager, Activity mContext) {
         if(isManager == null){
@@ -76,18 +82,15 @@ public class AtEaseApplication extends Application {
 
 
     public DrawerBuilder getNewDrawerBuilderTenant(final Activity myActivity) {
+        ParseUser currentUser = ParseUser.getCurrentUser();
         PrimaryDrawerItem home = new PrimaryDrawerItem()
                 .withIcon(GoogleMaterial.Icon.gmd_home)
                 .withName("Home");
-        PrimaryDrawerItem workOrderInbox = new PrimaryDrawerItem()
-                .withIcon(FontAwesome.Icon.faw_wrench)
-                .withName("Work Orders");
-        PrimaryDrawerItem messageInbox = new PrimaryDrawerItem()
-                .withIcon(GoogleMaterial.Icon.gmd_forum)
-                .withName("Messages");
-        PrimaryDrawerItem rentInbox = new PrimaryDrawerItem()
-                .withIcon(GoogleMaterial.Icon.gmd_attach_money)
-                .withName("Rent");
+        PrimaryDrawerItem fullname = new PrimaryDrawerItem()
+                .withIcon(GoogleMaterial.Icon.gmd_face)
+                .withName(getFullName(currentUser));
+
+
 
         final PrimaryDrawerItem logout = new PrimaryDrawerItem()
                 .withIcon(FontAwesome.Icon.faw_sign_out)
@@ -103,13 +106,11 @@ public class AtEaseApplication extends Application {
                 .withActionBarDrawerToggle(true)
                 .addDrawerItems(
                         home,
+                        fullname,
                         new DividerDrawerItem(),
                         new SecondaryDrawerItem()
                                 .withName("Manage Property")
                                 .withSelectable(false),
-                        workOrderInbox,
-                        messageInbox,
-                        rentInbox,
                         new DividerDrawerItem(),
                         leaveProperty,
                         new DividerDrawerItem(),
@@ -121,7 +122,7 @@ public class AtEaseApplication extends Application {
                     public boolean onItemClick(View view, int position, IDrawerItem drawerItem) {
                         // do something with the clicked item :D
                         Log.d("At-Ease", "Pos: " + position);
-                        if(drawerItem ==  logout){
+                        if (drawerItem == logout) {
                             new MaterialDialog.Builder(view.getContext())
                                     .title("Are you Sure you want to Logout?")
                                     .positiveText("Logout")
@@ -138,25 +139,23 @@ public class AtEaseApplication extends Application {
                                     dialog.dismiss(); //done, so dismiss the dialog
                                     Intent intent = new Intent(myActivity, LoginActivity.class);
                                     Log.d("TAG", "before stop");
-                                    stopService(new Intent(getApplicationContext(), MessageService.class));
-                                    Log.d("TAG","after stop");
+                                    stopService(new Intent(myActivity, MessageService.class));
+                                    Log.d("TAG", "after stop");
                                     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                                     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                                     intent.putExtra("EXIT", true);
                                     myActivity.startActivity(intent);
-                                    String username = ParseUser.getCurrentUser().getUsername();
                                     ParseUser.logOut();
                                     myActivity.finish();
                                     Toast.makeText(getApplicationContext(),
-                                            username + " Logged out!(wait a few seconds)",
+                                            "Logged out!",
                                             Toast.LENGTH_LONG).show();
 
                                 }
 
 
-                        }).show();
-                        }
-                        else if(drawerItem == leaveProperty){
+                            }).show();
+                        } else if (drawerItem == leaveProperty) {
                             new MaterialDialog.Builder(view.getContext())
                                     .title("Confirm Leaving Property")
                                     .content("Are you sure you want to leave this property? This action can not be undone!")
@@ -201,18 +200,13 @@ public class AtEaseApplication extends Application {
                 });
     }
     public DrawerBuilder getNewDrawerBuilderManager(final Activity myActivity) {
+        ParseUser currentUser = ParseUser.getCurrentUser();
         PrimaryDrawerItem home = new PrimaryDrawerItem()
                 .withIcon(GoogleMaterial.Icon.gmd_home)
                 .withName("Home");
-        PrimaryDrawerItem workOrderInbox = new PrimaryDrawerItem()
-                .withIcon(FontAwesome.Icon.faw_wrench)
-                .withName("Work Orders");
-        PrimaryDrawerItem messageInbox = new PrimaryDrawerItem()
-                .withIcon(GoogleMaterial.Icon.gmd_forum)
-                .withName("Messages");
-        PrimaryDrawerItem rentInbox = new PrimaryDrawerItem()
-                .withIcon(GoogleMaterial.Icon.gmd_attach_money)
-                .withName("Rent");
+        PrimaryDrawerItem fullname = new PrimaryDrawerItem()
+                .withIcon(GoogleMaterial.Icon.gmd_face)
+                .withName(getFullName(currentUser));
 
         final PrimaryDrawerItem logout = new PrimaryDrawerItem()
                 .withIcon(FontAwesome.Icon.faw_sign_out)
@@ -230,13 +224,12 @@ public class AtEaseApplication extends Application {
                 .withActionBarDrawerToggle(true)
                 .addDrawerItems(
                         home,
+                        fullname,
                         new DividerDrawerItem(),
                         new SecondaryDrawerItem()
                                 .withName("Manage Property")
                                 .withSelectable(false),
-                        workOrderInbox,
-                        messageInbox,
-                        rentInbox,
+
                         new DividerDrawerItem(),
                         addProp,
                         removeProp,
@@ -267,7 +260,7 @@ public class AtEaseApplication extends Application {
                                     Intent intent = new Intent(myActivity, LoginActivity.class);
 
                                     Log.d("TAG", "before stop");
-                                    stopService(new Intent(getApplicationContext(), MessageService.class));
+                                    stopService(new Intent(myActivity, MessageService.class));
                                     Log.d("TAG", "after stop");
                                     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                                     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -275,18 +268,16 @@ public class AtEaseApplication extends Application {
                                     Log.d("TAG", "before start act");
                                     myActivity.startActivity(intent);
                                     Log.d("TAG", "after start act");
-                                    String username = ParseUser.getCurrentUser().getUsername();
                                     ParseUser.logOut();
                                     myActivity.finish();
                                     Toast.makeText(getApplicationContext(),
-                                            username + " Logged out!(wait a few seconds)",
+                                            " Logged out!",
                                             Toast.LENGTH_LONG).show();
 
                                 }
                             }).show();
                         } else if (drawerItem == addProp) {
                             Intent intent = new Intent(myActivity, AddPropertyActivity.class);
-                            intent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
                             myActivity.startActivity(intent);
                         } else if (drawerItem == removeProp) {
                             ParseUser currentUser = ParseUser.getCurrentUser();
@@ -294,8 +285,8 @@ public class AtEaseApplication extends Application {
                                 //just take to the homepage
                                 Intent intent = new Intent(myActivity, MainMultipleManagerActivity.class);
                                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                                intent.putExtra("EXIT", true);
+                                //intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                //intent.putExtra("EXIT", true);
                                 myActivity.startActivity(intent);
                                 myActivity.finish();
                             } else {
@@ -315,10 +306,11 @@ public class AtEaseApplication extends Application {
                                             public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
                                                 ParseQuery propQuery = new ParseQuery("Property");
                                                 propQuery.whereEqualTo("owner", ParseUser.getCurrentUser());
-                                                propQuery.getFirstInBackground(new GetCallback() {
+                                                propQuery.findInBackground(new FindCallback<ParseObject>() {
                                                     @Override
-                                                    public void done(ParseObject property, ParseException e) {
+                                                    public void done(List<ParseObject> properties, ParseException e) {
                                                         if (e == null) {
+                                                            ParseObject property = properties.get(0);
                                                             property.deleteInBackground(new DeleteCallback() {
                                                                 @Override
                                                                 public void done(ParseException e) {

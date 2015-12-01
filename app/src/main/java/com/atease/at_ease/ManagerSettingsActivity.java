@@ -51,6 +51,8 @@ public class ManagerSettingsActivity extends AppCompatActivity {
     MaterialEditText etMonthlyRentDue;
     MaterialEditText etProrateDays;
     Button btnSave;
+    TextView tvPropId;
+    String propId;
 
 
     Date rentDueDate;
@@ -111,12 +113,13 @@ public class ManagerSettingsActivity extends AppCompatActivity {
         btnStripeConnect = (Button) findViewById(R.id.btnStripeConnect);
         swUseStripe = (Switch) findViewById(R.id.swUseStripe);
         cbOccupied = (CheckBox) findViewById(R.id.cbOccupied);
+        tvPropId = (TextView) findViewById(R.id.tvPropId);
         calendar = (MaterialCalendarView) findViewById(R.id.calendarView);
         etMonthlyRentDue = (MaterialEditText) findViewById(R.id.etMonthlyRent);
-        etProrateDays = (MaterialEditText) findViewById(R.id.etProrateDays);
+        //etProrateDays = (MaterialEditText) findViewById(R.id.etProrateDays);
         btnSave = (Button) findViewById(R.id.btnSave);
 
-
+        propId = getIntent().getStringExtra("propId");
         try{
             currentUser.fetchIfNeeded();
         }catch(ParseException ex){
@@ -178,7 +181,7 @@ public class ManagerSettingsActivity extends AppCompatActivity {
         });
 
         ParseQuery<ParseObject> propertyQuery = ParseQuery.getQuery("Property");
-        propertyQuery.whereEqualTo("objectId", getIntent().getStringExtra("propId"));
+        propertyQuery.whereEqualTo("objectId", propId);
         propertyQuery.getFirstInBackground(new GetCallback<ParseObject>() {
             @Override
             public void done(ParseObject prop, ParseException e) {
@@ -196,11 +199,17 @@ public class ManagerSettingsActivity extends AppCompatActivity {
                     }
                     // assume 0 if doesn't exist?
                     rentdue = Integer.toString(property.getInt("monthlyRentDue"));
-                    //String rentdue = Integer.toString(rentdue);
 
-                    etMonthlyRentDue.setText(rentdue.substring(0, rentdue.length() - 2) + "." + rentdue.substring(rentdue.length() - 2, rentdue.length()));
-                    prorateDays = property.getInt("prorateDays");
-                    etProrateDays.setText(Integer.toString(prorateDays));
+                    //String rentdue = Integer.toString(rentdue);
+                    tvPropId.setText("Property ID: " + property.getObjectId());
+                    if(rentdue.length() > 2) {
+                        etMonthlyRentDue.setText(rentdue.substring(0, rentdue.length() - 2) + "." + rentdue.substring(rentdue.length() - 2, rentdue.length()));
+                    }
+                    else{
+                        etMonthlyRentDue.setText("0");
+                    }
+                    //prorateDays = property.getInt("prorateDays");
+                    //etProrateDays.setText(Integer.toString(prorateDays));
 
                 } else {
                     Log.d(TAG, "couldn't get Property from Parse");
@@ -238,8 +247,12 @@ public class ManagerSettingsActivity extends AppCompatActivity {
                         // save property settings
                         String amount = fixAmountForStore(etMonthlyRentDue.getText().toString());
                         property.put("monthlyRentDue", Integer.parseInt(amount));
+                        int newRentAmount =  property.getInt("rentAmount") - Integer.parseInt(rentdue) + Integer.parseInt(amount);
+
+                        property.put("rentAmount", newRentAmount);
+
                         property.put("occupied", cbOccupied.isChecked());
-                        property.put("prorateDays", Integer.parseInt(etProrateDays.getText().toString()));
+                        // property.put("prorateDays", Integer.parseInt(etProrateDays.getText().toString()));
                         property.put("nextRentDue", calendar.getSelectedDate().getDate());
 
                         //Save both mgrSettings and property in back ground
@@ -258,7 +271,7 @@ public class ManagerSettingsActivity extends AppCompatActivity {
 
 
     private String combineChecks(){
-        String ans = checkStripePay() + checkOccupied() + checkRent() + checkProrate() + checkDate();
+        String ans = checkStripePay() + checkOccupied() + checkRent() + checkDate();
         return ans;
     }
 

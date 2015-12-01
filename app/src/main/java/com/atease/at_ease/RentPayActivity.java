@@ -1,5 +1,6 @@
 package com.atease.at_ease;
 
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -15,6 +16,8 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.afollestad.materialdialogs.DialogAction;
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.atease.at_ease.models.ManagerSettings;
 import com.atease.at_ease.models.Payment;
 import com.atease.at_ease.models.Property;
@@ -109,14 +112,42 @@ public class RentPayActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayShowTitleEnabled(true);
 
         try{
-            currentUser.fetch();
+            currentUser.fetchIfNeeded();
             property = currentUser.getParseObject("liveAt");
-            property.fetch();
+            property.fetchIfNeeded();
             manager = property.getParseUser("owner");
-            manager.fetch();
+            manager.fetchIfNeeded();
+
         }catch(ParseException ex){
             Log.d(TAG, ex.getMessage());
         }
+
+        ParseQuery<ParseObject> query = new ParseQuery<ParseObject>("ManagerSettings");
+        query.whereEqualTo("manager",manager);
+        query.getFirstInBackground(new GetCallback<ParseObject>() {
+            @Override
+            public void done(ParseObject parseObject, ParseException e) {
+                if(e == null){
+                    if(!parseObject.getBoolean("useStripePayments") || !parseObject.getBoolean("authorizedStripe")){
+                        new MaterialDialog.Builder(RentPayActivity.this)
+                                .title("Error")
+                                .content("Manager has not setup stripe payments yet, please let your manager know if you would like to use At Ease to pay your rent")
+                                .positiveText("Okay")
+                                .onPositive(new MaterialDialog.SingleButtonCallback() {
+                                    @Override
+                                    public void onClick(MaterialDialog dialog, DialogAction which) {
+                                        dialog.dismiss(); //done, so dismiss the dialog
+                                        //startActivity(new Intent(RentPayActivity.this, MainTenantActivity.class));
+                                        finish();
+                                    }
+                                }).show();
+                    }
+                }
+                else{
+                    Log.d(TAG,e.toString());
+                }
+            }
+        });
 
         getStripeAuth();
 
@@ -161,7 +192,7 @@ public class RentPayActivity extends AppCompatActivity {
         tvError = (TextView) findViewById(R.id.tvError);
         btnConfirm = (Button) findViewById(R.id.btnConfirm);
 
-
+        /*
         etCardHolderName.setText("Jesse Parker");
         etCardHolderAddressOne.setText("718 Vicksburg Drive");
         etCity.setText("Tuscaloosa");
@@ -169,6 +200,7 @@ public class RentPayActivity extends AppCompatActivity {
         etCardNumber.setText("4242424242424242");
         etCardCVC.setText("123");
         etAmount.setText("5000");
+        */
 
         Log.d(TAG, property.getString("nickname"));
         Log.d(TAG, manager.getEmail());
@@ -352,7 +384,9 @@ public class RentPayActivity extends AppCompatActivity {
 
     private void setRentDuetv(){
         String rentdue = Integer.toString(property.getInt("rentAmount"));
-        rentdue = rentdue.substring(0, rentdue.length() - 2) + "." + rentdue.substring(rentdue.length() - 2, rentdue.length());
+        if(rentdue.length() > 2) {
+            rentdue = rentdue.substring(0, rentdue.length() - 2) + "." + rentdue.substring(rentdue.length() - 2, rentdue.length());
+        }
         DateFormat df = new SimpleDateFormat("MMM d, yyyy");
         String date = df.format(property.getDate("nextRentDue"));
         rentdue = "$" + rentdue + " due by " + date;

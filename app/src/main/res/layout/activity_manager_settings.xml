@@ -44,6 +44,7 @@
             android:layout_height="wrap_content"
             android:text="To use stripe payments you must first connect your stripe account"
             android:id="@+id/tvTitle"
+            android:textSize="20dp"
 
         />
 
@@ -84,31 +85,41 @@
             android:layout_alignParentTop="true"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
+            android:layout_marginBottom="5dp"
+            android:textSize="20dp"
             android:textColor="@color/primary"/>
 
-      <!--  <LinearLayout
-            android:id="@+id/recycler_layout"
-            android:orientation="horizontal"
-            android:layout_width="match_parent"
-            android:layout_below="@id/tvGeneral"
+        <TextView
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_margin="0dp"
-            android:padding="5dp"
-            android:minHeight="150dp">
+            android:text="This is your Property Id, give it to your Tenants so that they can connect with your property!"
+            android:id="@+id/tvPropIdInfo"
+            android:layout_below="@+id/tvGeneral"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:textSize="16dp"
+            />
 
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/recycler_tenant"
-                android:layout_width="match_parent"
-                android:layout_height="fill_parent" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Property ID : IPJAJBNAEA"
+            android:id="@+id/tvPropId"
+            android:layout_below="@+id/tvPropIdInfo"
+            android:layout_marginBottom="5dp"
+            android:layout_centerHorizontal="true"
+            android:gravity="center_horizontal"
+            android:textSize="16dp"
+            android:textColor="@color/primary"
+            />
 
-        </LinearLayout> -->
 
         <com.rey.material.widget.CheckBox
             style="@style/Material.Drawable.CheckBox"
             android:id="@+id/cbOccupied"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/tvGeneral"
+            android:layout_below="@+id/tvPropId"
             android:text="Occupied"
             android:layout_marginTop="30dp"
             android:textColor="@color/primary"
@@ -131,23 +142,6 @@
             android:layout_below="@+id/cbOccupied"
             android:layout_marginTop="30dp" />
 
-        <com.rengwuxian.materialedittext.MaterialEditText
-            android:id="@+id/etProrateDays"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:met_baseColor="@color/primary_text"
-            app:met_primaryColor="@color/primary_dark"
-            app:met_errorColor="@color/error"
-            app:met_floatingLabel="highlight"
-            app:met_floatingLabelText="Number of days to prorate this month"
-            app:met_floatingLabelTextColor = "@color/primary"
-            android:text= "0"
-            android:hint="Number of days to prorate this month"
-            android:editable="true"
-            android:enabled="true"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:layout_below="@+id/etMonthlyRent" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -155,7 +149,7 @@
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:text="Date that the next rent payment is due"
             android:id="@+id/tvRentDue"
-            android:layout_below="@+id/etProrateDays"
+            android:layout_below="@+id/etMonthlyRent"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
             android:textColor="@color/primary"/>

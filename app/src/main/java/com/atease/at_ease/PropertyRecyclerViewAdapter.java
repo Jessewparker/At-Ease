@@ -61,15 +61,7 @@ public class PropertyViewHolder extends RecyclerView.ViewHolder {
 
     }
 
-    public void toggleDelete(){
-        if(btnDelete.getVisibility() == View.VISIBLE){
-            btnDelete.setVisibility(View.GONE);
-        }
-        else{
-            btnDelete.setVisibility(View.VISIBLE);
-        }
 
-    }
 }
 
     @Override
@@ -103,7 +95,7 @@ public class PropertyViewHolder extends RecyclerView.ViewHolder {
         holder.btnWorkOrders.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(mContext, ManagerSettingsActivity.class);
+                Intent intent = new Intent(mContext, WorkOrderInboxActivity.class);
                 intent.putExtra("propId", propId);
                 mContext.startActivity(intent);
             }

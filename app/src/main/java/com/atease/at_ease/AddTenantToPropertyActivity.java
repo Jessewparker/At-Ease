@@ -9,6 +9,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.afollestad.materialdialogs.DialogAction;
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.parse.*;
 import com.rengwuxian.materialedittext.MaterialEditText;
 
@@ -17,6 +19,7 @@ import com.rengwuxian.materialedittext.MaterialEditText;
  */
 public class AddTenantToPropertyActivity extends Activity {
     private Button add;
+    private Button logout;
     private MaterialEditText propertyID;
     private String id;
     private ParseObject place;
@@ -37,6 +40,7 @@ final String TAG = "AddTenantToProp";
         setContentView(R.layout.activity_add_tenant_to_property);
 
         add = (Button) findViewById(R.id.addButton);
+        logout = (Button) findViewById(R.id.logoutButton);
         propertyID = (MaterialEditText) findViewById(R.id.propertyID);
         Log.d(TAG, "started Acitivity");
         add.setOnClickListener(new View.OnClickListener() {
@@ -61,6 +65,33 @@ final String TAG = "AddTenantToProp";
                         }
                     }
                 });
+            }
+        });
+        logout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                new MaterialDialog.Builder(AddTenantToPropertyActivity.this)
+                        .title("Logout?")
+                        .content("Are you sure you want to logout? you should get the Property ID from your manager to join their property!")
+                        .positiveText("Stay Logged In")
+                        .negativeText("Logout")
+                        .onPositive(new MaterialDialog.SingleButtonCallback() {
+                            @Override
+                            public void onClick(MaterialDialog dialog, DialogAction dialogAction) {
+                                dialog.dismiss();
+                            }
+                        })
+                        .onNegative(new MaterialDialog.SingleButtonCallback() {
+                            @Override
+                            public void onClick(MaterialDialog dialog, DialogAction which) {
+                                dialog.dismiss(); //done, so dismiss the dialog
+                                stopService(new Intent(AddTenantToPropertyActivity.this, MessageService.class));
+                                startActivity(new Intent(AddTenantToPropertyActivity.this, LoginActivity.class));
+                                ParseUser.logOut();
+                                finish();
+                            }
+                        }).show();
+
             }
         });
     }

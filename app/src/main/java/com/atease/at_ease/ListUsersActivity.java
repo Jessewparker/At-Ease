@@ -151,8 +151,9 @@ public class ListUsersActivity extends AppCompatActivity {
                             @Override
                             public void done(List<ParseUser> list, com.parse.ParseException e) {
                                 if (e == null) {
-                                    for (ParseUser tenant : list) {
-                                        names.add(tenant.getUsername());
+                                    for (ParseUser pu : list) {
+                                        names.add( pu.getString("firstName") + " " + pu.getString("lastName") );
+                                        usernames.put(pu.getString("firstName") + " " + pu.getString("lastName"), pu.getUsername() );
                                     }
                                     usersListView = (ListView)findViewById(R.id.usersListView);
                                     namesArrayAdapter =

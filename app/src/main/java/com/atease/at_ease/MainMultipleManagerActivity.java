@@ -114,13 +114,9 @@ public class MainMultipleManagerActivity extends AppCompatActivity {
 
         populate();
 
-        if(getIntent().getStringExtra("delete") != null){
-            toggleDelete();
-        }
+
     }
-    public void toggleDelete(){
-        viewHolder.toggleDelete();
-    }
+
     private void showSpinner() {
         //progress.setVisibility(View.VISIBLE);
         //btnMessaging.setAlpha(0.25f);

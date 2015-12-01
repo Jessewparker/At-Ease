@@ -151,6 +151,7 @@ public class WorkOrderInboxRecyclerViewAdapter extends RecyclerView.Adapter<Work
             }
         });
         final IconicsButton btnDone = (IconicsButton) holder.btnDone;
+        holder.btnDone.setTag(position);
         holder.btnDone.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(final View v) {

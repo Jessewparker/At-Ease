@@ -172,7 +172,7 @@ public class LoginActivity extends Activity {
 
     private void determineActivity(ParseUser user){
 
-        Intent serviceIntent = new Intent(getApplicationContext(), MessageService.class);
+        Intent serviceIntent = new Intent(LoginActivity.this, MessageService.class);
         Log.d("DETTTTT","determineActivity");
         if(user.getBoolean("isManager")){
             if(user.getInt("managedProperties") > 1){

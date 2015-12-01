@@ -85,6 +85,7 @@ public class MessageService extends Service implements SinchClientListener {
 
     @Override
     public void onClientFailed(SinchClient client, SinchError error) {
+        Log.d(TAG, "on Client Failed");
         broadcastIntent.putExtra("success", false);
         broadcaster.sendBroadcast(broadcastIntent);
 
@@ -116,10 +117,12 @@ public class MessageService extends Service implements SinchClientListener {
 
     @Override
     public void onLogMessage(int level, String area, String message) {
+        Log.d(TAG, "Log message " + message);
     }
 
     @Override
     public void onRegistrationCredentialsRequired(SinchClient client, ClientRegistration clientRegistration) {
+        Log.d(TAG, "client registration?");
     }
 
     public void sendMessage(String recipientUserId, String textBody) {
@@ -147,10 +150,12 @@ public class MessageService extends Service implements SinchClientListener {
 
     @Override
     public void onDestroy() {
+        super.onDestroy();
         sinchClient.stopListeningOnActiveConnection();
-        sinchClient.terminate();
+        sinchClient.terminateGracefully();
         broadcaster.unregisterReceiver(receiver);
         Log.d("MESSAGING SERVICE", "On Destroy");
+
     }
 
     public class MessageServiceInterface extends Binder {

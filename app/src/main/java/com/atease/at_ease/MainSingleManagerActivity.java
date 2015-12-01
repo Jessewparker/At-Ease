@@ -55,6 +55,18 @@ public class MainSingleManagerActivity extends AppCompatActivity {
 
 
         currentUser = ParseUser.getCurrentUser();
+        if(currentUser == null){
+            Intent login = new Intent(MainSingleManagerActivity.this, LoginActivity.class);
+            startActivity(login);
+            finish();
+        }
+        //Log.d("Tenant main",currentUser.getParseObject("liveAt").getObjectId());
+        if(currentUser.getInt("managedProperties") == 0){
+            //no property,
+            Intent addProp = new Intent(MainSingleManagerActivity.this, AddPropertyActivity.class);
+            startActivity(addProp);
+            finish();
+        }
         AtEaseApplication application = (AtEaseApplication) getApplicationContext();
         final Drawer myDrawer = application.getNewDrawerBuilder(currentUser.getBoolean("isManager"),this).withActivity(this).build();
         //Toolbar stuff

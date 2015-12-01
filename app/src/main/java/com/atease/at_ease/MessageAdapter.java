@@ -40,6 +40,14 @@ public class MessageAdapter extends BaseAdapter {
         messages = new ArrayList<Pair<WritableMessage, Integer>>();
     }
 
+    public Boolean checkMessageUnique(WritableMessage message, int direction){
+        Boolean unique = true;
+        for( Pair<WritableMessage, Integer> pair : messages){
+
+        }
+        return true;
+    }
+
     @Override
     public int getCount() {
         return messages.size();
