@@ -217,6 +217,7 @@ public class MessagingActivity extends AppCompatActivity {
                 else{
                     writableMessage.addHeader("date", dt.toString("MMM d"));
                 }
+                if(messageAdapter.checkMessageUnique(writableMessage,MessageAdapter.DIRECTION_INCOMING))
                 messageAdapter.addMessage(writableMessage, MessageAdapter.DIRECTION_INCOMING);
 
             }

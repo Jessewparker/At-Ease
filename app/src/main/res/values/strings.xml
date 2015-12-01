@@ -65,8 +65,6 @@
     </string-array>
     <string-array name="countries_array">
         <item>United States</item>
-        <item>Canada</item>
-        <item>Mexico</item>
     </string-array>
 
     <string-array name="months_array">

@@ -1,6 +1,7 @@
 package com.atease.at_ease;
 
 import android.app.Activity;
+import android.util.Log;
 import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -41,9 +42,11 @@ public class MessageAdapter extends BaseAdapter {
     }
 
     public Boolean checkMessageUnique(WritableMessage message, int direction){
-        Boolean unique = true;
         for( Pair<WritableMessage, Integer> pair : messages){
-
+            if(pair.first.getTextBody() == message.getTextBody()){
+                Log.d("GOT IT", "Caught the duplicate");
+                return false;
+            }
         }
         return true;
     }

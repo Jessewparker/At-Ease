@@ -32,7 +32,7 @@ public class Payment extends ParseObject{
             Log.d("Payment", e.toString());
         }
 
-        return man.getString("firstName") + man.getString("lastName");
+        return man.getString("firstName") + " " + man.getString("lastName");
     }
 
     public String getTenantName(){
@@ -43,7 +43,7 @@ public class Payment extends ParseObject{
             Log.d("Payment", e.toString());
         }
 
-        return user.getString("firstName") + user.getString("lastName");
+        return user.getString("firstName") + " " +user.getString("lastName");
 
     }
 

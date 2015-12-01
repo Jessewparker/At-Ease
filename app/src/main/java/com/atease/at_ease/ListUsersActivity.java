@@ -42,8 +42,8 @@ public class ListUsersActivity extends AppCompatActivity {
     private ArrayList<String> names;
     private HashMap<String,String> usernames;
     private ListView usersListView;
-    private ProgressDialog progressDialog;
-    private BroadcastReceiver receiver = null;
+
+
     private ParseUser currentUser;
 
     final String TAG = "ListUsersActivity";
@@ -238,28 +238,7 @@ public class ListUsersActivity extends AppCompatActivity {
     }
 
     //show a loading spinner while the sinch client starts
-    private void showSpinner() {
-        progressDialog = new ProgressDialog(this);
-        progressDialog.setTitle("Loading");
-        progressDialog.setMessage("Please wait...");
-        progressDialog.show();
 
-        receiver = new BroadcastReceiver() {
-            @Override
-            public void onReceive(Context context, Intent intent) {
-                Boolean success = intent.getBooleanExtra("success", false);
-                progressDialog.dismiss();
-                if (!success) {
-                    Toast.makeText(getApplicationContext(), "Messaging service failed to start", Toast.LENGTH_LONG).show();
-                }
-                else{
-                    Toast.makeText(getApplicationContext(), "message service connected!", Toast.LENGTH_LONG).show();
-                }
-            }
-        };
-
-        LocalBroadcastManager.getInstance(this).registerReceiver(receiver, new IntentFilter("com.atease.at_ease.ListUsersActivity"));
-    }
 
     @Override
     public void onResume() {

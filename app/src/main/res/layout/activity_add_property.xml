@@ -1,14 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="16dp">
 
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_gravity="center_horizontal">
+
 
         <TextView
             android:layout_width="wrap_content"
@@ -18,128 +21,97 @@
             android:id="@+id/textView3"
             android:layout_gravity="center_horizontal"
             android:layout_alignParentTop="true"
-            android:layout_centerHorizontal="true" />
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="10dp"
+            android:textColor="@color/primary"/>
 
         <com.rengwuxian.materialedittext.MaterialEditText
+            android:id="@+id/streetField"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             app:met_baseColor="@color/primary_text"
             app:met_primaryColor="@color/primary_dark"
             app:met_errorColor="@color/error"
             app:met_floatingLabel="highlight"
-            app:met_floatingLabelText="Street"
+            app:met_floatingLabelText="Street Address"
             app:met_floatingLabelTextColor = "@color/primary"
-            android:hint="Street"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/streetField"
-            android:layout_below="@+id/textView3"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:layout_marginTop="37dp"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentEnd="true"
+            android:layout_marginBottom="10dp"
+            android:hint="Street Address"
             />
 
+
+
         <com.rengwuxian.materialedittext.MaterialEditText
+            android:id="@+id/cityField"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             app:met_baseColor="@color/primary_text"
             app:met_primaryColor="@color/primary_dark"
             app:met_errorColor="@color/error"
             app:met_floatingLabel="highlight"
             app:met_floatingLabelText="City"
             app:met_floatingLabelTextColor = "@color/primary"
+            android:layout_marginBottom="10dp"
             android:hint="City"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/cityField"
-            android:layout_below="@+id/streetField"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:layout_marginTop="34dp"
-            android:layout_alignRight="@+id/textView3"
-            android:layout_alignEnd="@+id/textView3"
-            />
+         />
 
-        <com.rengwuxian.materialedittext.MaterialEditText
-            app:met_baseColor="@color/primary_text"
-            app:met_primaryColor="@color/primary_dark"
-            app:met_errorColor="@color/error"
-            app:met_floatingLabel="highlight"
-            app:met_floatingLabelText="State"
-            app:met_floatingLabelTextColor = "@color/primary"
-            android:hint="State"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/stateField"
-            android:layout_alignTop="@+id/cityField"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentEnd="true"
-            android:layout_toRightOf="@+id/cityField"
-            android:layout_toEndOf="@+id/cityField"
-             />
-
-        <com.rengwuxian.materialedittext.MaterialEditText
-            app:met_baseColor="@color/primary_text"
-            app:met_primaryColor="@color/primary_dark"
-            app:met_errorColor="@color/error"
-            app:met_floatingLabel="highlight"
-            app:met_floatingLabelText="Zipcode"
-            app:met_floatingLabelTextColor = "@color/primary"
-            app:met_maxCharacters="5"
-            android:hint="Zipcode"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:inputType="number"
-            android:ems="10"
-            android:id="@+id/zipField"
-            android:layout_below="@+id/cityField"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:layout_marginTop="44dp"
-            />
-
-        <com.rengwuxian.materialedittext.MaterialEditText
-            app:met_baseColor="@color/primary_text"
-            app:met_primaryColor="@color/primary_dark"
-            app:met_errorColor="@color/error"
-            app:met_floatingLabel="highlight"
-            app:met_floatingLabelText="Country"
-            app:met_floatingLabelTextColor = "@color/primary"
-            android:hint="Country"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/countryField"
-            android:layout_alignBottom="@+id/zipField"
-            android:layout_toRightOf="@+id/zipField"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentEnd="true"
-             />
-
-        <Button
-            style="?android:attr/buttonStyleSmall"
+        <LinearLayout
+            android:orientation="horizontal"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Add Property"
-            android:id="@+id/addButton"
-            android:layout_below="@+id/nicknameField"
-            android:layout_centerHorizontal="true"
-            android:layout_margin="39dp"
+            android:weightSum="1"
+            android:id="@+id/linearLayout3">
+
+            <fr.ganfra.materialspinner.MaterialSpinner
+                android:id="@+id/stateField"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:minWidth="60dp"
+                app:ms_multiline="false"
+                app:ms_hint="State"
+                app:ms_floatingLabelText="State"
+                app:ms_baseColor="@color/primary_text"
+                app:ms_highlightColor="@color/primary_dark"
+                app:ms_errorColor="@color/error"
+                app:ms_thickness="2dp"
+                app:ms_arrowColor="@color/primary"
+                app:ms_arrowSize="16dp"
+                app:ms_alignLabels="false"
+                app:ms_floatingLabelColor="@color/primary"/>
+
+            <com.rengwuxian.materialedittext.MaterialEditText
+                android:id="@+id/zipField"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:met_baseColor="@color/primary_text"
+                app:met_primaryColor="@color/primary_dark"
+                app:met_errorColor="@color/error"
+                app:met_floatingLabel="highlight"
+                app:met_floatingLabelText="Zipcode"
+                app:met_floatingLabelTextColor = "@color/primary"
+                app:met_maxCharacters="5"
+                android:hint="Zipcode"
            />
 
-        <com.rengwuxian.materialedittext.MaterialEditText
-            app:met_baseColor="@color/primary_text"
-            app:met_primaryColor="@color/primary_dark"
-            app:met_errorColor="@color/error"
-            app:met_floatingLabel="highlight"
-            app:met_floatingLabelText="(optional) Nickname"
-            app:met_floatingLabelTextColor = "@color/primary"
-            android:hint="(optional) Nickname"
-            android:layout_width="match_parent"
+
+        </LinearLayout>
+
+        <fr.ganfra.materialspinner.MaterialSpinner
+            android:id="@+id/countryField"
+            android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/nicknameField"
-            android:layout_below="@+id/secondaryAddressField"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:layout_marginTop="37dp"
-             />
+            app:ms_multiline="false"
+            app:ms_hint="Country"
+            app:ms_floatingLabelText="Country"
+            app:ms_baseColor="@color/primary_text"
+            app:ms_highlightColor="@color/primary_dark"
+            app:ms_errorColor="@color/error"
+            app:ms_thickness="2dp"
+            app:ms_arrowColor="@color/primary"
+            app:ms_arrowSize="16dp"
+            app:ms_alignLabels="false"
+            app:ms_floatingLabelColor="@color/primary"
+            android:layout_marginBottom="10dp"/>
 
 
 
@@ -154,11 +126,31 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/secondaryAddressField"
-            android:layout_below="@+id/zipField"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:layout_marginTop="35dp" />
 
-    </RelativeLayout>
+            android:layout_marginBottom="10dp" />
+    <com.rengwuxian.materialedittext.MaterialEditText
+        app:met_baseColor="@color/primary_text"
+        app:met_primaryColor="@color/primary_dark"
+        app:met_errorColor="@color/error"
+        app:met_floatingLabel="highlight"
+        app:met_floatingLabelText="(optional) Nickname"
+        app:met_floatingLabelTextColor = "@color/primary"
+        android:hint="(optional) Nickname"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/nicknameField"
+
+        android:layout_marginBottom="10dp" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Add Property"
+        android:id="@+id/addButton"
+        android:textColor="@color/primary"
+
+        android:layout_gravity="center_horizontal" />
+
 
 </LinearLayout>
+</ScrollView>

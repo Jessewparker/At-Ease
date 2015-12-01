@@ -196,9 +196,13 @@ public class SignUpActivity extends Activity {
             emailField.setError("Enter a Valid Email Address");
             success = false;
         }
-        if(phoneNumberField.getText().toString().equals("")){
+        String phone = phoneNumberField.getText().toString();
+        if(phone.equals("")){
             phoneNumberField.setError("Phone Number is Required");
             success = false;
+        }else if (!phone.matches("[0-9]+") || !(phone.length() == 10)){
+            phoneNumberField.setError("Phone Number Should be Exactly 10 Numbers, Nothing Else");
+            success= false;
         }
 
         return success;
