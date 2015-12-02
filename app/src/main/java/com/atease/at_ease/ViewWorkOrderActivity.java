@@ -103,6 +103,13 @@ public class ViewWorkOrderActivity extends AppCompatActivity {
 
         ParseUser tenant = workOrder.getTenant();
         if (tenant != null) {
+            try{
+                tenant.fetchIfNeeded();
+            }
+            catch(Exception e){
+                Log.d("work order",e.getMessage());
+            }
+
             // do stuff with the user
             TextView tenantTextViewName = (TextView) findViewById(R.id.new_work_order_tenant_name);
             TextView tenantTextViewEmail = (TextView) findViewById(R.id.new_work_order_tenant_email);

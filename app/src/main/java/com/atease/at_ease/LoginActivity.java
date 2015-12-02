@@ -51,9 +51,13 @@ public class LoginActivity extends Activity {
         /******* THIS SHOULD BE REMOVED BEFORE APP IS DONE *******/
 
         Button ggm = (Button) findViewById(R.id.btnGGManager);
+        ggm.setVisibility(View.GONE);
         Button gus = (Button) findViewById(R.id.btnGusGuy );
+        gus.setVisibility(View.GONE);
         Button jesseTenant = (Button) findViewById(R.id.btnJesseTenant);
+        jesseTenant.setVisibility(View.GONE);
         Button jesseManager = (Button) findViewById(R.id.btnJesseManager);
+        jesseManager.setVisibility(View.GONE);
 
         ggm.setOnClickListener(new View.OnClickListener() {
             @Override
